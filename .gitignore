@@ -27,6 +27,7 @@ node_modules/
 
 # Babel compiled sources
 lib/
+build/
 
 # UMD distribution
 dist/

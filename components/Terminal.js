@@ -2,6 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Bar from './Bar';
 import './Terminal.css';
+import ObjectInspector from 'react-object-inspector';
+
+function handleLogging(method, addToOutput) {
+  const old = console[method];
+  console[method] = (...args) => {
+    old(...args);
+    const res = [...args].map((arg, i) => {
+      switch (typeof arg) {
+        case 'object':
+          return <ObjectInspector data={arg} key={i} />;
+        case 'function':
+          return `${arg}`;
+        default:
+          return arg;
+      }
+    });
+    addToOutput(res);
+  };
+}
 
 class Terminal extends Component {
   static displayName='Terminal';
@@ -13,7 +32,8 @@ class Terminal extends Component {
     barColor: PropTypes.string,
     backgroundColor: PropTypes.string,
     commands: PropTypes.objectOf(PropTypes.func),
-    description: PropTypes.objectOf(PropTypes.string)
+    description: PropTypes.objectOf(PropTypes.string),
+    watchConsoleLogging: PropTypes.bool,
   };
 
   state = {
@@ -21,6 +41,7 @@ class Terminal extends Component {
     summary: [],
     commands: {},
     description: {},
+    watchConsoleLogging: false
   };
 
   componentDidMount = () => {
@@ -29,12 +50,23 @@ class Terminal extends Component {
     this.allCommands();
     this.setDescription();
     this.showMsg();
+
+    if (this.props.watchConsoleLogging) {
+      this.watchConsoleLogging();
+    }
   };
 
   adder = (inp) => {
     let summary = this.state.summary;
     summary.push(inp);
     this.setState({ summary, });
+  }
+
+  watchConsoleLogging = () => {
+    handleLogging('log', this.adder);
+    handleLogging('warn', this.adder);
+    handleLogging('error', this.adder);
+    handleLogging('info', this.adder);
   }
 
   allCommands = () => {
@@ -110,21 +142,21 @@ class Terminal extends Component {
 
     const output = this.state.summary.map((content, i) => {
       return (
-        <p key={i}>{content}</p>
+        <div className="terminal-output-line" key={i}>{content}</div>
       );
     });
 
     return (
-      <div className="container-main" style={{ color: this.props.color, ...this.props.style }}>
+      <div className="terminal-container-wrapper" style={{ color: this.props.color, ...this.props.style }}>
         <Bar style={ barColor }/>
-        <div className="container" id="main" style={backgroundColor}>
-          <div className="holder">
-            <div id="content">
-              <div className="input-area">
+        <div className="terminal-container terminal-container-main" style={backgroundColor}>
+          <div className="terminal-holder">
+            <div className="terminal-content">
+              <div className="terminal-input-area">
                 {output}
                 <p>
-                  <span className="prompt" style={prompt}>{this.state.prompt}</span>
-                  <input className="main" style={inputStyles} type="text" ref="com" onKeyPress={this.handleChange} />
+                  <span className="terminal-prompt" style={prompt}>{this.state.prompt}</span>
+                  <input className="terminal-main-input" style={inputStyles} type="text" ref="com" onKeyPress={this.handleChange} />
                 </p>
               </div>
             </div>
