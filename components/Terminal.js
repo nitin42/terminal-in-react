@@ -111,16 +111,16 @@ class Terminal extends Component {
   }
 
   handleChange = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       var inputText = this.refs.com.value;
       var inputArray = inputText.split(' ');
       var input = inputArray[0];
       var arg = inputArray[1]; // Undefined for function call
       var command = this.state.commands[input];
-      this.adder(this.state.prompt + " " + inputText);
+      this.adder(this.state.prompt + ' ' + inputText);
 
       if (command === undefined) {
-        this.adder("-bash:" + input + ": command not found");
+        this.adder('-bash:' + input + ': command not found');
       }
 
       else if (input === 'clear') {
@@ -131,7 +131,7 @@ class Terminal extends Component {
         this.adder(command(arg));
       }
 
-      this.refs.com.value = "";
+      this.refs.com.value = '';
     }
   }
 
@@ -149,7 +149,7 @@ class Terminal extends Component {
 
     return (
       <div className="terminal-container-wrapper" style={{ color: this.props.color, ...this.props.style }}>
-        <Bar style={ barColor }/>
+        <Bar style={barColor} />
         <div className="terminal-container terminal-container-main" style={backgroundColor}>
           <div className="terminal-holder">
             <div className="terminal-content">

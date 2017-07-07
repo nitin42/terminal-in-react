@@ -23,6 +23,10 @@ After you're done making changes to the codebase, generate the bundle.
 npm run build:production
 ```
 
-This will generate a file `terminal.js` in the `build` directory.
+This will generate a file `terminal.js` in the `build` directory. There is also a [starter](./starter) folder where you can test your changes and check them locally by running the development server.
+
+```
+npm run start
+```
 
 That's it!! I'm excited to see your pull request.

@@ -1,0 +1,28 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "plugins": [
+    "babel"
+  ],
+  "rules": {
+    "generator-star-spacing": 1,
+    "babel/new-cap": 1,
+    "object-shorthand": 1,
+    "arrow-parens": 1,
+    "no-await-in-loop": 1,
+
+    "react/jsx-filename-extension": 0,
+    "react/no-array-index-key": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./webpack.config.js"
+      }
+    }
+  }
+}

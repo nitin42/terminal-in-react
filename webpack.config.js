@@ -1,56 +1,68 @@
 const webpack = require('webpack');
 const { join, resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BabiliPlugin = require('babili-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+const VENDOR = ['react', 'react-dom'];
 
 module.exports = {
-  entry: join(__dirname, './components/index.js'),
-  output: {
-    filename: 'terminal.js',
-    path: resolve(__dirname, 'build'),
-    publicPath: '/',
-    libraryTarget: 'umd',
-    library: 'terminalInReact',
-    pathinfo: true
+  entry: {
+    main: [
+      'webpack-dev-server/client?http://0.0.0.0:8080',
+      'webpack/hot/only-dev-server',
+      join(__dirname, 'starter/App.js')
+    ],
+    vendor: VENDOR
   },
-  devtool: 'cheap-module-source-map',
-  cache: true,
+  output: {
+    filename: '[name].[hash].js',
+    path: resolve(__dirname, 'dist'),
+    publicPath: '/'
+  },
+  devServer: {
+    publicPath: '/',
+    historyApiFallback: true,
+    hot: true,
+    port: '3000',
+    host: '127.0.0.1',
+    noInfo: true,
+    overlay: true,
+    clientLogLevel: "none"
+  },
+  stats: {
+    chunks: true,
+    chunkModules: true,
+    colors: true,
+    errors: true,
+    errorDetails: true,
+    timings: true,
+    version: true,
+    warnings: true
+  },
+  devtool: 'eval',
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: [/node_modules/, /__tests__/, /docs/, /coverage/],
+        exclude: [/node_modules/, /__tests__/, /coverage/],
         use: ['babel-loader']
       },
       {
         test: /\.css$/,
-        include: /components/,
+        exclude: /node_modules/,
         use: ['style-loader', 'css-loader']
       }
     ]
   },
-  target: 'web',
-  externals: {
-    'react': 'react',
-    'react-dom': 'react-dom'
-  },
   plugins: [
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false,
-      options: {
-        context: resolve(__dirname, './components')
-      }
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new HtmlWebpackPlugin({
+      template: require('html-webpack-template'),
+      appMountId: 'app'
     }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    // Better results
-    new BabiliPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    new CleanWebpackPlugin([resolve(__dirname, './build')])
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor'
+    })
   ]
 };
