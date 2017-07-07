@@ -45,7 +45,6 @@ class App extends Component {
 }
 ```
 
-Output -
 <p align="center">
   <img src="https://i.gyazo.com/a7e35f346b909349a02438ee17678956.gif" />
 </p>
