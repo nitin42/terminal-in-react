@@ -90,6 +90,7 @@ Use
 This would be an awesome feature 👇
 
 I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion).
+Also thanks to [Jonathan Gertig](https://github.com/jcgertig) for [this](https://github.com/nitin42/terminal-in-react/pull/4) PR. Now we will have `console.log` option 😄
 
 ## API
 
@@ -127,3 +128,7 @@ I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues
 ## You want a X fetaure
 
 Sure! Create an issue for that and I will look into it.
+
+## Contributing
+
+[Contributing Guide](./CONTRIBUTING.md)
