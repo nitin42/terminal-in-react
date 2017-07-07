@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import ObjectInspector from 'react-object-inspector';
 import Bar from './Bar';
 import './Terminal.css';
-import ObjectInspector from 'react-object-inspector';
 
-const oldConsoleLog = console['log'];
+console.oldLog = console['log']; // eslint-disable-line no-console, dot-notation
 
 function handleLogging(method, addToOutput) {
-  console[method] = (...args) => {
-    oldConsoleLog(`[${method}]`, ...args);
+  console[method] = (...args) => { // eslint-disable-line no-console
+    console.oldLog(`[${method}]`, ...args); // eslint-disable-line no-console
     const res = [...args].map((arg, i) => {
       switch (typeof arg) {
         case 'object':
-          return <ObjectInspector data={arg} key={i} />;
+          return <ObjectInspector data={arg} key={`object-${i}`} />;
         case 'function':
           return `${arg}`;
         default:
@@ -29,6 +29,7 @@ class Terminal extends Component {
   static propTypes = {
     msg: PropTypes.string,
     color: PropTypes.string,
+    style: PropTypes.object, // eslint-disable-line
     prompt: PropTypes.string,
     barColor: PropTypes.string,
     backgroundColor: PropTypes.string,
@@ -37,17 +38,27 @@ class Terminal extends Component {
     watchConsoleLogging: PropTypes.bool,
   };
 
+  static defaultProps = {
+    msg: '',
+    color: 'green',
+    style: {},
+    prompt: 'green',
+    barColor: 'black',
+    backgroundColor: 'black',
+    commands: {},
+    description: {},
+    watchConsoleLogging: false,
+  };
+
   state = {
     prompt: '>',
     summary: [],
     commands: {},
     description: {},
-    watchConsoleLogging: false
   };
 
   componentDidMount = () => {
-    const node = this.refs.com;
-    node.focus();
+    this.com.focus();
     this.allCommands();
     this.setDescription();
     this.showMsg();
@@ -57,10 +68,26 @@ class Terminal extends Component {
     }
   };
 
-  adder = (inp) => {
-    let summary = this.state.summary;
-    summary.push(inp);
-    this.setState({ summary, });
+  setDescription = () => {
+    this.setState({
+      description: {
+        clear: 'clear the screen',
+        show: 'show the msg',
+        help: 'list all the commands',
+        ...this.props.description,
+      },
+    });
+  }
+
+  allCommands = () => {
+    this.setState({
+      commands: {
+        clear: this.clearScreen,
+        show: this.showMsg,
+        help: this.showHelp,
+        ...this.props.commands,
+      },
+    });
   }
 
   watchConsoleLogging = () => {
@@ -70,31 +97,15 @@ class Terminal extends Component {
     handleLogging('error', this.adder);
   }
 
-  allCommands = () => {
-    this.setState({
-      commands: {
-        'clear': this.clearScreen,
-        'show': this.showMsg,
-        'help': this.showHelp,
-        ...this.props.commands
-      }
-    });
-  }
-
-  setDescription = () => {
-    this.setState({
-      description: {
-        'clear': 'clear the screen',
-        'show': 'show the msg',
-        'help': 'list all the commands',
-        ...this.props.description
-      }
-    })
+  adder = (inp) => {
+    const summary = this.state.summary;
+    summary.push(inp);
+    this.setState({ summary });
   }
 
   clearScreen = () => {
     this.setState({
-      summary: []
+      summary: [],
     });
   }
 
@@ -104,52 +115,46 @@ class Terminal extends Component {
 
   showHelp = () => {
     const options = Object.keys(this.state.commands);
-    const description = this.state.description
-    for (var option of options) {
+    const description = this.state.description;
+    for (const option of options) { // eslint-disable-line no-restricted-syntax
       this.adder(`${option} - ${description[option]}`);
     }
   }
 
   handleChange = (e) => {
-    if (e.key === "Enter") {
-      var inputText = this.refs.com.value;
-      var inputArray = inputText.split(' ');
-      var input = inputArray[0];
-      var arg = inputArray[1]; // Undefined for function call
-      var command = this.state.commands[input];
-      this.adder(this.state.prompt + " " + inputText);
+    if (e.key === 'Enter') {
+      const inputText = this.com.value;
+      const inputArray = inputText.split(' ');
+      const input = inputArray[0];
+      const arg = inputArray[1]; // Undefined for function call
+      const command = this.state.commands[input];
+      this.adder(`${this.state.prompt} ${inputText}`);
 
       if (command === undefined) {
-        this.adder("-bash:" + input + ": command not found");
-      }
-
-      else if (input === 'clear') {
+        this.adder(`-bash:${input}: command not found`);
+      } else if (input === 'clear') {
         this.clearScreen();
-      }
-
-      else {
+      } else {
         this.adder(command(arg));
       }
 
-      this.refs.com.value = "";
+      this.com.value = '';
     }
   }
 
-  render () {
+  render() {
     const inputStyles = { backgroundColor: this.props.backgroundColor, color: this.props.color };
     const prompt = { color: this.props.prompt };
     const barColor = { backgroundColor: this.props.barColor };
-    const backgroundColor = { backgroundColor: this.props.backgroundColor }
+    const backgroundColor = { backgroundColor: this.props.backgroundColor };
 
-    const output = this.state.summary.map((content, i) => {
-      return (
-        <div className="terminal-output-line" key={i}>{content}</div>
-      );
-    });
+    const output = this.state.summary.map((content, i) => (
+      <div className="terminal-output-line" key={i}>{content}</div>
+    ));
 
     return (
       <div className="terminal-container-wrapper" style={{ color: this.props.color, ...this.props.style }}>
-        <Bar style={ barColor }/>
+        <Bar style={barColor} />
         <div className="terminal-container terminal-container-main" style={backgroundColor}>
           <div className="terminal-holder">
             <div className="terminal-content">
@@ -157,7 +162,13 @@ class Terminal extends Component {
                 {output}
                 <p>
                   <span className="terminal-prompt" style={prompt}>{this.state.prompt}</span>
-                  <input className="terminal-main-input" style={inputStyles} type="text" ref="com" onKeyPress={this.handleChange} />
+                  <input
+                    className="terminal-main-input"
+                    style={inputStyles}
+                    type="text"
+                    ref={com => (this.com = com)}
+                    onKeyPress={this.handleChange}
+                  />
                 </p>
               </div>
             </div>
@@ -166,7 +177,6 @@ class Terminal extends Component {
       </div>
     );
   }
-
 }
 
 export default Terminal;

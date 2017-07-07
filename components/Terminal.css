@@ -1,30 +1,30 @@
 .terminal-container-wrapper {
-	margin: 100px 0;
-	font-family: 'Inconsolata', monospace;
-	font-size: 0.9em;
-	color: green;
+  margin: 100px 0;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.9em;
+  color: green;
 }
 
 .terminal-container {
-	display: block;
-	margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .terminal-input-area {
-	height: 100%;
-	padding: 3px;
+  height: 100%;
+  padding: 3px;
 }
 
 .terminal-main-input {
-	font-size: 0.9em
+  font-size: 0.9em
 }
 
 .terminal-container-main {
-	max-width: 600px;
-	background: black;
-	border-radius: 1px;
-	height: 600px;
-	overflow: scroll;
+  max-width: 600px;
+  background: black;
+  border-radius: 1px;
+  height: 600px;
+  overflow: scroll;
 }
 
 .terminal-holder {
@@ -32,17 +32,17 @@
 }
 
 .terminal-prompt {
-	color: green;
+  color: green;
 }
 
 .terminal-main-input, .terminal-main-input:focus {
-	border: none;
-	padding: 0;
-	margin: 3px;
-	background: black;
-	color: green;
-	width: 80%;
-	outline: none;
+  border: none;
+  padding: 0;
+  margin: 3px;
+  background: black;
+  color: green;
+  width: 80%;
+  outline: none;
 }
 
 .terminal-output-line {
@@ -51,6 +51,6 @@
 }
 
 .terminal-content {
-	padding: 20px;
-	height: 100%;
+  padding: 20px;
+  height: 100%;
 }

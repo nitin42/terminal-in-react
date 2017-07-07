@@ -9,22 +9,22 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: [/node_modules/, /__tests__/, /docs/, /coverage/],
-        use: ['babel-loader']
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,
         include: /components/,
-        use: ['style-loader', 'css-loader']
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   target: 'web',
   plugins: [
     // Better results
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('development')
-      }
+        NODE_ENV: JSON.stringify('development'),
+      },
     }),
-  ]
+  ],
 };

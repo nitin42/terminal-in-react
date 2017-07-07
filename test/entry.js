@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import Terminal from '../components/Terminal';
 
-var elemDiv = document.createElement('div');
+const elemDiv = document.createElement('div');
 document.body.appendChild(elemDiv);
 ReactDOM.render((
   <Terminal
