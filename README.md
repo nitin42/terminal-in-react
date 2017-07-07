@@ -35,8 +35,16 @@ class App extends Component {
           backgroundColor="black"
           barColor="black"
           style={{ fontWeight: 'bold', fontSize: '1em' }}
-          commands={{ 'open-google': () => window.open("https://www.google.com/", "_blank"), showmsg: this.showMsg, popup: () => alert("Terminal in React") }}
-          description={{ 'open-google': 'opens google.com', showmsg: 'shows a message', alert: 'alert', popup: 'alert' }}
+          commands={{
+            'open-google': () => window.open("https://www.google.com/", "_blank"),
+            showmsg: this.showMsg,
+            popup: () => alert("Terminal in React")
+          }}
+          description={{
+            'open-google': 'opens google.com',
+            showmsg: 'shows a message',
+            alert: 'alert', popup: 'alert'
+          }}
           msg="You can write anything here. Example - Hello! My name is Foo and I like Bar."
         />
       </div>
@@ -65,6 +73,11 @@ Add a description of your command using prop `description`.
 <Terminal description={{ 'open-google': 'opens google' }} />
 ```
 
+You can have the terminal watch console.log/info function and print out
+```jsx
+<Terminal watchConsoleLogging />
+```
+
 ## Customisation
 
 Use
@@ -72,7 +85,7 @@ Use
 * prop `color` to change the color of the text.
 * prop `backgroundColor` to change the background.
 * prop `barColor` to change the color of bar.
-* prop `prompt` to change the prompt (`$`) color.
+* prop `prompt` to change the prompt (`>`) color.
 
 This would be an awesome feature 👇
 
@@ -89,6 +102,7 @@ I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues
 | **description** | object      |    {} |
 | **commands** | object      |    { clear: this.clearScreen(), help: this.showHelp(), show: this.showMsg() } |
 | **msg** | string      |    - |
+| **watchConsoleLogging** | bool | false |
 
 
 ## Built-in commands

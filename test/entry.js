@@ -8,8 +8,8 @@ document.body.appendChild(elemDiv);
 ReactDOM.render((
   <Terminal
     color="green"
-    backgroundColor="black"
     barColor="black"
+    backgroundColor="black"
     style={{ fontWeight: 'bold', fontSize: '1em' }}
     watchConsoleLogging
   />
