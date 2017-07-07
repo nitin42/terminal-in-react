@@ -28,6 +28,13 @@
   },
   "scripts": {
     "start": "NODE_ENV=development ./node_modules/.bin/webpack-dev-server --watch",
-    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js --display-max-modules 0"
-  }
+    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js --display-max-modules 0",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "terminal",
+    "simple",
+    "display"
+  ]
 }

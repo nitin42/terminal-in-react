@@ -4,7 +4,7 @@
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
 </p>
 
-> A tiny component that renders a terminal 
+> A tiny component that renders a terminal
 
 ## Install
 
@@ -67,7 +67,7 @@ Add a description of your command using prop `description`.
 
 ## Customisation
 
-Use 
+Use
 
 * prop `color` to change the color of the text.
 * prop `backgroundColor` to change the background.
@@ -110,8 +110,6 @@ I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues
 * Explain any of your project using this terminal component
 * or just play with it
 
-## You want a X fetaure 
+## You want a X fetaure
 
 Sure! Create an issue for that and I will look into it.
-
-  
