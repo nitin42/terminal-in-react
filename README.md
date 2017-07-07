@@ -114,3 +114,7 @@ Also thanks to [Jonathan Gertig](https://github.com/jcgertig) for [this](https:/
 ## You want a X fetaure
 
 Sure! Create an issue for that and I will look into it.
+
+## Contributing
+
+[Contributing Guide](./CONTRIBUTING.md)
