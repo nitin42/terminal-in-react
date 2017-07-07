@@ -78,16 +78,16 @@ class Terminal extends Component {
   }
 
   handleChange = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       var inputText = this.refs.com.value;
       var inputArray = inputText.split(' ');
       var input = inputArray[0];
       var arg = inputArray[1]; // Undefined for function call
       var command = this.state.commands[input];
-      this.adder(this.state.prompt + " " + inputText);
+      this.adder(this.state.prompt + ' ' + inputText);
 
       if (command === undefined) {
-        this.adder("-bash:" + input + ": command not found");
+        this.adder('-bash:' + input + ': command not found');
       }
 
       else if (input === 'clear') {
@@ -98,7 +98,7 @@ class Terminal extends Component {
         this.adder(command(arg));
       }
 
-      this.refs.com.value = "";
+      this.refs.com.value = '';
     }
   }
 
@@ -115,16 +115,16 @@ class Terminal extends Component {
     });
 
     return (
-      <div className="container-main" style={{ color: this.props.color, ...this.props.style }}>
+      <div className='container-main' style={{ color: this.props.color, ...this.props.style }}>
         <Bar style={ barColor }/>
-        <div className="container" id="main" style={backgroundColor}>
-          <div className="holder">
-            <div id="content">
-              <div className="input-area">
+        <div className='container' id='main' style={backgroundColor}>
+          <div className='holder'>
+            <div id='content'>
+              <div className='input-area'>
                 {output}
                 <p>
-                  <span className="prompt" style={prompt}>{this.state.prompt}</span>
-                  <input className="main" style={inputStyles} type="text" ref="com" onKeyPress={this.handleChange} />
+                  <span className='prompt' style={prompt}>{this.state.prompt}</span>
+                  <input className='main' style={inputStyles} type='text' ref='com' onKeyPress={this.handleChange} />
                 </p>
               </div>
             </div>
