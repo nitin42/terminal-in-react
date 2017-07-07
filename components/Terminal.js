@@ -6,7 +6,7 @@ import './Terminal.css';
 class Terminal extends Component {
   static displayName='Terminal';
 
-  static propTypes = {  
+  static propTypes = {
     msg: PropTypes.string,
     color: PropTypes.string,
     prompt: PropTypes.string,
@@ -25,7 +25,7 @@ class Terminal extends Component {
 
   componentDidMount = () => {
     const node = this.refs.com;
-    node.focus();  
+    node.focus();
     this.allCommands();
     this.setDescription();
     this.showMsg();
@@ -78,7 +78,7 @@ class Terminal extends Component {
   }
 
   handleChange = (e) => {
-    if (e.key === "Enter") {  
+    if (e.key === "Enter") {
       var inputText = this.refs.com.value;
       var inputArray = inputText.split(' ');
       var input = inputArray[0];
@@ -88,11 +88,11 @@ class Terminal extends Component {
 
       if (command === undefined) {
         this.adder("-bash:" + input + ": command not found");
-      }  
+      }
 
       else if (input === 'clear') {
         this.clearScreen();
-      } 
+      }
 
       else {
         this.adder(command(arg));
