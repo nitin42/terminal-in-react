@@ -31,5 +31,11 @@
     "build:production": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack/webpack.config.js --display-max-modules 0",
     "prepublish": "npm run build:production",
     "prebuild": "rm -rf ./build"
-  }
+  },
+  "keywords": [
+    "react",
+    "terminal",
+    "simple",
+    "display"
+  ]
 }

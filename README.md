@@ -4,7 +4,7 @@
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
 </p>
 
-> A tiny component that renders a terminal 
+> A tiny component that renders a terminal
 
 ## Install
 
@@ -45,7 +45,6 @@ class App extends Component {
 }
 ```
 
-Output -
 <p align="center">
   <img src="https://i.gyazo.com/a7e35f346b909349a02438ee17678956.gif" />
 </p>
@@ -68,12 +67,17 @@ Add a description of your command using prop `description`.
 
 ## Customisation
 
-Use 
+Use
 
 * prop `color` to change the color of the text.
 * prop `backgroundColor` to change the background.
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`$`) color.
+
+This would be an awesome feature 👇
+
+I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion).
+Also thanks to [Jonathan Gertig](https://github.com/jcgertig) for [this](https://github.com/nitin42/terminal-in-react/pull/4) PR. Now we will have `console.log` option 😄
 
 ## API
 
@@ -107,8 +111,10 @@ Use
 * Explain any of your project using this terminal component
 * or just play with it
 
-## You want a X fetaure 
+## You want a X fetaure
 
 Sure! Create an issue for that and I will look into it.
 
-  
+## Contributing
+
+[Contributing Guide](./CONTRIBUTING.md)

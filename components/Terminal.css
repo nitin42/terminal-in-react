@@ -40,7 +40,7 @@ div#main {
 
 .main, .main:focus {
 	border: none;
-	padding: 0; 
+	padding: 0;
 	margin: 3px;
 	background: black;
 	color: green;
@@ -48,7 +48,7 @@ div#main {
 	outline: none;
 }
 
-.print { 
+.print {
 	margin-bottom: 10px;
 	line-height: 21px;
 }
