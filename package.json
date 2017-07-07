@@ -27,7 +27,7 @@
     "webpack-dev-server": "^2.5.1"
   },
   "scripts": {
-    "start": "NODE_ENV=development ./node_modules/.bin/webpack-dev-server --watch",
-    "build": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js --display-max-modules 0"
+    "start": "NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --open",
+    "build:production": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack/webpack.config.js --display-max-modules 0"
   }
 }
