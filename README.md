@@ -74,6 +74,10 @@ Use
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`$`) color.
 
+This would be an awesome feature 👇
+
+I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion).
+
 ## API
 
 | Props        | Type           | Default  |
