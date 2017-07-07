@@ -4,10 +4,11 @@ import Bar from './Bar';
 import './Terminal.css';
 import ObjectInspector from 'react-object-inspector';
 
+const oldConsoleLog = console['log'];
+
 function handleLogging(method, addToOutput) {
-  const old = console[method];
   console[method] = (...args) => {
-    old(...args);
+    oldConsoleLog(`[${method}]`, ...args);
     const res = [...args].map((arg, i) => {
       switch (typeof arg) {
         case 'object':
@@ -64,9 +65,9 @@ class Terminal extends Component {
 
   watchConsoleLogging = () => {
     handleLogging('log', this.adder);
+    handleLogging('info', this.adder);
     handleLogging('warn', this.adder);
     handleLogging('error', this.adder);
-    handleLogging('info', this.adder);
   }
 
   allCommands = () => {
