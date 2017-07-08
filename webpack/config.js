@@ -53,6 +53,8 @@ const plugins = () => [
 const externals = () => ({
   react: 'react',
   'react-dom': 'react-dom',
+  'prop-types': 'prop-types',
+  'react-object-inspector': 'react-object-inspector',
 });
 
 const entry = () => ({
