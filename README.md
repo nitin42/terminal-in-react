@@ -102,6 +102,14 @@ Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
   <img src="http://g.recordit.co/ZYeUKmbANQ.gif"/>
 </p>
 
+Also,
+
+* Animations
+* Prettifying the console output
+* Enlarging the interactive
+
+For more updates about the new changes and progress, follow me on Twitter [@NTulswani](https://twitter.com/NTulswani). 
+
 ## API
 
 | Props        | Type           | Default  |
