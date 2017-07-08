@@ -61,7 +61,9 @@ const plugins = () => {
 const externals = () => {
   return {
     'react': 'react',
-    'react-dom': 'react-dom'
+    'react-dom': 'react-dom',
+    'prop-types': 'prop-types',
+    'react-object-inspector': 'react-object-inspector'
   };
 };
 
