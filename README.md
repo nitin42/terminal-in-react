@@ -137,7 +137,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * Explain any of your project using this terminal component
 * or just play with it
 
-## You want a X fetaure
+## You want a X feature
 
 Sure! Create an issue for that and I will look into it.
 
