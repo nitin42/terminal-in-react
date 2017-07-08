@@ -89,12 +89,17 @@ Use
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`>`) color.
 
-> I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion). This would be an awesome feature!
-
 Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
 
 <p align="center">
   <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
+</p>
+
+## Coming soon !
+> I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion). This would be an awesome feature!
+
+<p align="center">
+  <img src="http://g.recordit.co/ZYeUKmbANQ.gif"/>
 </p>
 
 ## API
