@@ -53,6 +53,8 @@ class App extends Component {
 }
 ```
 
+> Be careful when copying this example because it uses `window` object (`'open-google': () => window.open("https://www.google.com/", "_blank"),`) which is only available on the client-side and it will give you an error if you're doing server side rendering. 
+
 <p align="center">
   <img src="https://i.gyazo.com/a7e35f346b909349a02438ee17678956.gif" />
 </p>
@@ -87,10 +89,26 @@ Use
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`>`) color.
 
-This would be an awesome feature 👇
+Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
 
-I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion).
-Also thanks to [Jonathan Gertig](https://github.com/jcgertig) for [this](https://github.com/nitin42/terminal-in-react/pull/4) PR. Now we will have `console.log` option 😄
+<p align="center">
+  <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
+</p>
+
+## Coming soon !
+> I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion). This would be an awesome feature!
+
+<p align="center">
+  <img src="http://g.recordit.co/ZYeUKmbANQ.gif"/>
+</p>
+
+## What's more ?
+
+* will support images, gifs
+* animations
+* prettifying the console output
+
+Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
 
 ## API
 
@@ -112,12 +130,6 @@ Also thanks to [Jonathan Gertig](https://github.com/jcgertig) for [this](https:/
 * `help` - List all the commands
 * `show` - Shows a msg if any
 
-## What's more ?
-
-* will support images, gifs.
-* animations.
-* and more stuff to make it look more interactive
-
 ## Where to use ?
 
 * Embed it as a toy on your website
@@ -125,7 +137,7 @@ Also thanks to [Jonathan Gertig](https://github.com/jcgertig) for [this](https:/
 * Explain any of your project using this terminal component
 * or just play with it
 
-## You want a X fetaure
+## You want a X feature
 
 Sure! Create an issue for that and I will look into it.
 
