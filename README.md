@@ -1,5 +1,5 @@
 # Terminal in React
-![version](https://img.shields.io/badge/terminal-in-react-2.0.0-brightgreen.svg)
+![version](https://img.shields.io/badge/terminal--in--react-2.0.0-brightgreen.svg)
 ![size](https://img.shields.io/badge/size-17.6%20KB-brightgreen.svg)
 
 <p align="center">
