@@ -108,7 +108,7 @@ Also,
 * Prettifying the console output
 * and much more (or suggest me something)
 
-For more updates about the new changes and progress, follow me on Twitter [@NTulswani](https://twitter.com/NTulswani). 
+For new updates and progress, Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani). 
 
 ## API
 
