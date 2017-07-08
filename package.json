@@ -38,11 +38,11 @@
     "webpack-dev-server": "^2.5.1"
   },
   "scripts": {
-    "start": "NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --open --progress --colors --content-base starter/ --hot",
+    "start": "NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --open --progress --colors --content-base starter/",
     "build:production": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack/webpack.config.js --display-max-modules 0",
     "prepublish": "npm run build:production",
     "prebuild": "rm -rf ./build",
-    "lint": "./node_modules/.bin/eslint components/",
+    "lint": "./node_modules/.bin/eslint components/"
   },
   "keywords": [
     "react",
