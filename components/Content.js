@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 class Content extends Component {
   static displayName = 'Content';
 
-  // react/require-default-props
   static propTypes = {
     backgroundColor: PropTypes.objectOf(PropTypes.string),
     output: PropTypes.arrayOf(PropTypes.element),

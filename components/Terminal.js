@@ -129,10 +129,10 @@ class Terminal extends Component {
   allCommands = () => {
     this.setState({
       commands: {
-        clear: this.clearScreen,
         show: this.showMsg,
-        help: this.showHelp,
         ...this.props.commands,
+        clear: this.clearScreen,
+        help: this.showHelp,
       },
     });
   };
@@ -179,17 +179,18 @@ class Terminal extends Component {
 
       if (command === undefined) {
         if (typeof this.props.commandPassThrough === 'function') {
-          this.props.commandPassThrough(input, this.adder);
+          const res = this.props.commandPassThrough(input, this.adder);
+          if (typeof res !== 'undefined') {
+            this.adder(res);
+          }
         } else {
           this.adder(`-bash:${input}: command not found`);
         }
-      } else if (input === 'clear') {
-        this.clearScreen();
       } else {
         this.adder(command(arg));
       }
 
-      e.target.value = '';
+      e.target.value = ''; // eslint-disable-line no-param-reassign
     }
   };
 

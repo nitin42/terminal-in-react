@@ -1,6 +1,6 @@
-const webpack = require('webpack');
+const webpack = require('webpack'); // eslint-disable-line
 const { join, resolve } = require('path');
-const BabiliPlugin = require('babili-webpack-plugin');
+const BabiliPlugin = require('babili-webpack-plugin'); // eslint-disable-line
 
 const common = {
   exclude: [

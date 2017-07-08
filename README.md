@@ -55,7 +55,7 @@ class App extends Component {
 }
 ```
 
-> Be careful when copying this example because it uses `window` object (`'open-google': () => window.open("https://www.google.com/", "_blank"),`) which is only available on the client-side and it will give you an error if you're doing server side rendering. 
+> Be careful when copying this example because it uses `window` object (`'open-google': () => window.open("https://www.google.com/", "_blank"),`) which is only available on the client-side and it will give you an error if you're doing server side rendering.
 
 <p align="center">
   <img src="https://i.gyazo.com/a7e35f346b909349a02438ee17678956.gif" />
@@ -82,7 +82,21 @@ You can have the terminal watch console.log/info function and print out
 <Terminal watchConsoleLogging />
 ```
 
-## Customisation
+You can have the terminal pass out the cmd that was input
+```jsx
+<Terminal commandPassThrough={cmd => `-PassedThrough:${cmd}: command not found`} />
+```
+you can also handle the result with a callback
+```jsx
+<Terminal
+  commandPassThrough={(cmd, done) => {
+    // do something async
+    done(`-PassedThrough:${cmd}: command not found`);
+  }}
+/>
+```
+
+## Customization
 
 Use
 
@@ -124,6 +138,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 | **commands** | object      |    { clear: this.clearScreen(), help: this.showHelp(), show: this.showMsg() } |
 | **msg** | string      |    - |
 | **watchConsoleLogging** | bool | false |
+| **commandPassThrough** | function | null |
 
 
 ## Built-in commands
