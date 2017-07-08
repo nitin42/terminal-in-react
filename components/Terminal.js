@@ -4,11 +4,17 @@ import ObjectInspector from 'react-object-inspector';
 import Bar from './Bar';
 import './Terminal.css';
 
-console.oldLog = console['log']; // eslint-disable-line no-console, dot-notation
+(function setOldLogger() {
+  console['oldLog'] = console['log']; // eslint-disable-line no-console, dot-notation
+}());
 
 function handleLogging(method, addToOutput) {
   console[method] = (...args) => { // eslint-disable-line no-console
-    console.oldLog(`[${method}]`, ...args); // eslint-disable-line no-console
+    try {
+      console.oldLog(`[${method}]`, ...args); // eslint-disable-line no-console
+    } catch (e) {
+      throw new Error('Terminal was loaded more than once check script tags');
+    }
     const res = [...args].map((arg, i) => {
       switch (typeof arg) {
         case 'object':
@@ -21,6 +27,7 @@ function handleLogging(method, addToOutput) {
     });
     addToOutput(res);
   };
+  Object.defineProperty(console[method], 'name', { value: method, writable: false }); // eslint-disable-line no-console
 }
 
 class Terminal extends Component {
@@ -36,6 +43,10 @@ class Terminal extends Component {
     commands: PropTypes.objectOf(PropTypes.func),
     description: PropTypes.objectOf(PropTypes.string),
     watchConsoleLogging: PropTypes.bool,
+    commandPassThrough: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.bool,
+    ]),
   };
 
   static defaultProps = {
@@ -48,6 +59,7 @@ class Terminal extends Component {
     commands: {},
     description: {},
     watchConsoleLogging: false,
+    commandPassThrough: false,
   };
 
   state = {
@@ -128,10 +140,13 @@ class Terminal extends Component {
       const input = inputArray[0];
       const arg = inputArray[1]; // Undefined for function call
       const command = this.state.commands[input];
-      this.adder(`${this.state.prompt} ${inputText}`);
 
       if (command === undefined) {
-        this.adder(`-bash:${input}: command not found`);
+        if (typeof this.props.commandPassThrough === 'function') {
+          this.props.commandPassThrough(input, this.adder);
+        } else {
+          this.adder(`-bash:${input}: command not found`);
+        }
       } else if (input === 'clear') {
         this.clearScreen();
       } else {
@@ -140,6 +155,10 @@ class Terminal extends Component {
 
       this.com.value = '';
     }
+  }
+
+  focusInput = () => {
+    this.com.focus();
   }
 
   render() {
@@ -155,13 +174,19 @@ class Terminal extends Component {
     return (
       <div className="terminal-container-wrapper" style={{ color: this.props.color, ...this.props.style }}>
         <Bar style={barColor} />
-        <div className="terminal-container terminal-container-main" style={backgroundColor}>
+        <div
+          className="terminal-container terminal-container-main"
+          style={backgroundColor}
+          onClick={this.focusInput}
+        >
           <div className="terminal-holder">
             <div className="terminal-content">
               <div className="terminal-input-area">
                 {output}
                 <p>
-                  <span className="terminal-prompt" style={prompt}>{this.state.prompt}</span>
+                  <span className="terminal-prompt" style={prompt}>
+                    {this.state.prompt}
+                  </span>
                   <input
                     className="terminal-main-input"
                     style={inputStyles}
