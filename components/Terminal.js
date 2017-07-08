@@ -171,9 +171,7 @@ class Terminal extends Component {
   };
 
   clearScreen = () => {
-    this.setState({
-      summary: [],
-    });
+    this.setState({ summary: [] });
   };
 
   showMsg = () => {
@@ -196,18 +194,22 @@ class Terminal extends Component {
       const input = inputArray[0];
       const arg = inputArray[1]; // Undefined for function call
       const command = this.state.commands[input];
+      let res;
 
-      if (command === undefined) {
+      if (input === '') {
+        this.adder('');
+      } else if (command === undefined) {
         if (typeof this.props.commandPassThrough === 'function') {
-          const res = this.props.commandPassThrough(input, this.adder);
-          if (typeof res !== 'undefined') {
-            this.adder(res);
-          }
+          res = this.props.commandPassThrough(input, this.adder);
         } else {
           this.adder(`-bash:${input}: command not found`);
         }
       } else {
-        this.adder(command(arg));
+        res = command(arg);
+      }
+
+      if (typeof res !== 'undefined') {
+        this.adder(res);
       }
 
       e.target.value = ''; // eslint-disable-line no-param-reassign
@@ -222,9 +224,12 @@ class Terminal extends Component {
     const barColorStyles = { backgroundColor: barColor };
     const backgroundColorStyles = { backgroundColor };
 
-    const output = this.state.summary.map((content, i) =>
-      <div className="terminal-output-line" key={i}>{content}</div>, // comma-dangle
-    );
+    const output = this.state.summary.map((content, i) => {
+      if (typeof context !== 'string' && content.length === 0) {
+        return <div className="terminal-output-line" key={i}>&nbsp;</div>;
+      }
+      return <div className="terminal-output-line" key={i}>{content}</div>;
+    });
 
     return (
       <div

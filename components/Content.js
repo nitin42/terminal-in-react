@@ -38,12 +38,10 @@ class Content extends Component {
     return (
       <div
         className="terminal-container terminal-container-main"
-        style={
-          (
-            backgroundColor,
-            maximise ? { maxWidth: '100%' } : null
-          )
-        }
+        style={(
+          backgroundColor,
+          maximise ? { maxWidth: '100%' } : null
+        )}
         onClick={this.focusInput}
       >
         <div className="terminal-holder">
