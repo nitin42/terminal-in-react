@@ -64,6 +64,22 @@ class Terminal extends Component {
     commandPassThrough: false,
   };
 
+  static childContextTypes = {
+    symbol: PropTypes.string,
+    show: PropTypes.bool,
+    minimise: PropTypes.bool,
+    maximise: PropTypes.bool,
+    closeWindow: PropTypes.func,
+    openWindow: PropTypes.func,
+    minimiseWindow: PropTypes.func,
+    unminimiseWindow: PropTypes.func,
+    maximiseWindow: PropTypes.func,
+    unmaximiseWindow: PropTypes.func,
+    toggleShow: PropTypes.func,
+    toggleMaximise: PropTypes.func,
+    toggleMinimize: PropTypes.func,
+  };
+
   state = {
     prompt: '>',
     summary: [],
@@ -76,16 +92,19 @@ class Terminal extends Component {
 
   getChildContext() {
     return {
+      symbol: this.state.prompt,
       show: this.state.show,
       minimise: this.state.minimise,
       maximise: this.state.maximise,
-      symbol: this.state.prompt,
-      closeWindow: this.closeWindow,
-      minimiseWindow: this.minimiseWindow,
-      undoMin: this.undoMin,
-      maximiseWindow: this.maximiseWindow,
-      undoMax: this.undoMax,
-      closeOnMinMax: this.closeOnMinMax,
+      openWindow: this.setTrue('show'),
+      closeWindow: this.setFalse('show'),
+      minimiseWindow: this.setTrue('minimise'),
+      unminimiseWindow: this.setFalse('minimise'),
+      maximiseWindow: this.setTrue('maximise'),
+      unmaximiseWindow: this.setFalse('maximise'),
+      toggleShow: this.toggleState('show'),
+      toggleMaximise: this.toggleState('maximise'),
+      toggleMinimize: this.toggleState('minimise'),
     };
   }
 
@@ -102,29 +121,30 @@ class Terminal extends Component {
   setDescription = () => {
     this.setState({
       description: {
-        clear: 'clear the screen',
         show: 'show the msg',
-        help: 'list all the commands',
         ...this.props.description,
+        clear: 'clear the screen',
+        help: 'list all the commands',
       },
     });
   };
 
-  closeWindow = () => this.setState({ show: false });
+  setTrue = name => () => this.setState({ [name]: true });
 
-  openWindow = () => this.setState({ show: true });
+  setFalse = name => () => this.setState({ [name]: false });
 
-  minimiseWindow = () =>
-    this.setState({ minimise: true, maximise: false, show: false });
+  getContent = () => {
+    const { show, minimise } = this.state;
+    if (!show) {
+      return this.showNote();
+    }
+    if (minimise) {
+      return this.showBar();
+    }
+    return this.showContent();
+  }
 
-  maximiseWindow = () => this.setState({ maximise: true });
-
-  undoMin = () => this.setState({ minimise: false, show: true });
-
-  undoMax = () => this.setState({ maximise: false });
-
-  closeOnMinMax = () =>
-    this.setState({ minimise: false, maximise: false, show: false });
+  toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
   allCommands = () => {
     this.setState({
@@ -194,40 +214,50 @@ class Terminal extends Component {
     }
   };
 
-  showContent = (
-    props,
-    barColor,
-    backgroundColor,
-    output,
-    prompt,
-    inputStyles,
-    handleChange,
-  ) => (
-    <div
-      className="terminal-container-wrapper"
-      style={{ color: props.color, ...props.style }}
-    >
-      <Bar style={barColor} />
-      <Content
-        backgroundColor={backgroundColor}
-        output={output}
-        prompt={prompt}
-        inputStyles={inputStyles}
-        handleChange={handleChange}
-      />
-    </div>
-  );
+  showContent = () => {
+    const { backgroundColor, color, style, barColor, prompt } = this.props;
 
-  showBar = (props, barColor) => (
-    <div
-      className="terminal-container-wrapper"
-      style={{ color: props.color, ...props.style }}
-    >
-      <Bar style={barColor} />
-    </div>
-  );
+    const inputStyles = { backgroundColor, color };
+    const promptStyles = { color: prompt };
+    const barColorStyles = { backgroundColor: barColor };
+    const backgroundColorStyles = { backgroundColor };
 
-  showNote = openWindow => (
+    const output = this.state.summary.map((content, i) =>
+      <div className="terminal-output-line" key={i}>{content}</div>, // comma-dangle
+    );
+
+    return (
+      <div
+        className="terminal-container-wrapper"
+        style={{ color, ...style }}
+      >
+        <Bar style={barColorStyles} />
+        <Content
+          backgroundColor={backgroundColorStyles}
+          output={output}
+          prompt={promptStyles}
+          inputStyles={inputStyles}
+          handleChange={this.handleChange}
+        />
+      </div>
+    );
+  };
+
+  showBar = () => {
+    const { color, barColor, style } = this.props;
+    const barColorStyles = { backgroundColor: barColor };
+
+    return (
+      <div
+        className="terminal-container-wrapper"
+        style={{ color, ...style }}
+      >
+        <Bar style={barColorStyles} />
+      </div>
+    );
+  }
+
+  showNote = () => (
     <span className="note">
       <h1>OOPS! You closed the window.</h1>
       <img
@@ -235,69 +265,19 @@ class Terminal extends Component {
         width="200"
         height="200"
         alt="note"
-        onClick={openWindow}
+        onClick={this.toggleState('show')}
       />
       Click on the icon to reopen.
     </span>
   );
 
   render() {
-    const inputStyles = {
-      backgroundColor: this.props.backgroundColor,
-      color: this.props.color,
-    };
-
-    const prompt = { color: this.props.prompt };
-    const barColor = { backgroundColor: this.props.barColor };
-    const backgroundColor = { backgroundColor: this.props.backgroundColor };
-
-    const output = this.state.summary.map((content, i) =>
-      <div className="terminal-output-line" key={i}>{content}</div>, // comma-dangle
-    );
-
-    const { show, minimise, maximise } = this.state;
-
     return (
       <div>
-        {show // eslint-disable-line no-nested-ternary
-          ? this.showContent(
-            this.props,
-            barColor,
-            backgroundColor,
-            output,
-            prompt,
-            inputStyles,
-            this.handleChange,
-          )
-          : minimise // eslint-disable-line  no-nested-ternary
-            ? this.showBar(this.props, barColor)
-            : maximise // eslint-disable-line  no-nested-ternary
-              ? this.showContent(
-                this.props,
-                barColor,
-                backgroundColor,
-                output,
-                prompt,
-                inputStyles,
-                this.handleChange,
-              )
-              : this.showNote(this.openWindow)}
+        {this.getContent()}
       </div>
     );
   }
 }
-
-Terminal.childContextTypes = {
-  show: PropTypes.bool,
-  minimise: PropTypes.bool,
-  maximise: PropTypes.bool,
-  closeWindow: PropTypes.func,
-  minimiseWindow: PropTypes.func,
-  undoMin: PropTypes.func,
-  maximiseWindow: PropTypes.func,
-  undoMax: PropTypes.func,
-  closeOnMinMax: PropTypes.func,
-  symbol: PropTypes.string,
-};
 
 export default Terminal;
