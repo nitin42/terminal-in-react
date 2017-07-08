@@ -105,6 +105,30 @@ you can also handle the result with a callback
 />
 ```
 
+## Advanced commands
+You can give your commands options and get them back parsed to the method.
+Using this method will also give your command a build in help output.
+With the option `-h` or `--help`.
+
+```jsx
+<Terminal
+  commands={{
+    color: {
+      method: (args) => {
+        console.log(`The color is ${args._[0] || args.color}`);
+      },
+      options: [
+        {
+          name: 'color',
+          description: 'The color the output should be',
+          defaultValue: 'white',
+        },
+      ],
+    },
+  }}
+/>
+```
+
 ## Customization
 
 Use

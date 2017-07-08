@@ -7,10 +7,15 @@
   "author": "Nitin Tulswani",
   "license": "MIT",
   "dependencies": {
+    "args": "^3.0.2",
+    "camelcase": "^4.1.0",
+    "chalk": "^2.0.1",
+    "lodash.clonedeep": "^4.5.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-object-inspector": "^0.2.1"
+    "react-object-inspector": "^0.2.1",
+    "string-similarity": "^1.2.0"
   },
   "files": [
     "build",
