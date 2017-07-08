@@ -106,7 +106,7 @@ Also,
 
 * Animations
 * Prettifying the console output
-* Enlarging the interactive
+* and much more (or suggest me something)
 
 For more updates about the new changes and progress, follow me on Twitter [@NTulswani](https://twitter.com/NTulswani). 
 
