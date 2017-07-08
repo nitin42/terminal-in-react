@@ -225,7 +225,7 @@ class Terminal extends Component {
     const backgroundColorStyles = { backgroundColor };
 
     const output = this.state.summary.map((content, i) => {
-      if (typeof context !== 'string' && content.length === 0) {
+      if (typeof content !== 'string' && content.length === 0) {
         return <div className="terminal-output-line" key={i}>&nbsp;</div>;
       }
       return <div className="terminal-output-line" key={i}>{content}</div>;
