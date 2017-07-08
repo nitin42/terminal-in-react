@@ -26,7 +26,7 @@ npm install
 
 To test your changes, there is a [starter](./starter) folder where you will find two files, `index.html` and `App.js`. 
 
-Make changes to `App.js` and start the development server with -
+Make your changes to `App.js` and start the development server with -
 
 ```
 npm run start
