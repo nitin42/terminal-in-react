@@ -102,11 +102,11 @@ Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
   <img src="http://g.recordit.co/ZYeUKmbANQ.gif"/>
 </p>
 
-Also,
+## What's more ?
 
-* Animations
-* Prettifying the console output
-* and much more (or suggest me something)
+* will support images, gifs
+* animations
+* prettifying the console output
 
 Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
 
@@ -129,12 +129,6 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `clear` - Clears the screen
 * `help` - List all the commands
 * `show` - Shows a msg if any
-
-## What's more ?
-
-* will support images, gifs.
-* animations.
-* and more stuff to make it look more interactive
 
 ## Where to use ?
 
