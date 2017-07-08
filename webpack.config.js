@@ -25,7 +25,7 @@ module.exports = {
         NODE_ENV: JSON.stringify('development'),
       },
     }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-  ],
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.NamedModulesPlugin()
+  ]
 };

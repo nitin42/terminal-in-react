@@ -10,6 +10,13 @@
   margin: 0 auto;
 }
 
+.note {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .terminal-input-area {
   height: 100%;
   padding: 3px;

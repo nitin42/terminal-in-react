@@ -1,10 +1,21 @@
 # Terminal in React
+![version](https://img.shields.io/badge/terminal--in--react-2.0.0-brightgreen.svg)
+![size](https://img.shields.io/badge/size-17.6%20KB-brightgreen.svg)
 
 <p align="center">
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
 </p>
 
 > A tiny component that renders a terminal
+
+## V2.0.0 is out !
+
+Added this 👇
+
+<p align="center">
+  <img src="https://camo.githubusercontent.com/3748e38abc72cb7860ba8f2272c0329ded5bfe23/687474703a2f2f672e7265636f726469742e636f2f5a5965554b6d62414e512e676966" />
+</p>
+
 
 ## Install
 
@@ -95,18 +106,11 @@ Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
   <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
 </p>
 
-## Coming soon !
-> I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion). This would be an awesome feature!
+## What's more ?
 
-<p align="center">
-  <img src="http://g.recordit.co/ZYeUKmbANQ.gif"/>
-</p>
-
-Also,
-
-* Animations
-* Prettifying the console output
-* and much more (or suggest me something)
+* will support images, gifs
+* animations
+* prettifying the console output
 
 Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
 
@@ -130,12 +134,6 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `help` - List all the commands
 * `show` - Shows a msg if any
 
-## What's more ?
-
-* will support images, gifs.
-* animations.
-* and more stuff to make it look more interactive
-
 ## Where to use ?
 
 * Embed it as a toy on your website
@@ -143,7 +141,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * Explain any of your project using this terminal component
 * or just play with it
 
-## You want a X fetaure
+## You want a X feature
 
 Sure! Create an issue for that and I will look into it.
 
