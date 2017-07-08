@@ -1,59 +1,56 @@
-.container-main {
-	margin: 100px 0;
-	font-family: 'Inconsolata', monospace;
-	font-size: 0.9em;
-	color: green;
+.terminal-container-wrapper {
+  margin: 100px 0;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.9em;
+  color: green;
 }
 
-.container {
-	display: block;
-	margin: 0 auto;
+.terminal-container {
+  display: block;
+  margin: 0 auto;
 }
 
-#app, div.input-area {
-	height: 100%;
-	padding: 3px;
+.terminal-input-area {
+  height: 100%;
+  padding: 3px;
 }
 
-input {
-	font-size: 0.9em
+.terminal-main-input {
+  font-size: 0.9em
 }
 
-div#main {
-	max-width: 600px;
-	background: black;
-	border-radius: 1px;
-	height: 600px;
-/*  -webkit-box-shadow: 0px 0px 13px 0px rgba(50, 50, 50, 0.59);
-  -moz-box-shadow:    0px 0px 13px 0px rgba(50, 50, 50, 0.59);
-	box-shadow:         0px 0px 13px 0px rgba(50, 50, 50, 0.59);*/
-	overflow: scroll;
+.terminal-container-main {
+  max-width: 600px;
+  background: black;
+  border-radius: 1px;
+  height: 600px;
+  overflow: scroll;
 }
 
-.holder {
+.terminal-holder {
   overflow: auto;
 }
 
-.prompt {
-	color: green;
+.terminal-prompt {
+  color: green;
 }
 
-.main, .main:focus {
-	border: none;
-	padding: 0;
-	margin: 3px;
-	background: black;
-	color: green;
-	width: 80%;
-	outline: none;
+.terminal-main-input, .terminal-main-input:focus {
+  border: none;
+  padding: 0;
+  margin: 3px;
+  background: black;
+  color: green;
+  width: 80%;
+  outline: none;
 }
 
-.print {
-	margin-bottom: 10px;
-	line-height: 21px;
+.terminal-output-line {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-#content {
-	padding: 20px;
-	height: 100%;
+.terminal-content {
+  padding: 20px;
+  height: 100%;
 }

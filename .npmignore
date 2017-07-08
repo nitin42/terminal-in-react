@@ -34,6 +34,7 @@ lib-cov
 html-report
 xunit.xml
 components
+starter
 
 .project
 .idea
