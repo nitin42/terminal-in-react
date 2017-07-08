@@ -13,11 +13,11 @@ cd terminal-in-react
 npm install
 ```
 
-### Changes or adding features
+### Making Changes or adding features
 
 All the components and stylesheets can be found in [components](./components) directory. 
 
-After you're done making changes to the codebase, generate the bundle.
+After you've made changes to the codebase, generate the bundle.
 
 ```
 npm run build:production
@@ -29,4 +29,14 @@ This will generate a file `terminal.js` in the `build` directory. There is also 
 npm run start
 ```
 
-That's it!! I'm excited to see your pull request.
+### Starting development server
+
+To test your changes, there is a [starter](./starter) folder where you will find two files, `index.html` and `App.js`. 
+
+Start the development server with -
+
+```
+npm run start
+```
+
+That's it! I am excited to see your pull request.
