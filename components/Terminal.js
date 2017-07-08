@@ -7,8 +7,7 @@ import './Terminal.css';
 console.oldLog = console['log']; // eslint-disable-line no-console, dot-notation
 
 function handleLogging(method, addToOutput) {
-  console[method] = (...args) => {
-    // eslint-disable-line no-console
+  console[method] = (...args) => {// eslint-disable-line no-console
     console.oldLog(`[${method}]`, ...args); // eslint-disable-line no-console
     const res = [...args].map((arg, i) => {
       switch (typeof arg) {
@@ -214,7 +213,7 @@ class Terminal extends Component {
                     className="terminal-main-input"
                     style={inputStyles}
                     type="text"
-                    ref={com => this.com = com}
+                    ref={com => (this.com = com)}
                     onKeyPress={this.handleChange}
                     onKeyDown={this.setHistoryCommand}
                   />
