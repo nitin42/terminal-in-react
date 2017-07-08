@@ -1,4 +1,6 @@
 # Terminal in React
+![version](https://img.shields.io/badge/animate--components-2.0.0-brightgreen.svg)
+![size](https://img.shields.io/badge/size-17.6%20KB-brightgreen.svg)
 
 <p align="center">
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
