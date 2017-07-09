@@ -77,10 +77,16 @@ Add a description of your command using prop `description`.
 <Terminal description={{ 'open-google': 'opens google' }} />
 ```
 
-You can have the terminal watch console.log/info function and print out
+You can have the terminal watch console.log/info function and print out. Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
+
 ```jsx
 <Terminal watchConsoleLogging />
 ```
+
+<p align="center">
+  <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
+</p>
+
 
 You can have the terminal pass out the cmd that was input
 ```jsx
@@ -150,12 +156,6 @@ Use
 * prop `backgroundColor` to change the background.
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`>`) color.
-
-Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
-
-<p align="center">
-  <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
-</p>
 
 ## What's more ?
 
