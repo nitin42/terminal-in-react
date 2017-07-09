@@ -98,9 +98,9 @@ You can have the terminal pass out the cmd that was input
 you can also handle the result with a callback
 ```jsx
 <Terminal
-  commandPassThrough={(cmd, done) => {
+  commandPassThrough={(cmd, print) => {
     // do something async
-    done(`-PassedThrough:${cmd}: command not found`);
+    print(`-PassedThrough:${cmd}: command not found`);
   }}
 />
 ```
@@ -114,8 +114,8 @@ With the option `-h` or `--help`.
 <Terminal
   commands={{
     color: {
-      method: (args) => {
-        console.log(`The color is ${args._[0] || args.color}`);
+      method: (args, print, runCommand) => {
+        print(`The color is ${args._[0] || args.color}`);
       },
       options: [
         {
@@ -128,6 +128,16 @@ With the option `-h` or `--help`.
   }}
 />
 ```
+
+The command Api has three parameters `arguments`, `print`, and `runCommand`.
+
+ - `arguments` will be an array of the input split on spaces or and object with
+ parameters meeting the options given as well as a `_` option with any strings given
+ after the options.
+ - `print` is a method to write a new line to the terminals output. Any string returned
+ as a result of a command will also be printed.
+ - `runCommand` is a method to call other commands it takes a string and will
+ attempt to run the command given
 
 ## Customization
 
