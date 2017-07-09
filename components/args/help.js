@@ -1,5 +1,5 @@
 export default function () {
-  const name = this.config.name || this.binary.replace('-', ' ');
+  const name = this.config.name;
   const firstBig = word => word.charAt(0).toUpperCase() + word.substr(1);
 
   const parts = [];

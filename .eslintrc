@@ -12,11 +12,10 @@
     "generator-star-spacing": 1,
     "babel/new-cap": 1,
     "object-shorthand": 1,
-    "arrow-parens": 0,
+    "arrow-parens": 1,
     "no-await-in-loop": 1,
-    "no-param-reassign": 0,
-    "no-trailing-spaces": 0,
 
+    "no-param-reassign": 0,
     "react/jsx-filename-extension": 0,
     "react/no-array-index-key": 0,
     "no-restricted-syntax": 0,
