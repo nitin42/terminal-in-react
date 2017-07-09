@@ -17,7 +17,7 @@ npm install
 
 *   Create a new branch for the new feature: `git checkout -b new-feature`
 *   Make your changes.
-*   `npm run build:production` for bundling everything.
+*   `npm run build:production` for bundling.
 *   Commit your changes: `git commit -m 'Add some feature'`
 *   Push to the branch: `git push origin new-feature`
 *   Submit a pull request with full remarks documenting your changes.

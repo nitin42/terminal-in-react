@@ -1,10 +1,21 @@
 # Terminal in React
+![version](https://img.shields.io/badge/terminal--in--react-2.0.0-brightgreen.svg)
+![size](https://img.shields.io/badge/size-17.6%20KB-brightgreen.svg)
 
 <p align="center">
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
 </p>
 
 > A tiny component that renders a terminal
+
+## V2.0.0 is out !
+
+Added this 👇
+
+<p align="center">
+  <img src="https://camo.githubusercontent.com/3748e38abc72cb7860ba8f2272c0329ded5bfe23/687474703a2f2f672e7265636f726469742e636f2f5a5965554b6d62414e512e676966" />
+</p>
+
 
 ## Install
 
@@ -93,13 +104,6 @@ Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
 
 <p align="center">
   <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
-</p>
-
-## Coming soon !
-> I've started working on [#1](https://github.com/nitin42/terminal-in-react/issues/1) (thanks [Brad](https://github.com/bradarv90) for the suggestion). This would be an awesome feature!
-
-<p align="center">
-  <img src="http://g.recordit.co/ZYeUKmbANQ.gif"/>
 </p>
 
 ## What's more ?
