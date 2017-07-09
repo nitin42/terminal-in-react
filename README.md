@@ -182,6 +182,8 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `clear` - Clears the screen
 * `help` - List all the commands
 * `show` - Shows a msg if any
+* `echo` - Outputs anything given
+* `edit-line` - Edits the last line or a given line using the `-l` argument
 
 ## Where to use ?
 
