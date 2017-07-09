@@ -239,14 +239,14 @@ class Terminal extends Component {
         this.adder('');
       } else if (command === undefined) {
         if (typeof this.props.commandPassThrough === 'function') {
-          res = this.props.commandPassThrough(input, this.adder);
+          res = this.props.commandPassThrough(inputArray, this.adder);
         } else {
           this.adder(`-bash:${input}: command not found`);
         }
       } else {
         const parsedArgs = command.parse(args);
         if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
-          res = command.method(parsedArgs);
+          res = command.method(parsedArgs, this.adder);
         }
       }
 

@@ -45,7 +45,6 @@
 .terminal-container-main {
   max-width: 600px;
   background: black;
-  border-radius: 1px;
   max-height: 600px;
   height: 100%;
   overflow: scroll;
