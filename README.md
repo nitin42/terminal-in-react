@@ -134,6 +134,10 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `help` - List all the commands
 * `show` - Shows a msg if any
 
+## Built-in functionality
+
+* History of your commands available pressing key up and key down
+
 ## Where to use ?
 
 * Embed it as a toy on your website
