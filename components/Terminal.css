@@ -77,6 +77,10 @@
   white-space: pre-wrap;
 }
 
+.terminal-output-line > pre {
+  background-color: transparent !important;
+}
+
 .terminal-content {
   padding: 5px 20px;
   height: 100%;

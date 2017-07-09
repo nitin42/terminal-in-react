@@ -2662,6 +2662,14 @@ he@1.1.x:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
+highlight.js@~9.12.0:
+  version "9.12.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.12.0.tgz#e6d9dbe57cbefe60751f02af336195870c90c01e"
+
+highlight.js@~9.8.0:
+  version "9.8.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.8.0.tgz#38eeef40cd45eaddbec8c9e5238fb7a783a3b685"
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -3208,6 +3216,16 @@ kind-of@^4.0.0:
   dependencies:
     is-buffer "^1.1.5"
 
+lang-map@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/lang-map/-/lang-map-0.4.0.tgz#de38b07783a0a7db0bc082c6c5ff69c56e354ab5"
+  dependencies:
+    language-map "^1.1.0"
+
+language-map@^1.1.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/language-map/-/language-map-1.2.0.tgz#86b56081d11237c989ec630172e85b1592998fc7"
+
 lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
@@ -3349,6 +3367,12 @@ loud-rejection@^1.0.0:
 lower-case@^1.1.1:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
+
+lowlight@^1.5.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/lowlight/-/lowlight-1.9.0.tgz#6eccfb20f9125a56a82032083967998b5ba19905"
+  dependencies:
+    highlight.js "~9.12.0"
 
 macaddress@^0.2.8:
   version "0.2.8"
@@ -4325,6 +4349,14 @@ react-object-inspector@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-object-inspector/-/react-object-inspector-0.2.1.tgz#8ec32951bde8c76b072ef084a74e7a9d2d0aeb72"
 
+react-syntax-highlighter@^5.6.2:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/react-syntax-highlighter/-/react-syntax-highlighter-5.6.2.tgz#01f5ad3cc44c40c26b6fb4e00a4bed90f66304c5"
+  dependencies:
+    babel-runtime "^6.18.0"
+    highlight.js "~9.8.0"
+    lowlight "^1.5.0"
+
 react@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/react/-/react-15.6.1.tgz#baa8434ec6780bde997cdc380b79cd33b96393df"
@@ -4978,13 +5010,15 @@ tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-terminal-in-react-pseudo-file-system-plugin@^1.0.19:
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/terminal-in-react-pseudo-file-system-plugin/-/terminal-in-react-pseudo-file-system-plugin-1.0.19.tgz#a0fd83123019bc5128eed703c1ef20776bcd7f46"
+terminal-in-react-pseudo-file-system-plugin@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/terminal-in-react-pseudo-file-system-plugin/-/terminal-in-react-pseudo-file-system-plugin-1.2.0.tgz#53af4373ef1317f3001edaecd63add038a90b5b4"
   dependencies:
     core-decorators "^0.19.0"
+    lang-map "^0.4.0"
     lodash.set "^4.3.2"
     memoizerific "^1.11.2"
+    react-syntax-highlighter "^5.6.2"
 
 text-table@~0.2.0:
   version "0.2.0"
