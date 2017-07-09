@@ -55,6 +55,11 @@ const externals = () => ({
   'react-dom': 'react-dom',
   'prop-types': 'prop-types',
   'react-object-inspector': 'react-object-inspector',
+  'args': 'args',
+  'camelcase': 'camelcase',
+  'chalk': 'chalk',
+  'lodash.clonedeep': 'lodash.clonedeep',
+  'string-similarity': 'string-similarity'
 });
 
 const entry = () => ({
