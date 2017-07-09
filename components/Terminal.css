@@ -44,6 +44,7 @@
 
 .terminal-container-main {
   max-width: 600px;
+  transition: all 0.4s ease-out;
   background: black;
   max-height: 600px;
   height: 100%;
