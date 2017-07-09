@@ -35,10 +35,10 @@ class Bar extends Component {
   render() {
     return (
       <div
-        style={(
-          this.props.style,
-          this.context.maximise ? { maxWidth: '100%' } : null
-        )}
+        style={{
+          ...this.props.style,
+          ...(this.context.maximise ? { maxWidth: '100%' } : {}),
+        }}
         className="terminal-top-bar adjust-bar"
       >
         <svg height="20" width="100">

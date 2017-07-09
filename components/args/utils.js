@@ -36,8 +36,10 @@ export default {
       }
     }
 
+    let count = -1;
     // Process the option's value
     for (let name of option.usage) {
+      count += 1;
       let propVal = value;
 
       // Convert the value to an array when the option is called just once
@@ -45,6 +47,9 @@ export default {
         Array.isArray(option.defaultValue) &&
         typeof propVal !== typeof option.defaultValue
       ) {
+        if (count === 0) {
+          this.raw._.push(propVal);
+        }
         propVal = [propVal];
       }
 
@@ -52,6 +57,9 @@ export default {
         typeof option.defaultValue !== 'undefined' &&
         typeof propVal !== typeof option.defaultValue
       ) {
+        if (count === 0) {
+          this.raw._.push(propVal);
+        }
         propVal = option.defaultValue;
       }
 
@@ -85,11 +93,6 @@ export default {
     const options = {};
     const args = {};
 
-    // Copy over the arguments
-    Object.assign(args, this.raw);
-    const _ = cloneDeep(args._);
-    delete args._;
-
     // Set option defaults
     for (const option of this.details.options) {
       if (typeof option.defaultValue === 'undefined') {
@@ -99,12 +102,16 @@ export default {
       Object.assign(options, this.readOption(option));
     }
 
+    // Copy over the arguments
+    Object.assign(args, this.raw);
+    const _ = cloneDeep(args._);
+    delete args._;
+
     // Override defaults if used in command line
     for (const option in args) {
       if (!{}.hasOwnProperty.call(args, option)) {
         continue; // eslint-disable-line
       }
-
       const related = this.isDefined(option, 'options');
 
       if (related) {

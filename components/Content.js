@@ -32,11 +32,11 @@ class Content extends Component {
 
   render() {
     const {
-      backgroundColor,
       output,
       prompt,
       inputStyles,
       handleChange,
+      backgroundColor,
       setHistoryCommand,
     } = this.props;
     const { symbol, maximise } = this.context;
@@ -44,10 +44,10 @@ class Content extends Component {
     return (
       <div
         className="terminal-container terminal-container-main"
-        style={(
-          backgroundColor,
-          maximise ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' } : null
-        )}
+        style={{
+          ...backgroundColor,
+          ...(maximise ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' } : {}),
+        }}
         onClick={this.focusInput}
       >
         <div className="terminal-holder">
@@ -62,7 +62,7 @@ class Content extends Component {
                   type="text"
                   ref={com => (this.com = com)}
                   onKeyPress={handleChange}
-                  onKeyDown={(e) => setHistoryCommand(e, this.com)}
+                  onKeyDown={e => setHistoryCommand(e, this.com)}
                 />
               </div>
             </div>

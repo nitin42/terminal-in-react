@@ -34,6 +34,8 @@
 }
 
 .terminal-input {
+  display: flex;
+  align-items: center;
   padding-top: 15px;
   padding-bottom: 15px;
 }
@@ -65,7 +67,7 @@
   margin: 3px;
   background: black;
   color: green;
-  width: 80%;
+  flex: 1;
   outline: none;
 }
 
@@ -73,6 +75,11 @@
   margin-top: 10px;
   margin-bottom: 10px;
   white-space: pre-wrap;
+  color: inherit;
+}
+
+.terminal-output-line > pre {
+  background-color: transparent !important;
 }
 
 .terminal-content {
