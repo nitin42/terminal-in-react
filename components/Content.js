@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 class Content extends Component {
   static displayName = 'Content';
 
-  // react/require-default-props 
   static propTypes = {
     backgroundColor: PropTypes.objectOf(PropTypes.string),
     output: PropTypes.arrayOf(PropTypes.element),
@@ -13,7 +12,16 @@ class Content extends Component {
     handleChange: PropTypes.func,
   };
 
+  static contextTypes = {
+    symbol: PropTypes.string,
+    maximise: PropTypes.bool,
+  };
+
   componentDidMount = () => {
+    this.focusInput();
+  };
+
+  focusInput = () => {
     this.com.focus();
   };
 
@@ -30,12 +38,11 @@ class Content extends Component {
     return (
       <div
         className="terminal-container terminal-container-main"
-        style={
-        (
+        style={(
           backgroundColor,
           maximise ? { maxWidth: '100%' } : null
-        )
-        }
+        )}
+        onClick={this.focusInput}
       >
         <div className="terminal-holder">
           <div className="terminal-content">
@@ -58,10 +65,5 @@ class Content extends Component {
     );
   }
 }
-
-Content.contextTypes = {
-  symbol: PropTypes.string,
-  maximise: PropTypes.bool,
-};
 
 export default Content;

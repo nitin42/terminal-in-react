@@ -5,12 +5,18 @@ import Bar from './Bar';
 import Content from './Content';
 import './Terminal.css';
 
-console.oldLog = console['log']; // eslint-disable-line no-console, dot-notation
+(function setOldLogger() {
+  console['oldLog'] = console['log']; // eslint-disable-line no-console, dot-notation
+}());
 
 function handleLogging(method, addToOutput) {
+  // eslint-disable-next-line no-console
   console[method] = (...args) => {
-    // eslint-disable-line no-console
-    console.oldLog(`[${method}]`, ...args); // eslint-disable-line no-console
+    try {
+      console.oldLog(`[${method}]`, ...args); // eslint-disable-line no-console
+    } catch (e) {
+      throw new Error('Terminal was loaded more than once check script tags');
+    }
     const res = [...args].map((arg, i) => {
       switch (typeof arg) {
         case 'object':
@@ -23,6 +29,7 @@ function handleLogging(method, addToOutput) {
     });
     addToOutput(res);
   };
+  Object.defineProperty(console[method], 'name', { value: method, writable: false }); // eslint-disable-line no-console
 }
 
 class Terminal extends Component {
@@ -38,6 +45,10 @@ class Terminal extends Component {
     commands: PropTypes.objectOf(PropTypes.func),
     description: PropTypes.objectOf(PropTypes.string),
     watchConsoleLogging: PropTypes.bool,
+    commandPassThrough: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.bool,
+    ]),
   };
 
   static defaultProps = {
@@ -50,6 +61,23 @@ class Terminal extends Component {
     commands: {},
     description: {},
     watchConsoleLogging: false,
+    commandPassThrough: false,
+  };
+
+  static childContextTypes = {
+    symbol: PropTypes.string,
+    show: PropTypes.bool,
+    minimise: PropTypes.bool,
+    maximise: PropTypes.bool,
+    closeWindow: PropTypes.func,
+    openWindow: PropTypes.func,
+    minimiseWindow: PropTypes.func,
+    unminimiseWindow: PropTypes.func,
+    maximiseWindow: PropTypes.func,
+    unmaximiseWindow: PropTypes.func,
+    toggleShow: PropTypes.func,
+    toggleMaximise: PropTypes.func,
+    toggleMinimize: PropTypes.func,
   };
 
   state = {
@@ -64,16 +92,19 @@ class Terminal extends Component {
 
   getChildContext() {
     return {
+      symbol: this.state.prompt,
       show: this.state.show,
       minimise: this.state.minimise,
       maximise: this.state.maximise,
-      symbol: this.state.prompt,
-      closeWindow: this.closeWindow,
-      minimiseWindow: this.minimiseWindow,
-      undoMin: this.undoMin,
-      maximiseWindow: this.maximiseWindow,
-      undoMax: this.undoMax,
-      closeOnMinMax: this.closeOnMinMax,
+      openWindow: this.setTrue('show'),
+      closeWindow: this.setFalse('show'),
+      minimiseWindow: this.setTrue('minimise'),
+      unminimiseWindow: this.setFalse('minimise'),
+      maximiseWindow: this.setTrue('maximise'),
+      unmaximiseWindow: this.setFalse('maximise'),
+      toggleShow: this.toggleState('show'),
+      toggleMaximise: this.toggleState('maximise'),
+      toggleMinimize: this.toggleState('minimise'),
     };
   }
 
@@ -96,37 +127,38 @@ class Terminal extends Component {
   setDescription = () => {
     this.setState({
       description: {
-        clear: 'clear the screen',
         show: 'show the msg',
-        help: 'list all the commands',
         ...this.props.description,
+        clear: 'clear the screen',
+        help: 'list all the commands',
       },
     });
   };
 
-  closeWindow = () => this.setState({ show: false });
+  setTrue = name => () => this.setState({ [name]: true });
 
-  openWindow = () => this.setState({ show: true });
+  setFalse = name => () => this.setState({ [name]: false });
 
-  minimiseWindow = () =>
-    this.setState({ minimise: true, maximise: false, show: false });
+  getContent = () => {
+    const { show, minimise } = this.state;
+    if (!show) {
+      return this.showNote();
+    }
+    if (minimise) {
+      return this.showBar();
+    }
+    return this.showContent();
+  }
 
-  maximiseWindow = () => this.setState({ maximise: true });
-
-  undoMin = () => this.setState({ minimise: false, show: true });
-
-  undoMax = () => this.setState({ maximise: false });
-
-  closeOnMinMax = () =>
-    this.setState({ minimise: false, maximise: false, show: false });
+  toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
   allCommands = () => {
     this.setState({
       commands: {
-        clear: this.clearScreen,
         show: this.showMsg,
-        help: this.showHelp,
         ...this.props.commands,
+        clear: this.clearScreen,
+        help: this.showHelp,
       },
     });
   };
@@ -145,9 +177,7 @@ class Terminal extends Component {
   };
 
   clearScreen = () => {
-    this.setState({
-      summary: [],
-    });
+    this.setState({ summary: [] });
   };
 
   showMsg = () => {
@@ -170,54 +200,75 @@ class Terminal extends Component {
       const input = inputArray[0];
       const arg = inputArray[1]; // Undefined for function call
       const command = this.state.commands[input];
-      this.adder(`${this.state.prompt} ${inputText}`);
+      let res;
 
-      if (command === undefined) {
-        this.adder(`-bash:${input}: command not found`);
-      } else if (input === 'clear') {
-        this.clearScreen();
+      if (input === '') {
+        this.adder('');
+      } else if (command === undefined) {
+        if (typeof this.props.commandPassThrough === 'function') {
+          res = this.props.commandPassThrough(input, this.adder);
+        } else {
+          this.adder(`-bash:${input}: command not found`);
+        }
       } else {
-        this.adder(command(arg));
+        res = command(arg);
       }
 
-      e.target.value = '';
+      if (typeof res !== 'undefined') {
+        this.adder(res);
+      }
+
+      e.target.value = ''; // eslint-disable-line no-param-reassign
     }
   };
 
-  showContent = (
-    props,
-    barColor,
-    backgroundColor,
-    output,
-    prompt,
-    inputStyles,
-    handleChange,
-  ) => (
-    <div
-      className="terminal-container-wrapper"
-      style={{ color: props.color, ...props.style }}
-    >
-      <Bar style={barColor} />
-      <Content
-        backgroundColor={backgroundColor}
-        output={output}
-        prompt={prompt}
-        inputStyles={inputStyles}
-        handleChange={handleChange}
-      />
-    </div>
-  );
+  showContent = () => {
+    const { backgroundColor, color, style, barColor, prompt } = this.props;
 
-  showBar = (props, barColor) => (
-    <div
-      className="terminal-container-wrapper"
-      style={{ color: props.color, ...props.style }}
-    >
-      <Bar style={barColor} />
-    </div>
-  );
+    const inputStyles = { backgroundColor, color };
+    const promptStyles = { color: prompt };
+    const barColorStyles = { backgroundColor: barColor };
+    const backgroundColorStyles = { backgroundColor };
 
-  showNote = openWindow => (
+    const output = this.state.summary.map((content, i) => {
+      if (typeof content === 'string' && content.length === 0) {
+        return <div className="terminal-output-line" key={i}>&nbsp;</div>;
+      }
+      return <div className="terminal-output-line" key={i}>{content}</div>;
+    });
+
+    return (
+      <div
+        className="terminal-container-wrapper"
+        style={{ color, ...style }}
+      >
+        <Bar style={barColorStyles} />
+        <Content
+          backgroundColor={backgroundColorStyles}
+          output={output}
+          prompt={promptStyles}
+          inputStyles={inputStyles}
+          handleChange={this.handleChange}
+        />
+      </div>
+    );
+  };
+
+  showBar = () => {
+    const { color, barColor, style } = this.props;
+    const barColorStyles = { backgroundColor: barColor };
+
+    return (
+      <div
+        className="terminal-container-wrapper"
+        style={{ color, ...style }}
+      >
+        <Bar style={barColorStyles} />
+      </div>
+    );
+  }
+
+  showNote = () => (
     <span className="note">
       <h1>OOPS! You closed the window.</h1>
       <img
@@ -225,69 +276,19 @@ class Terminal extends Component {
         width="200"
         height="200"
         alt="note"
-        onClick={openWindow}
+        onClick={this.toggleState('show')}
       />
       Click on the icon to reopen.
     </span>
   );
 
   render() {
-    const inputStyles = {
-      backgroundColor: this.props.backgroundColor,
-      color: this.props.color,
-    };
-
-    const prompt = { color: this.props.prompt };
-    const barColor = { backgroundColor: this.props.barColor };
-    const backgroundColor = { backgroundColor: this.props.backgroundColor };
-
-    const output = this.state.summary.map((content, i) =>
-      <div className="terminal-output-line" key={i}>{content}</div> // comma-dangle
-    );
-
-    const { show, minimise, maximise } = this.state;
-
     return (
       <div>
-        {show // no-nested-ternary
-          ? this.showContent(
-            this.props,
-            barColor,
-            backgroundColor,
-            output,
-            prompt,
-            inputStyles,
-            this.handleChange,
-          )
-          : minimise // no-nested-ternary
-            ? this.showBar(this.props, barColor)
-            : maximise // no-nested-ternary
-              ? this.showContent(
-                this.props,
-                barColor,
-                backgroundColor,
-                output,
-                prompt,
-                inputStyles,
-                this.handleChange,
-              )
-              : this.showNote(this.openWindow)}
+        {this.getContent()}
       </div>
     );
   }
 }
-
-Terminal.childContextTypes = {
-  show: PropTypes.bool,
-  minimise: PropTypes.bool,
-  maximise: PropTypes.bool,
-  closeWindow: PropTypes.func,
-  minimiseWindow: PropTypes.func,
-  undoMin: PropTypes.func,
-  maximiseWindow: PropTypes.func,
-  undoMax: PropTypes.func,
-  closeOnMinMax: PropTypes.func,
-  symbol: PropTypes.string,
-};
 
 export default Terminal;

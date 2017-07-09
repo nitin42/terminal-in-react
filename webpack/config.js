@@ -1,6 +1,6 @@
-const webpack = require('webpack');
+const webpack = require('webpack'); // eslint-disable-line
 const { join, resolve } = require('path');
-const BabiliPlugin = require('babili-webpack-plugin');
+const BabiliPlugin = require('babili-webpack-plugin'); // eslint-disable-line
 
 const common = {
   exclude: [
@@ -8,70 +8,58 @@ const common = {
     /__tests__/,
     /coverage/,
     /build/,
-  ]
+  ],
 };
 
-const jsLoader = () => {
-  return {
-    test: /\.js$/,
-    exclude: common.exclude,
-    use: ['babel-loader']
-  };
-};
+const jsLoader = () => ({
+  test: /\.js$/,
+  exclude: common.exclude,
+  use: ['babel-loader'],
+});
 
-const styleLoader = () => {
-  return {
-    test: /\.css$/,
-    exclude: common.exclude,
-    use: ['style-loader', 'css-loader']
-  };
-};
+const styleLoader = () => ({
+  test: /\.css$/,
+  exclude: common.exclude,
+  use: ['style-loader', 'css-loader'],
+});
 
-let output = () => {
-  return {
-    filename: 'terminal.js',
-    path: resolve(__dirname, '../build'),
-    libraryTarget: 'umd',
-    library: 'terminalReact',
-    publicPath: '/',
-    pathinfo: true
-  };
-};
+const output = () => ({
+  filename: 'terminal.js',
+  path: resolve(__dirname, '../build'),
+  libraryTarget: 'umd',
+  library: 'terminalReact',
+  publicPath: '/',
+  pathinfo: true,
+});
 
-const plugins = () => {
-  return [
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false,
-      options: {
-        context: resolve(__dirname, '../components')
-      }
-    }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
+const plugins = () => [
+  new webpack.LoaderOptionsPlugin({
+    minimize: true,
+    debug: false,
+    options: {
+      context: resolve(__dirname, '../components'),
+    },
+  }),
+  new webpack.optimize.ModuleConcatenationPlugin(),
     // Better results
-    new BabiliPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    })
-  ];
-};
+  new BabiliPlugin(),
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('production'),
+    },
+  }),
+];
 
-const externals = () => {
-  return {
-    'react': 'react',
-    'react-dom': 'react-dom',
-    'prop-types': 'prop-types',
-    'react-object-inspector': 'react-object-inspector'
-  };
-};
+const externals = () => ({
+  react: 'react',
+  'react-dom': 'react-dom',
+  'prop-types': 'prop-types',
+  'react-object-inspector': 'react-object-inspector',
+});
 
-const entry = () => {
-  return {
-    entry: join(__dirname, '../components/index.js')
-  };
-};
+const entry = () => ({
+  entry: join(__dirname, '../components/index.js'),
+});
 
 module.exports = {
   jsLoader,
@@ -79,5 +67,5 @@ module.exports = {
   styleLoader,
   plugins,
   externals,
-  entry
+  entry,
 };
