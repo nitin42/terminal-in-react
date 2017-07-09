@@ -196,7 +196,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 
 ## Built-in functionality
 
-* History of your commands available pressing key up and key down
+* Check history of your commands by pressing key up and key down.
 
 ## Where to use ?
 
