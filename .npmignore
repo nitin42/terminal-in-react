@@ -35,6 +35,7 @@ html-report
 xunit.xml
 components
 starter
+webpack
 
 .project
 .idea
