@@ -87,6 +87,12 @@ class Terminal extends Component {
     }
   };
 
+  componentDidUpdate = () => {
+    const el = React.findDOMNode(this);
+    const app = document.getElementById('app');
+    app.scrollTop = el.scrollHeight;
+  }
+
   setDescription = () => {
     this.setState({
       description: {
