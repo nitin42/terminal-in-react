@@ -310,7 +310,7 @@ class Terminal extends Component {
 
   handleChange = (e) => {
     if (e.key === 'Enter') {
-      this.adder(`${this.state.prompt} ${e.target.value}`);
+      this.adder(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
 
       const res = this.runCommand(e.target.value);
 
