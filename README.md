@@ -126,6 +126,8 @@ Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
 * animations
 * prettifying the console output
 
+Also some exciting stuff is happening [here](https://github.com/nitin42/terminal-in-react/pull/12). 
+
 Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
 
 ## API
