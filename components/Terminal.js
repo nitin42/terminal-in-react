@@ -174,7 +174,6 @@ class Terminal extends Component {
     const promptStyles = { color: prompt };
     const barColorStyles = { backgroundColor: barColor };
     const backgroundColorStyles = { backgroundColor };
-    console.dir(backgroundColorStyles);
 
     const output = this.state.summary.map((content, i) => {
       if (typeof content === 'string' && content.length === 0) {
