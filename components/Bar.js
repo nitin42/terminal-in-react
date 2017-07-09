@@ -13,38 +13,32 @@ class Bar extends Component {
     style: {},
   };
 
+  static contextTypes = {
+    maximise: PropTypes.bool,
+    toggleShow: PropTypes.func,
+    toggleMinimize: PropTypes.func,
+    toggleMaximise: PropTypes.func,
+  };
+
   handleClose = () => {
-    this.context.closeWindow();
-    if (this.context.minimise) {
-      this.context.closeOnMinMax();
-    } else if (this.context.maximise) {
-      this.context.closeOnMinMax();
-    }
+    this.context.toggleShow();
   };
 
   handleMinimise = () => {
-    this.context.minimiseWindow();
-    if (this.context.minimise) {
-      this.context.undoMin();
-    }
+    this.context.toggleMinimize();
   };
 
   handleMaximise = () => {
-    this.context.maximiseWindow();
-    if (this.context.maximise) {
-      this.context.undoMax();
-    }
+    this.context.toggleMaximise();
   };
 
   render() {
     return (
       <div
-        style={
-        (
+        style={(
           this.props.style,
           this.context.maximise ? { maxWidth: '100%' } : null
-        )
-        }
+        )}
         className="terminal-top-bar adjust-bar"
       >
         <svg height="20" width="100">
@@ -68,16 +62,5 @@ class Bar extends Component {
     );
   }
 }
-
-Bar.contextTypes = {
-  minimise: PropTypes.bool,
-  maximise: PropTypes.bool,
-  closeWindow: PropTypes.func,
-  minimiseWindow: PropTypes.func,
-  undoMin: PropTypes.func,
-  maximiseWindow: PropTypes.func,
-  undoMax: PropTypes.func,
-  closeOnMinMax: PropTypes.func,
-};
 
 export default Bar;
