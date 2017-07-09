@@ -132,10 +132,10 @@ class Terminal extends Component {
   setDescription = () => {
     const description = {
       show: 'show the msg',
-      ...this.props.description,
       clear: 'clear the screen',
       help: 'list all the commands',
       echo: 'output the input',
+      ...this.props.description,
     };
     this.setState({ description });
     return description;
@@ -161,10 +161,10 @@ class Terminal extends Component {
   assembleCommands = () => {
     const commands = {
       show: this.showMsg,
-      ...this.props.commands,
       clear: this.clearScreen,
       help: this.showHelp,
       echo: (input) => { console.log(...input.slice(1)); }, // eslint-disable-line
+      ...this.props.commands,
     };
 
     Object.keys(commands).forEach((name) => {
