@@ -5,7 +5,7 @@ import Terminal from '../components';
 
 const App = () => (
   <Terminal
-    msg="Hello World. My name is Nitin Tulswani"
+    msg="Hello World. My name is Foo and I like Bar"
     watchConsoleLogging
   />
 );
