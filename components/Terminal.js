@@ -433,10 +433,12 @@ class Terminal extends Component {
 
   showHelp = () => {
     const options = Object.keys(this.state.commands);
-    const description = this.state.description;
+    const descriptions = this.state.descriptions;
     for (const option of options) {
       // eslint-disable-line no-restricted-syntax
-      this.printLine(`${option} - ${description[option]}`);
+      if (descriptions[option] !== false) {
+        this.printLine(`${option} - ${descriptions[option]}`);
+      }
     }
   };
 
