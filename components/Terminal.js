@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ObjectInspector from 'react-object-inspector';
+import Command from './args';
 import Bar from './Bar';
 import Content from './Content';
 import './Terminal.css';
@@ -42,7 +43,17 @@ class Terminal extends Component {
     prompt: PropTypes.string,
     barColor: PropTypes.string,
     backgroundColor: PropTypes.string,
-    commands: PropTypes.objectOf(PropTypes.func),
+    commands: PropTypes.objectOf(PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({
+        options: PropTypes.arrayOf(PropTypes.shape({
+          name: PropTypes.string,
+          description: PropTypes.string,
+          defaultValue: PropTypes.any,
+        })),
+        method: PropTypes.func,
+      }),
+    ])),
     description: PropTypes.objectOf(PropTypes.string),
     watchConsoleLogging: PropTypes.bool,
     commandPassThrough: PropTypes.oneOfType([
@@ -60,7 +71,7 @@ class Terminal extends Component {
     backgroundColor: 'black',
     commands: {},
     description: {},
-    watchConsoleLogging: false,
+    watchConsoleLogging: true,
     commandPassThrough: false,
   };
 
@@ -109,7 +120,7 @@ class Terminal extends Component {
   }
 
   componentDidMount = () => {
-    this.allCommands();
+    this.assembleCommands();
     this.setDescription();
     this.showMsg();
 
@@ -118,21 +129,17 @@ class Terminal extends Component {
     }
   };
 
-  componentDidUpdate = () => {
-    const el = React.findDOMNode(this);
-    const app = document.getElementById('app');
-    app.scrollTop = el.scrollHeight;
-  }
-
   setDescription = () => {
-    this.setState({
-      description: {
-        show: 'show the msg',
-        ...this.props.description,
-        clear: 'clear the screen',
-        help: 'list all the commands',
-      },
-    });
+    const description = {
+      show: 'show the msg',
+      clear: 'clear the screen',
+      help: 'list all the commands',
+      echo: 'output the input',
+      'edit-line': 'edit the contents of an output line',
+      ...this.props.description,
+    };
+    this.setState({ description });
+    return description;
   };
 
   setTrue = name => () => this.setState({ [name]: true });
@@ -152,15 +159,63 @@ class Terminal extends Component {
 
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
-  allCommands = () => {
-    this.setState({
-      commands: {
-        show: this.showMsg,
-        ...this.props.commands,
-        clear: this.clearScreen,
-        help: this.showHelp,
+  editLine = (args) => {
+    const { summary } = this.state;
+    let index = args.line;
+    if (index === -1) {
+      index = summary.length === 0 ? 0 : summary.length - 1;
+    }
+    summary[index] = args._.join(' ');
+    this.setState({ summary });
+  }
+
+  assembleCommands = () => {
+    const commands = {
+      show: this.showMsg,
+      clear: this.clearScreen,
+      help: this.showHelp,
+      echo: (input) => { console.log(...input.slice(1)); }, // eslint-disable-line
+      'edit-line': {
+        method: this.editLine,
+        options: [
+          {
+            name: 'line',
+            description: 'the line you want to edit. -1 is the last line',
+            init: value => parseInt(value, 10),
+            defaultValue: -1,
+          },
+        ],
       },
+      ...this.props.commands,
+    };
+
+    Object.keys(commands).forEach((name) => {
+      const definition = commands[name];
+      let method = definition;
+      let parse = i => i;
+      if (typeof definition === 'object') {
+        const cmd = new Command();
+        if (typeof definition.options !== 'undefined') {
+          try {
+            cmd.options(definition.options);
+          } catch (e) {
+            throw new Error('options for command wrong format');
+          }
+        }
+        parse = i => cmd.parse(i, {
+          name,
+          help: true,
+          version: false,
+        });
+        method = definition.method;
+      }
+
+      commands[name] = {
+        parse,
+        method,
+      };
     });
+    this.setState({ commands });
   };
 
   watchConsoleLogging = () => {
@@ -195,24 +250,9 @@ class Terminal extends Component {
 
   handleChange = (e) => {
     if (e.key === 'Enter') {
-      const inputText = e.target.value;
-      const inputArray = inputText.split(' ');
-      const input = inputArray[0];
-      const arg = inputArray[1]; // Undefined for function call
-      const command = this.state.commands[input];
-      let res;
+      this.adder(`${this.state.prompt} ${e.target.value}`);
 
-      if (input === '') {
-        this.adder('');
-      } else if (command === undefined) {
-        if (typeof this.props.commandPassThrough === 'function') {
-          res = this.props.commandPassThrough(input, this.adder);
-        } else {
-          this.adder(`-bash:${input}: command not found`);
-        }
-      } else {
-        res = command(arg);
-      }
+      const res = this.runCommand(e.target.value);
 
       if (typeof res !== 'undefined') {
         this.adder(res);
@@ -221,6 +261,30 @@ class Terminal extends Component {
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
   };
+
+  runCommand = (inputText) => {
+    const inputArray = inputText.split(' ');
+    const input = inputArray[0];
+    const args = inputArray; // Undefined for function call
+    const command = this.state.commands[input];
+    let res;
+
+    if (input === '') {
+      // do nothing
+    } else if (command === undefined) {
+      if (typeof this.props.commandPassThrough === 'function') {
+        res = this.props.commandPassThrough(inputArray, this.adder, this.runCommand);
+      } else {
+        this.adder(`-bash:${input}: command not found`);
+      }
+    } else {
+      const parsedArgs = command.parse(args);
+      if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
+        res = command.method(parsedArgs, this.adder, this.runCommand);
+      }
+    }
+    return res;
+  }
 
   showContent = () => {
     const { backgroundColor, color, style, barColor, prompt } = this.props;
@@ -234,7 +298,7 @@ class Terminal extends Component {
       if (typeof content === 'string' && content.length === 0) {
         return <div className="terminal-output-line" key={i}>&nbsp;</div>;
       }
-      return <div className="terminal-output-line" key={i}>{content}</div>;
+      return <pre className="terminal-output-line" key={i}>{content}</pre>;
     });
 
     return (
@@ -284,7 +348,7 @@ class Terminal extends Component {
 
   render() {
     return (
-      <div>
+      <div className="terminal-base" style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}>
         {this.getContent()}
       </div>
     );

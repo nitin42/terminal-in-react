@@ -1,5 +1,16 @@
+.terminal-base {
+  width: 100%;
+  max-width: 600px;
+  height: 630px;
+  max-height: 100vh;
+}
+
 .terminal-container-wrapper {
-  margin: 100px 0;
+  height: 100%;
+}
+
+.terminal-container-wrapper,
+.terminal-output-line {
   font-family: 'Inconsolata', monospace;
   font-size: 0.9em;
   color: green;
@@ -22,6 +33,11 @@
   padding: 3px;
 }
 
+.terminal-input {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 .terminal-main-input {
   font-size: 0.9em
 }
@@ -30,8 +46,8 @@
   max-width: 600px;
   transition: all 0.4s ease-out;
   background: black;
-  border-radius: 1px;
-  height: 600px;
+  max-height: 600px;
+  height: 100%;
   overflow: scroll;
 }
 
@@ -56,6 +72,7 @@
 .terminal-output-line {
   margin-top: 10px;
   margin-bottom: 10px;
+  white-space: pre-wrap;
 }
 
 .terminal-content {

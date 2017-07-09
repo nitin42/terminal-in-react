@@ -1,4 +1,4 @@
-const webpack = require('webpack');
+const webpack = require('webpack'); // eslint-disable-line
 
 module.exports = {
   entry: './starter/App.js',
@@ -25,7 +25,6 @@ module.exports = {
         NODE_ENV: JSON.stringify('development'),
       },
     }),
-    new webpack.optimize.UglifyJsPlugin(),
     new webpack.NamedModulesPlugin(),
     new webpack.NamedModulesPlugin()
   ]
