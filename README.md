@@ -1,5 +1,5 @@
 # Terminal in React
-![version](https://img.shields.io/badge/terminal--in--react-2.0.0-brightgreen.svg)
+![version](https://img.shields.io/badge/terminal--in--react-2.1.0-brightgreen.svg)
 ![size](https://img.shields.io/badge/size-35.5%20KB-brightgreen.svg)
 
 <p align="center">
@@ -145,6 +145,8 @@ The command Api has three parameters `arguments`, `print`, and `runCommand`.
  as a result of a command will also be printed.
  - `runCommand` is a method to call other commands it takes a string and will
  attempt to run the command given
+ 
+ Check [this](./starter/App.js) example for more information.
 
 ## Customization
 
