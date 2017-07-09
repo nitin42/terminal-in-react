@@ -180,7 +180,7 @@ class Terminal extends Component {
     const { commands } = this.state;
     const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, Object.keys(commands));
 
-    if (bestMatch.rating >= 0.5) {
+    if (bestMatch.rating >= 0.6) {
       return bestMatch.target;
     }
 
@@ -195,8 +195,6 @@ class Terminal extends Component {
    * @param {event} event of input
    */
   handlerKeyPress = (e, inputRef) => {
-    e.preventDefault();
-    
     const { historyCounter } = this.state;
     switch (e.keyCode) {
       case 38:
@@ -207,10 +205,12 @@ class Terminal extends Component {
         break;
       case 9:
         inputRef.value = this.autocompleteValue(inputRef);
+        e.preventDefault();
         break;
       default:
         break;
     }
+    
   }
 
   showMsg = () => {
