@@ -1,10 +1,16 @@
 .terminal-base {
   width: 100%;
   max-width: 600px;
-  height: auto;
+  height: 630px;
+  max-height: 100vh;
 }
 
-.terminal-container-wrapper, .terminal-container-wrapper pre {
+.terminal-container-wrapper {
+  height: 100%;
+}
+
+.terminal-container-wrapper,
+.terminal-container-wrapper pre {
   font-family: 'Inconsolata', monospace;
   font-size: 0.9em;
   color: green;
@@ -40,7 +46,8 @@
   max-width: 600px;
   background: black;
   border-radius: 1px;
-  height: 600px;
+  max-height: 600px;
+  height: 100%;
   overflow: scroll;
 }
 

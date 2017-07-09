@@ -44,7 +44,7 @@ class Content extends Component {
         className="terminal-container terminal-container-main"
         style={(
           backgroundColor,
-          maximise ? { maxWidth: '100%' } : null
+          maximise ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' } : null
         )}
         onClick={this.focusInput}
       >

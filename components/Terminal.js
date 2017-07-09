@@ -320,7 +320,7 @@ class Terminal extends Component {
 
   render() {
     return (
-      <div className="terminal-base">
+      <div className="terminal-base" style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}>
         {this.getContent()}
       </div>
     );
