@@ -1,5 +1,5 @@
 # Terminal in React
-![version](https://img.shields.io/badge/terminal--in--react-2.1.0-brightgreen.svg)
+![version](https://img.shields.io/badge/terminal--in--react-2.2.0-brightgreen.svg)
 ![size](https://img.shields.io/badge/size-35.5%20KB-brightgreen.svg)
 
 <p align="center">
@@ -7,22 +7,6 @@
 </p>
 
 > A tiny component that renders a terminal
-
-## V2.1.0 is out !
-
-What's new ? 👇
-
-<p align="center">
-  <img src="https://camo.githubusercontent.com/3748e38abc72cb7860ba8f2272c0329ded5bfe23/687474703a2f2f672e7265636f726469742e636f2f5a5965554b6d62414e512e676966" />
-  <strong>minimise, maximise and close</strong>
-  <hr/>
-</p>
-
-<p align="center">
-  <img src="http://g.recordit.co/fFr5qas9u3.gif"/>
-  <strong>advance commands option</strong>
-  <hr/>
-</p>
 
 ## Install
 
@@ -93,10 +77,16 @@ Add a description of your command using prop `description`.
 <Terminal description={{ 'open-google': 'opens google' }} />
 ```
 
-You can have the terminal watch console.log/info function and print out
+You can have the terminal watch console.log/info function and print out. Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
+
 ```jsx
 <Terminal watchConsoleLogging />
 ```
+
+<p align="center">
+  <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
+</p>
+
 
 You can have the terminal pass out the cmd that was input
 ```jsx
@@ -111,6 +101,12 @@ you can also handle the result with a callback
   }}
 />
 ```
+
+Minimize, maximize and close the window
+
+<p align="center">
+  <img src="https://camo.githubusercontent.com/3748e38abc72cb7860ba8f2272c0329ded5bfe23/687474703a2f2f672e7265636f726469742e636f2f5a5965554b6d62414e512e676966" />
+</p>
 
 ## Advanced commands
 You can give your commands options and get them back parsed to the method.
@@ -135,6 +131,10 @@ With the option `-h` or `--help`.
   }}
 />
 ```
+<p align="center">
+  <img src="http://g.recordit.co/fFr5qas9u3.gif"/>
+</p>
+
 
 The command Api has three parameters `arguments`, `print`, and `runCommand`.
 
@@ -157,17 +157,10 @@ Use
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`>`) color.
 
-Thank you so much [Jonathan Gertig](https://github.com/jcgertig) for this 👇
-
-<p align="center">
-  <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
-</p>
-
 ## What's more ?
 
 * will support images, gifs
-* animations
-* prettifying the console output
+* plugins
 
 Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
 
@@ -193,6 +186,10 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `show` - Shows a msg if any
 * `echo` - Outputs anything given
 * `edit-line` - Edits the last line or a given line using the `-l` argument
+
+## Built-in functionality
+
+Check the history of your commands by pressing key up and key down.
 
 ## Where to use ?
 
