@@ -34,6 +34,8 @@ const App = () => (
           }
         },
       }}
+      description={{ color: 'option for color. For eg - color red', 'type-text': 'advance command option'}}    
+      commandPassThrough={cmd => `-PassedThrough:${cmd}: command not found`}
     />
   </div>
 );
