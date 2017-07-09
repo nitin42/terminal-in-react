@@ -269,7 +269,9 @@ class Terminal extends Component {
     const command = this.state.commands[input];
     let res;
 
-    if (command === undefined) {
+    if (input === '') {
+      // do nothing
+    } else if (command === undefined) {
       if (typeof this.props.commandPassThrough === 'function') {
         res = this.props.commandPassThrough(inputArray, this.adder, this.runCommand);
       } else {
