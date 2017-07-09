@@ -250,27 +250,7 @@ class Terminal extends Component {
 
   handleChange = (e) => {
     if (e.key === 'Enter') {
-      const inputText = e.target.value;
-      const inputArray = inputText.split(' ');
-      const input = inputArray[0];
-      const args = inputArray; // Undefined for function call
-      const command = this.state.commands[input];
-      let res;
-
-      if (input === '') {
-        this.adder('');
-      } else if (command === undefined) {
-        if (typeof this.props.commandPassThrough === 'function') {
-          res = this.props.commandPassThrough(inputArray, this.adder);
-        } else {
-          this.adder(`-bash:${input}: command not found`);
-        }
-      } else {
-        const parsedArgs = command.parse(args);
-        if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
-          res = command.method(parsedArgs, this.adder);
-        }
-      }
+      const res = this.runCommand(e.target.value);
 
       if (typeof res !== 'undefined') {
         this.adder(res);
@@ -279,6 +259,30 @@ class Terminal extends Component {
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
   };
+
+  runCommand = (inputText) => {
+    const inputArray = inputText.split(' ');
+    const input = inputArray[0];
+    const args = inputArray; // Undefined for function call
+    const command = this.state.commands[input];
+    let res;
+
+    if (input === '') {
+      this.adder('');
+    } else if (command === undefined) {
+      if (typeof this.props.commandPassThrough === 'function') {
+        res = this.props.commandPassThrough(inputArray, this.adder, this.runCommand);
+      } else {
+        this.adder(`-bash:${input}: command not found`);
+      }
+    } else {
+      const parsedArgs = command.parse(args);
+      if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
+        res = command.method(parsedArgs, this.adder, this.runCommand);
+      }
+    }
+    return res;
+  }
 
   showContent = () => {
     const { backgroundColor, color, style, barColor, prompt } = this.props;

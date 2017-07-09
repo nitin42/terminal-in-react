@@ -10,7 +10,7 @@
 }
 
 .terminal-container-wrapper,
-.terminal-container-wrapper pre {
+.terminal-output-line {
   font-family: 'Inconsolata', monospace;
   font-size: 0.9em;
   color: green;
@@ -71,6 +71,7 @@
 .terminal-output-line {
   margin-top: 10px;
   margin-bottom: 10px;
+  white-space: pre-wrap;
 }
 
 .terminal-content {

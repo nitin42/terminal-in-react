@@ -20,6 +20,15 @@ const App = () => (
             },
           ],
         },
+        'type-text': (args, print, runCommand) => {
+          const text = args.slice(1).join(' ');
+          print('');
+          for (let i = 0; i < text.length; i += 1) {
+            setTimeout(() => {
+              runCommand(`edit-line ${text.slice(0, i + 1)}`);
+            }, 100 * i);
+          }
+        },
       }}
     />
   </div>
