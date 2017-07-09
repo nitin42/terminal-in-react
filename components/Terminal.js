@@ -129,12 +129,6 @@ class Terminal extends Component {
     }
   };
 
-  componentDidUpdate = () => {
-    const el = React.findDOMNode(this);
-    const app = document.getElementById('app');
-    app.scrollTop = el.scrollHeight;
-  }
-
   setDescription = () => {
     const description = {
       show: 'show the msg',
@@ -256,6 +250,8 @@ class Terminal extends Component {
 
   handleChange = (e) => {
     if (e.key === 'Enter') {
+      this.adder(`${this.state.prompt} ${e.target.value}`);
+
       const res = this.runCommand(e.target.value);
 
       if (typeof res !== 'undefined') {
