@@ -10,7 +10,7 @@ class Content extends Component {
     prompt: PropTypes.objectOf(PropTypes.string),
     inputStyles: PropTypes.objectOf(PropTypes.string),
     handleChange: PropTypes.func,
-    setHistoryCommand: PropTypes.func,
+    handlerKeyPress: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -36,6 +36,7 @@ class Content extends Component {
       prompt,
       inputStyles,
       handleChange,
+      backgroundColor,
       handlerKeyPress,
     } = this.props;
     const { symbol, maximise } = this.context;
@@ -62,7 +63,7 @@ class Content extends Component {
                   tabIndex="-1"
                   ref={com => (this.com = com)}
                   onKeyPress={handleChange}
-                  onKeyDown={(e) => handlerKeyPress(e, this.com)}
+                  onKeyDown={e => handlerKeyPress(e, this.com)}
                 />
               </div>
             </div>

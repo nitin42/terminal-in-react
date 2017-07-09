@@ -253,46 +253,6 @@ class Terminal extends Component {
 
   setFalse = name => () => this.setState({ [name]: false });
 
-  /**
-   * autocomplete with the command the have the best match
-   * @param {object} input reference
-   */
-  autocompleteValue = (inputRef) => {
-    const { commands } = this.state;
-    const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, Object.keys(commands));
-
-    if (bestMatch.rating >= 0.6) {
-      return bestMatch.target;
-    }
-
-    return inputRef.value;
-  }
-
-  /**
-   * Base of key code set the value of the input
-   * with the history
-   * 38 is key up
-   * 40 is key down
-   * @param {event} event of input
-   */
-  handlerKeyPress = (e, inputRef) => {
-    const { historyCounter } = this.state;
-    switch (e.keyCode) {
-      case 38:
-        this.setValueWithHistory(historyCounter - 1, inputRef);
-        break;
-      case 40:
-        this.setValueWithHistory(historyCounter + 1, inputRef);
-        break;
-      case 9:
-        inputRef.value = this.autocompleteValue(inputRef);
-        e.preventDefault();
-        break;
-      default:
-        break;
-    } 
-  }
-
   setPromptPrefix = (promptPrefix) => {
     this.setState({ promptPrefix });
   };
@@ -370,6 +330,21 @@ class Terminal extends Component {
     this.setState({ commands });
   };
 
+  /**
+   * autocomplete with the command the have the best match
+   * @param {object} input reference
+   */
+  autocompleteValue = (inputRef) => {
+    const { commands } = this.state;
+    const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, Object.keys(commands));
+
+    if (bestMatch.rating >= 0.6) {
+      return bestMatch.target;
+    }
+
+    return inputRef.value;
+  }
+
   clearScreen = () => {
     this.setState({ summary: [] });
   };
@@ -416,6 +391,31 @@ class Terminal extends Component {
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
   };
+
+  /**
+   * Base of key code set the value of the input
+   * with the history
+   * 38 is key up
+   * 40 is key down
+   * @param {event} event of input
+   */
+  handlerKeyPress = (e, inputRef) => {
+    const { historyCounter } = this.state;
+    switch (e.keyCode) {
+      case 38:
+        this.setValueWithHistory(historyCounter - 1, inputRef);
+        break;
+      case 40:
+        this.setValueWithHistory(historyCounter + 1, inputRef);
+        break;
+      case 9:
+        inputRef.value = this.autocompleteValue(inputRef);
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
+  }
 
   loadPlugins = () => {
     this.props.plugins.forEach((plugin) => {
