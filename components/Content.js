@@ -37,7 +37,7 @@ class Content extends Component {
       prompt,
       inputStyles,
       handleChange,
-      setHistoryCommand,
+      handlerKeyPress,
     } = this.props;
     const { symbol, maximise } = this.context;
 
@@ -60,9 +60,10 @@ class Content extends Component {
                   className="terminal-main-input"
                   style={inputStyles}
                   type="text"
+                  tabIndex="-1"
                   ref={com => (this.com = com)}
                   onKeyPress={handleChange}
-                  onKeyDown={(e) => setHistoryCommand(e, this.com)}
+                  onKeyDown={(e) => handlerKeyPress(e, this.com)}
                 />
               </div>
             </div>

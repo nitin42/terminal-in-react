@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ObjectInspector from 'react-object-inspector';
+import stringSimilarity from 'string-similarity';
 import Command from './args';
 import Bar from './Bar';
 import Content from './Content';
@@ -156,22 +157,6 @@ class Terminal extends Component {
     }
   };
 
-  /**
-   * Base of key code set the value of the input
-   * with the history
-   * 38 is key up
-   * 40 is key down
-   * @param {event} event of input
-   */
-  setHistoryCommand = (e, inputRef) => {
-    const { historyCounter } = this.state;
-    if (e.keyCode === 38) {
-      this.setValueWithHistory(historyCounter - 1, inputRef);
-    } else if (e.keyCode === 40) {
-      this.setValueWithHistory(historyCounter + 1, inputRef);
-    }
-  };
-
   setTrue = name => () => this.setState({ [name]: true });
 
   setFalse = name => () => this.setState({ [name]: false });
@@ -186,6 +171,47 @@ class Terminal extends Component {
     }
     return this.showContent();
   };
+
+  /**
+   * autocomplete with the command the have the best match
+   * @param {object} input reference
+   */
+  autocompleteValue = (inputRef) => {
+    const { commands } = this.state;
+    const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, Object.keys(commands));
+
+    if (bestMatch.rating >= 0.5) {
+      return bestMatch.target;
+    }
+
+    return inputRef.value;
+  }
+
+  /**
+   * Base of key code set the value of the input
+   * with the history
+   * 38 is key up
+   * 40 is key down
+   * @param {event} event of input
+   */
+  handlerKeyPress = (e, inputRef) => {
+    e.preventDefault();
+    
+    const { historyCounter } = this.state;
+    switch (e.keyCode) {
+      case 38:
+        this.setValueWithHistory(historyCounter - 1, inputRef);
+        break;
+      case 40:
+        this.setValueWithHistory(historyCounter + 1, inputRef);
+        break;
+      case 9:
+        inputRef.value = this.autocompleteValue(inputRef);
+        break;
+      default:
+        break;
+    }
+  }
 
   showMsg = () => {
     this.adder(this.props.msg);
@@ -348,7 +374,7 @@ class Terminal extends Component {
           prompt={promptStyles}
           inputStyles={inputStyles}
           handleChange={this.handleChange}
-          setHistoryCommand={this.setHistoryCommand}
+          handlerKeyPress={this.handlerKeyPress}
         />
       </div>
     );
