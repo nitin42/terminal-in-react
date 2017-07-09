@@ -60,6 +60,7 @@ class Terminal extends Component {
       PropTypes.func,
       PropTypes.bool,
     ]),
+    promptSymbol: PropTypes.string,
   };
 
   static defaultProps = {
@@ -73,6 +74,7 @@ class Terminal extends Component {
     description: {},
     watchConsoleLogging: true,
     commandPassThrough: false,
+    promptSymbol: '>',
   };
 
   static childContextTypes = {
@@ -93,6 +95,7 @@ class Terminal extends Component {
 
   state = {
     prompt: '>',
+    promptPrefix: '',
     summary: [],
     commands: {},
     description: {},
@@ -103,7 +106,7 @@ class Terminal extends Component {
 
   getChildContext() {
     return {
-      symbol: this.state.prompt,
+      symbol: this.state.promptPrefix + this.state.prompt,
       show: this.state.show,
       minimise: this.state.minimise,
       maximise: this.state.maximise,
@@ -119,6 +122,10 @@ class Terminal extends Component {
     };
   }
 
+  componentWillMount = () => {
+    this.setState({ prompt: this.props.promptSymbol });
+  };
+
   componentDidMount = () => {
     this.assembleCommands();
     this.setDescription();
@@ -127,6 +134,10 @@ class Terminal extends Component {
     if (this.props.watchConsoleLogging) {
       this.watchConsoleLogging();
     }
+  };
+
+  setPromptPrefix = (promptPrefix) => {
+    this.setState({ promptPrefix });
   };
 
   setDescription = () => {
@@ -219,13 +230,13 @@ class Terminal extends Component {
   };
 
   watchConsoleLogging = () => {
-    handleLogging('log', this.adder);
-    handleLogging('info', this.adder);
-    handleLogging('warn', this.adder);
-    handleLogging('error', this.adder);
+    handleLogging('log', this.printLine);
+    handleLogging('info', this.printLine);
+    handleLogging('warn', this.printLine);
+    handleLogging('error', this.printLine);
   };
 
-  adder = (inp) => {
+  printLine = (inp) => {
     const summary = this.state.summary;
     summary.push(inp);
     this.setState({ summary });
@@ -236,7 +247,7 @@ class Terminal extends Component {
   };
 
   showMsg = () => {
-    this.adder(this.props.msg);
+    this.printLine(this.props.msg);
   };
 
   showHelp = () => {
@@ -244,7 +255,7 @@ class Terminal extends Component {
     const description = this.state.description;
     for (const option of options) {
       // eslint-disable-line no-restricted-syntax
-      this.adder(`${option} - ${description[option]}`);
+      this.printLine(`${option} - ${description[option]}`);
     }
   };
 
@@ -253,7 +264,7 @@ class Terminal extends Component {
       const res = this.runCommand(e.target.value);
 
       if (typeof res !== 'undefined') {
-        this.adder(res);
+        this.printLine(res);
       }
 
       e.target.value = ''; // eslint-disable-line no-param-reassign
@@ -268,17 +279,17 @@ class Terminal extends Component {
     let res;
 
     if (input === '') {
-      this.adder('');
+      this.printLine('');
     } else if (command === undefined) {
       if (typeof this.props.commandPassThrough === 'function') {
-        res = this.props.commandPassThrough(inputArray, this.adder, this.runCommand);
+        res = this.props.commandPassThrough(inputArray, this.printLine, this.runCommand);
       } else {
-        this.adder(`-bash:${input}: command not found`);
+        this.printLine(`-bash:${input}: command not found`);
       }
     } else {
       const parsedArgs = command.parse(args);
       if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
-        res = command.method(parsedArgs, this.adder, this.runCommand);
+        res = command.method(parsedArgs, this.printLine, this.runCommand);
       }
     }
     return res;
