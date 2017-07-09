@@ -194,6 +194,10 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `echo` - Outputs anything given
 * `edit-line` - Edits the last line or a given line using the `-l` argument
 
+## Built-in functionality
+
+* History of your commands available pressing key up and key down
+
 ## Where to use ?
 
 * Embed it as a toy on your website
