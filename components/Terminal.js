@@ -310,6 +310,8 @@ class Terminal extends Component {
 
   handleChange = (e) => {
     if (e.key === 'Enter') {
+      this.adder(`${this.state.prompt} ${e.target.value}`);
+
       const res = this.runCommand(e.target.value);
 
       if (typeof res !== 'undefined') {
@@ -328,7 +330,7 @@ class Terminal extends Component {
     let res;
 
     if (input === '') {
-      this.printLine('');
+      // do nothing
     } else if (command === undefined) {
       if (typeof this.props.commandPassThrough === 'function') {
         res = this.props.commandPassThrough(inputArray, this.printLine, this.runCommand);
