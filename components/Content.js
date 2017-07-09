@@ -62,7 +62,7 @@ class Content extends Component {
                   type="text"
                   ref={com => (this.com = com)}
                   onKeyPress={handleChange}
-                  onKeyDown={(e)=> setHistoryCommand(e, this.com)}
+                  onKeyDown={(e) => setHistoryCommand(e, this.com)}
                 />
               </div>
             </div>
