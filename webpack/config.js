@@ -1,7 +1,7 @@
 const webpack = require('webpack'); // eslint-disable-line
 const { join, resolve } = require('path');
 const BabiliPlugin = require('babili-webpack-plugin'); // eslint-disable-line
-
+  
 const common = {
   exclude: [
     /node_modules/,
@@ -55,9 +55,9 @@ const externals = () => ({
   'react-dom': 'react-dom',
   'prop-types': 'prop-types',
   'react-object-inspector': 'react-object-inspector',
-  'args': 'args',
-  'camelcase': 'camelcase',
-  'chalk': 'chalk',
+  args: 'args',
+  camelcase: 'camelcase',
+  chalk: 'chalk',
   'lodash.clonedeep': 'lodash.clonedeep',
   'string-similarity': 'string-similarity'
 });

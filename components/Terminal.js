@@ -114,6 +114,8 @@ class Terminal extends Component {
     summary: [],
     commands: {},
     descriptions: {},
+    history: [],
+    historyCounter: 0,
     show: true,
     minimise: false,
     maximise: false,
@@ -137,6 +139,7 @@ class Terminal extends Component {
     };
   }
 
+  /* Life cycle */
   componentWillMount = () => {
     this.setState({ prompt: this.props.promptSymbol });
   };
@@ -152,10 +155,80 @@ class Terminal extends Component {
     }
   };
 
-  setPromptPrefix = (promptPrefix) => {
-    this.setState({ promptPrefix });
+  /* Getters */
+  getAppContent = () => {
+    const { show, minimise } = this.state;
+    if (!show) {
+      return this.showNote();
+    }
+    if (minimise) {
+      return this.showBar();
+    }
+    return this.showContent();
   };
 
+  getContent = () => {
+    const { backgroundColor, color, style, barColor, prompt } = this.props;
+
+    const inputStyles = { backgroundColor, color };
+    const promptStyles = { color: prompt };
+    const barColorStyles = { backgroundColor: barColor };
+    const backgroundColorStyles = { backgroundColor };
+
+    const output = this.state.summary.map((content, i) => {
+      if (typeof content === 'string' && content.length === 0) {
+        return <div className="terminal-output-line" key={i}>&nbsp;</div>;
+      }
+      return <pre className="terminal-output-line" key={i}>{content}</pre>;
+    });
+
+    return (
+      <div
+        className="terminal-container-wrapper"
+        style={{ color, ...style }}
+      >
+        <Bar style={barColorStyles} />
+        <Content
+          backgroundColor={backgroundColorStyles}
+          output={output}
+          prompt={promptStyles}
+          inputStyles={inputStyles}
+          handleChange={this.handleChange}
+          setHistoryCommand={this.setHistoryCommand}
+        />
+      </div>
+    );
+  };
+
+  getBar = () => {
+    const { color, barColor, style } = this.props;
+    const barColorStyles = { backgroundColor: barColor };
+
+    return (
+      <div
+        className="terminal-container-wrapper"
+        style={{ color, ...style }}
+      >
+        <Bar style={barColorStyles} />
+      </div>
+    );
+  }
+
+  getNote = () => (
+    <span className="note">
+      <h1>OOPS! You closed the window.</h1>
+      <img
+        src="https://camo.githubusercontent.com/95ad3fffa11193f85dedbf14ca67e4c5c07182d0/687474703a2f2f69636f6e732e69636f6e617263686976652e636f6d2f69636f6e732f70616f6d656469612f736d616c6c2d6e2d666c61742f313032342f7465726d696e616c2d69636f6e2e706e67"
+        width="200"
+        height="200"
+        alt="note"
+        onClick={this.toggleState('show')}
+      />
+      Click on the icon to reopen.
+    </span>
+  );
+
+  /* Setters */
   setDescriptions = () => {
     let descriptions = {
       show: 'show the msg',
@@ -176,48 +249,43 @@ class Terminal extends Component {
     this.setState({ descriptions });
   };
 
-  setTrue = name => () => this.setState({ [name]: true });
-
   setFalse = name => () => this.setState({ [name]: false });
 
-  getContent = () => {
-    const { show, minimise } = this.state;
-    if (!show) {
-      return this.showNote();
+  /**
+   * Base of key code set the value of the input
+   * with the history
+   * 38 is key up
+   * 40 is key down
+   * @param {event} event of input
+   */
+  setHistoryCommand = (e, inputRef) => {
+    const { historyCounter } = this.state;
+    if (e.keyCode === 38) {
+      this.setValueWithHistory(historyCounter - 1, inputRef);
+    } else if (e.keyCode === 40) {
+      this.setValueWithHistory(historyCounter + 1, inputRef);
     }
-    if (minimise) {
-      return this.showBar();
-    }
-    return this.showContent();
-  }
-
-  loadPlugins = () => {
-    this.props.plugins.forEach((plugin) => {
-      try {
-        plugin.load({
-          printLine: this.printLine,
-          runCommand: this.runCommand,
-          setPromptPrefix: this.setPromptPrefix,
-        });
-      } catch (e) {
-        console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
-        console.dir(e);
-      }
-    });
   };
 
-  toggleState = name => () => this.setState({ [name]: !this.state[name] });
+  setPromptPrefix = (promptPrefix) => {
+    this.setState({ promptPrefix });
+  };
 
-  editLine = (args) => {
-    const { summary } = this.state;
-    let index = args.line;
-    if (index === -1) {
-      index = summary.length === 0 ? 0 : summary.length - 1;
+  setTrue = name => () => this.setState({ [name]: true });
+
+  /**
+   * set the input value with the possible history value
+   * @param {number} next position on the history
+   */
+  setValueWithHistory = (position, inputRef) => {
+    const { history } = this.state;
+    if (history[position]) {
+      this.setState({ historyCounter: position });
+      inputRef.value = history[position];
     }
-    summary[index] = args._.join(' ');
-    this.setState({ summary });
-  }
+  };
 
+  /* General */
   assembleCommands = () => {
     let commands = {
       show: this.showMsg,
@@ -276,37 +344,19 @@ class Terminal extends Component {
     this.setState({ commands });
   };
 
-  watchConsoleLogging = () => {
-    handleLogging('log', this.printLine);
-    handleLogging('info', this.printLine);
-    handleLogging('warn', this.printLine);
-    handleLogging('error', this.printLine);
-  };
-
-  printLine = (inp) => {
-    const summary = this.state.summary;
-    summary.push(inp);
-    this.setState({ summary });
-  };
-
   clearScreen = () => {
     this.setState({ summary: [] });
   };
 
-  showMsg = () => {
-    this.printLine(this.props.msg);
-  };
-
-  showHelp = () => {
-    const options = Object.keys(this.state.commands);
-    const { descriptions } = this.state;
-    for (const option of options) {
-      // eslint-disable-line no-restricted-syntax
-      if (descriptions[option] !== false) {
-        this.printLine(`${option} - ${descriptions[option]}`);
-      }
+  editLine = (args) => {
+    const { summary } = this.state;
+    let index = args.line;
+    if (index === -1) {
+      index = summary.length === 0 ? 0 : summary.length - 1;
     }
-  };
+    summary[index] = args._.join(' ');
+    this.setState({ summary });
+  }
 
   handleChange = (e) => {
     if (e.key === 'Enter') {
@@ -318,8 +368,34 @@ class Terminal extends Component {
         this.printLine(res);
       }
 
+      const history = [...this.state.history, e.target.value];
+      this.setState({
+        history,
+        historyCounter: history.length,
+      });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
+  };
+
+  loadPlugins = () => {
+    this.props.plugins.forEach((plugin) => {
+      try {
+        plugin.load({
+          printLine: this.printLine,
+          runCommand: this.runCommand,
+          setPromptPrefix: this.setPromptPrefix,
+        });
+      } catch (e) {
+        console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
+        console.dir(e);
+      }
+    });
+  };
+
+  printLine = (inp) => {
+    const summary = this.state.summary;
+    summary.push(inp);
+    this.setState({ summary });
   };
 
   runCommand = (inputText) => {
@@ -346,66 +422,29 @@ class Terminal extends Component {
     return res;
   }
 
-  showContent = () => {
-    const { backgroundColor, color, style, barColor, prompt } = this.props;
+  toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
-    const inputStyles = { backgroundColor, color };
-    const promptStyles = { color: prompt };
-    const barColorStyles = { backgroundColor: barColor };
-    const backgroundColorStyles = { backgroundColor };
-
-    const output = this.state.summary.map((content, i) => {
-      if (typeof content === 'string' && content.length === 0) {
-        return <div className="terminal-output-line" key={i}>&nbsp;</div>;
-      }
-      return <pre className="terminal-output-line" key={i}>{content}</pre>;
-    });
-
-    return (
-      <div
-        className="terminal-container-wrapper"
-        style={{ color, ...style }}
-      >
-        <Bar style={barColorStyles} />
-        <Content
-          backgroundColor={backgroundColorStyles}
-          output={output}
-          prompt={promptStyles}
-          inputStyles={inputStyles}
-          handleChange={this.handleChange}
-        />
-      </div>
-    );
+  watchConsoleLogging = () => {
+    handleLogging('log', this.printLine);
+    handleLogging('info', this.printLine);
+    handleLogging('warn', this.printLine);
+    handleLogging('error', this.printLine);
   };
 
-  showBar = () => {
-    const { color, barColor, style } = this.props;
-    const barColorStyles = { backgroundColor: barColor };
+  showHelp = () => {
+    const options = Object.keys(this.state.commands);
+    const description = this.state.description;
+    for (const option of options) {
+      // eslint-disable-line no-restricted-syntax
+      this.printLine(`${option} - ${description[option]}`);
+    }
+  };
 
-    return (
-      <div
-        className="terminal-container-wrapper"
-        style={{ color, ...style }}
-      >
-        <Bar style={barColorStyles} />
-      </div>
-    );
-  }
+  showMsg = () => {
+    this.printLine(this.props.msg);
+  };
 
-  showNote = () => (
-    <span className="note">
-      <h1>OOPS! You closed the window.</h1>
-      <img
-        src="https://camo.githubusercontent.com/95ad3fffa11193f85dedbf14ca67e4c5c07182d0/687474703a2f2f69636f6e732e69636f6e617263686976652e636f6d2f69636f6e732f70616f6d656469612f736d616c6c2d6e2d666c61742f313032342f7465726d696e616c2d69636f6e2e706e67"
-        width="200"
-        height="200"
-        alt="note"
-        onClick={this.toggleState('show')}
-      />
-      Click on the icon to reopen.
-    </span>
-  );
-
+  /* Render */
   render() {
     return (
       <div className="terminal-base" style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}>
