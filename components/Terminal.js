@@ -335,10 +335,11 @@ class Terminal extends Component {
    * @param {object} input reference
    */
   autocompleteValue = (inputRef) => {
-    const { commands } = this.state;
-    const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, Object.keys(commands));
+    const { descriptions } = this.state;
+    const keysToCheck = Object.keys(descriptions).filter(key => descriptions[key] !== false);
+    const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, keysToCheck);
 
-    if (bestMatch.rating >= 0.6) {
+    if (bestMatch.rating >= 0.5) {
       return bestMatch.target;
     }
 
