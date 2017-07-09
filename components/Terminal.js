@@ -135,6 +135,7 @@ class Terminal extends Component {
       clear: 'clear the screen',
       help: 'list all the commands',
       echo: 'output the input',
+      'edit-line': 'edit the contents of an output line',
       ...this.props.description,
     };
     this.setState({ description });
@@ -158,12 +159,33 @@ class Terminal extends Component {
 
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
+  editLine = (args) => {
+    const { summary } = this.state;
+    let index = args.line;
+    if (index === -1) {
+      index = summary.length === 0 ? 0 : summary.length - 1;
+    }
+    summary[index] = args._.join(' ');
+    this.setState({ summary });
+  }
+
   assembleCommands = () => {
     const commands = {
       show: this.showMsg,
       clear: this.clearScreen,
       help: this.showHelp,
       echo: (input) => { console.log(...input.slice(1)); }, // eslint-disable-line
+      'edit-line': {
+        method: this.editLine,
+        options: [
+          {
+            name: 'line',
+            description: 'the line you want to edit. -1 is the last line',
+            init: value => parseInt(value, 10),
+            defaultValue: -1,
+          },
+        ],
+      },
       ...this.props.commands,
     };
 
