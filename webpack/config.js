@@ -1,7 +1,7 @@
 const webpack = require('webpack'); // eslint-disable-line
 const { join, resolve } = require('path');
 const BabiliPlugin = require('babili-webpack-plugin'); // eslint-disable-line
-const CompressionPlugin = require('compression-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin'); // eslint-disable-line
 
 const common = {
   exclude: [
@@ -15,7 +15,7 @@ const common = {
 const jsLoader = () => ({
   test: /\.js$/,
   include: [/components/, /node_modules\/args/], // Added module `args` because babel-loader skips everything from node_modules before transpiliing the code but we need args to be transpiled along with the components folder.
-  use: ['babel-loader']
+  use: ['babel-loader'],
 });
 
 const styleLoader = () => ({
@@ -50,12 +50,12 @@ const plugins = () => [
     },
   }),
   new CompressionPlugin({
-    asset: "[path].gz[query]",
-    algorithm: "gzip",
+    asset: '[path].gz[query]',
+    algorithm: 'gzip',
     test: /\.js$|\.css$|\.html$/,
     threshold: 10240,
-    minRatio: 0
-  })
+    minRatio: 0,
+  }),
 ];
 
 const externals = () => ({
@@ -63,11 +63,11 @@ const externals = () => ({
   'react-dom': 'react-dom',
   'prop-types': 'prop-types',
   'react-object-inspector': 'react-object-inspector',
-  args: 'args',
   camelcase: 'camelcase',
   chalk: 'chalk',
   'lodash.clonedeep': 'lodash.clonedeep',
-  'string-similarity': 'string-similarity'
+  'string-similarity': 'string-similarity',
+  minimist: 'minimist',
 });
 
 const entry = () => ({
