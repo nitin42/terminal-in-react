@@ -4,7 +4,7 @@ const {
   output,
   plugins,
   externals,
-  entry
+  entry,
 } = require('./config');
 
 module.exports = {
@@ -13,9 +13,9 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   cache: true,
   module: {
-    rules: [jsLoader(), styleLoader()]
+    rules: [jsLoader(), styleLoader()],
   },
   target: 'web',
   externals: externals(),
-  plugins: plugins()
+  plugins: plugins(),
 };

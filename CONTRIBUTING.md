@@ -13,20 +13,23 @@ cd terminal-in-react
 npm install
 ```
 
-### Changes or adding features
+### Submitting pull requests
 
-All the components and stylesheets can be found in [components](./components) directory. 
+*   Create a new branch for the new feature: `git checkout -b new-feature`
+*   Make your changes.
+*   `npm run build:production` for bundling.
+*   Commit your changes: `git commit -m 'Add some feature'`
+*   Push to the branch: `git push origin new-feature`
+*   Submit a pull request with full remarks documenting your changes.
 
-After you're done making changes to the codebase, generate the bundle.
+### Starting development server
 
-```
-npm run build:production
-```
+To test your changes, there is a [starter](./starter) folder where you will find two files, `index.html` and `App.js`. 
 
-This will generate a file `terminal.js` in the `build` directory. There is also a [starter](./starter) folder where you can test your changes and check them locally by running the development server.
+Make your changes to `App.js` and start the development server with -
 
 ```
 npm run start
 ```
 
-That's it!! I'm excited to see your pull request.
+That's it! I am excited to see your pull request.

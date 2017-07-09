@@ -21,7 +21,6 @@
 *.pid
 *.gz
 *.orig
-.babelrc
 
 work
 src
@@ -35,11 +34,21 @@ html-report
 xunit.xml
 components
 starter
+webpack
+
+CONTRIBUTING.md
+todo.md
 
 .project
 .idea
 .settings
 .iml
+.hound.yml
+.gitignore
+.eslintrc
+.eslintignore
+.editorconfig
+.babelrc
 *.sublime-workspace
 *.sublime-project
 
