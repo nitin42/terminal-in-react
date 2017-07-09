@@ -49,13 +49,13 @@ export default function (name, description, defaultValue, init) {
         defaultIsWrong = false;
     }
 
-      // Set initializer depending on type of default value
+    // Set initializer depending on type of default value
     if (!defaultIsWrong) {
       const initFunction = typeof init === 'function';
       optionDetails.init = initFunction ? init : this.handleType(defaultValue)[1];
     }
 
-      // Register option to global scope
+    // Register option to global scope
     this.details.options.push(optionDetails);
   }
 

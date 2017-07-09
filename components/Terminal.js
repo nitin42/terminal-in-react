@@ -320,7 +320,7 @@ class Terminal extends Component {
 
   render() {
     return (
-      <div>
+      <div className="terminal-base">
         {this.getContent()}
       </div>
     );

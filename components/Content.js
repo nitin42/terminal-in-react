@@ -21,6 +21,10 @@ class Content extends Component {
     this.focusInput();
   };
 
+  componentDidUpdate = () => {
+    this.inputWrapper.scrollIntoView(false);
+  }
+
   focusInput = () => {
     this.com.focus();
   };
@@ -48,7 +52,7 @@ class Content extends Component {
           <div className="terminal-content">
             <div className="terminal-input-area">
               {output}
-              <p>
+              <div className="terminal-input" ref={elm => (this.inputWrapper = elm)}>
                 <span className="terminal-prompt" style={prompt}>{symbol}</span>
                 <input
                   className="terminal-main-input"
@@ -57,7 +61,7 @@ class Content extends Component {
                   ref={com => (this.com = com)}
                   onKeyPress={handleChange}
                 />
-              </p>
+              </div>
             </div>
           </div>
         </div>

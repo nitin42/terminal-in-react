@@ -1,5 +1,10 @@
-.terminal-container-wrapper {
-  margin: 100px 0;
+.terminal-base {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+
+.terminal-container-wrapper, .terminal-container-wrapper pre {
   font-family: 'Inconsolata', monospace;
   font-size: 0.9em;
   color: green;
@@ -20,6 +25,11 @@
 .terminal-input-area {
   height: 100%;
   padding: 3px;
+}
+
+.terminal-input {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .terminal-main-input {
