@@ -119,6 +119,7 @@ class Terminal extends Component {
     show: true,
     minimise: false,
     maximise: false,
+    input: [],
   };
 
   getChildContext() {
@@ -359,10 +360,13 @@ class Terminal extends Component {
   }
 
   handleChange = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
       this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
+      const { input } = this.state;
 
-      const res = this.runCommand(e.target.value);
+      const res = this.runCommand(
+        `${input.join('\n')}${input.length > 0 ? '\n' : ''}${e.target.value}`,
+      );
 
       if (typeof res !== 'undefined') {
         this.printLine(res);
@@ -370,6 +374,17 @@ class Terminal extends Component {
 
       const history = [...this.state.history, e.target.value];
       this.setState({
+        input: [],
+        history,
+        historyCounter: history.length,
+      });
+      e.target.value = ''; // eslint-disable-line no-param-reassign
+    } else if (e.key === 'Enter' && e.shiftKey) {
+      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
+      const { input } = this.state;
+      const history = [...this.state.history, e.target.value];
+      this.setState({
+        input: [...input, e.target.value],
         history,
         historyCounter: history.length,
       });
@@ -427,8 +442,8 @@ class Terminal extends Component {
   watchConsoleLogging = () => {
     handleLogging('log', this.printLine);
     handleLogging('info', this.printLine);
-    handleLogging('warn', this.printLine);
-    handleLogging('error', this.printLine);
+    // handleLogging('warn', this.printLine);
+    // handleLogging('error', this.printLine);
   };
 
   showHelp = () => {
