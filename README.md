@@ -1,6 +1,6 @@
 # Terminal in React
 ![version](https://img.shields.io/badge/terminal--in--react-2.0.0-brightgreen.svg)
-![size](https://img.shields.io/badge/size-17.6%20KB-brightgreen.svg)
+![size](https://img.shields.io/badge/size-35.5%20KB-brightgreen.svg)
 
 <p align="center">
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
@@ -8,14 +8,21 @@
 
 > A tiny component that renders a terminal
 
-## V2.0.0 is out !
+## V2.1.0 is out !
 
-Added this 👇
+What's new ? 👇
 
 <p align="center">
   <img src="https://camo.githubusercontent.com/3748e38abc72cb7860ba8f2272c0329ded5bfe23/687474703a2f2f672e7265636f726469742e636f2f5a5965554b6d62414e512e676966" />
+  <strong>minimise, maximise and close</strong>
+  <hr/>
 </p>
 
+<p align="center">
+  <img src="http://g.recordit.co/fFr5qas9u3.gif"/>
+  <strong>advance commands option</strong>
+  <hr/>
+</p>
 
 ## Install
 
