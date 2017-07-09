@@ -1,4 +1,4 @@
-const webpack = require('webpack'); // eslint-disable-line
+const webpack = require('webpack');
 
 module.exports = {
   entry: './starter/App.js',
@@ -8,24 +8,24 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: [/node_modules/, /__tests__/, /coverage/],
-        use: ['babel-loader'],
+        exclude: [/node_modules/, /__tests__/, /docs/, /coverage/],
+        use: ['babel-loader']
       },
       {
         test: /\.css$/,
         include: /components/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   },
   target: 'web',
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('development'),
-      },
+        NODE_ENV: JSON.stringify('development')
+      }
     }),
-    new webpack.NamedModulesPlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
     new webpack.NamedModulesPlugin()
   ]
 };

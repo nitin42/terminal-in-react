@@ -129,6 +129,12 @@ class Terminal extends Component {
     }
   };
 
+  componentDidUpdate = () => {
+    const el = React.findDOMNode(this);
+    const app = document.getElementById('app');
+    app.scrollTop = el.scrollHeight;
+  }
+
   setDescription = () => {
     const description = {
       show: 'show the msg',
