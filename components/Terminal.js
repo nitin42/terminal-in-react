@@ -96,6 +96,8 @@ class Terminal extends Component {
     summary: [],
     commands: {},
     description: {},
+    history: [],
+    historyCounter: 0,
     show: true,
     minimise: false,
     maximise: false,
@@ -248,6 +250,34 @@ class Terminal extends Component {
     }
   };
 
+  /**
+   * set the input value with the possible history value
+   * @param {number} next position on the history
+   */
+  setValueWithHistory = (position, inputRef) => {
+    const { history } = this.state;
+    if (history[position]) {
+      this.setState({ historyCounter: position });
+      inputRef.value = history[position];
+    }
+  };
+
+  /**
+   * Base of key code set the value of the input
+   * with the history
+   * 38 is key up
+   * 40 is key down
+   * @param {event} event of input
+   */
+  setHistoryCommand = (e, inputRef) => {
+    const { historyCounter } = this.state;
+    if (e.keyCode === 38) {
+      this.setValueWithHistory(historyCounter - 1, inputRef);
+    } else if (e.keyCode === 40) {
+      this.setValueWithHistory(historyCounter + 1, inputRef);
+    }
+  };
+
   handleChange = (e) => {
     if (e.key === 'Enter') {
       this.adder(`${this.state.prompt} ${e.target.value}`);
@@ -258,6 +288,11 @@ class Terminal extends Component {
         this.adder(res);
       }
 
+      const history = [...this.state.history, e.target.value];
+      this.setState({
+        history,
+        historyCounter: history.length,
+      });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
   };
@@ -313,6 +348,7 @@ class Terminal extends Component {
           prompt={promptStyles}
           inputStyles={inputStyles}
           handleChange={this.handleChange}
+          setHistoryCommand={this.setHistoryCommand}
         />
       </div>
     );
