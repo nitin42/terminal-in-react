@@ -144,6 +144,34 @@ class Terminal extends Component {
     return description;
   };
 
+  /**
+   * set the input value with the possible history value
+   * @param {number} next position on the history
+   */
+  setValueWithHistory = (position, inputRef) => {
+    const { history } = this.state;
+    if (history[position]) {
+      this.setState({ historyCounter: position });
+      inputRef.value = history[position];
+    }
+  };
+
+  /**
+   * Base of key code set the value of the input
+   * with the history
+   * 38 is key up
+   * 40 is key down
+   * @param {event} event of input
+   */
+  setHistoryCommand = (e, inputRef) => {
+    const { historyCounter } = this.state;
+    if (e.keyCode === 38) {
+      this.setValueWithHistory(historyCounter - 1, inputRef);
+    } else if (e.keyCode === 40) {
+      this.setValueWithHistory(historyCounter + 1, inputRef);
+    }
+  };
+
   setTrue = name => () => this.setState({ [name]: true });
 
   setFalse = name => () => this.setState({ [name]: false });
@@ -157,19 +185,37 @@ class Terminal extends Component {
       return this.showBar();
     }
     return this.showContent();
-  }
+  };
 
-  toggleState = name => () => this.setState({ [name]: !this.state[name] });
+  showMsg = () => {
+    this.adder(this.props.msg);
+  };
 
-  editLine = (args) => {
-    const { summary } = this.state;
-    let index = args.line;
-    if (index === -1) {
-      index = summary.length === 0 ? 0 : summary.length - 1;
+  showHelp = () => {
+    const options = Object.keys(this.state.commands);
+    const description = this.state.description;
+    for (const option of options) {
+      // eslint-disable-line no-restricted-syntax
+      this.adder(`${option} - ${description[option]}`);
     }
-    summary[index] = args._.join(' ');
+  };
+
+  clearScreen = () => {
+    this.setState({ summary: [] });
+  };
+  
+  adder = (inp) => {
+    const summary = this.state.summary;
+    summary.push(inp);
     this.setState({ summary });
-  }
+  };
+
+  watchConsoleLogging = () => {
+    handleLogging('log', this.adder);
+    handleLogging('info', this.adder);
+    handleLogging('warn', this.adder);
+    handleLogging('error', this.adder);
+  };
 
   assembleCommands = () => {
     const commands = {
@@ -220,63 +266,17 @@ class Terminal extends Component {
     this.setState({ commands });
   };
 
-  watchConsoleLogging = () => {
-    handleLogging('log', this.adder);
-    handleLogging('info', this.adder);
-    handleLogging('warn', this.adder);
-    handleLogging('error', this.adder);
-  };
-
-  adder = (inp) => {
-    const summary = this.state.summary;
-    summary.push(inp);
+  editLine = (args) => {
+    const { summary } = this.state;
+    let index = args.line;
+    if (index === -1) {
+      index = summary.length === 0 ? 0 : summary.length - 1;
+    }
+    summary[index] = args._.join(' ');
     this.setState({ summary });
-  };
+  }
 
-  clearScreen = () => {
-    this.setState({ summary: [] });
-  };
-
-  showMsg = () => {
-    this.adder(this.props.msg);
-  };
-
-  showHelp = () => {
-    const options = Object.keys(this.state.commands);
-    const description = this.state.description;
-    for (const option of options) {
-      // eslint-disable-line no-restricted-syntax
-      this.adder(`${option} - ${description[option]}`);
-    }
-  };
-
-  /**
-   * set the input value with the possible history value
-   * @param {number} next position on the history
-   */
-  setValueWithHistory = (position, inputRef) => {
-    const { history } = this.state;
-    if (history[position]) {
-      this.setState({ historyCounter: position });
-      inputRef.value = history[position];
-    }
-  };
-
-  /**
-   * Base of key code set the value of the input
-   * with the history
-   * 38 is key up
-   * 40 is key down
-   * @param {event} event of input
-   */
-  setHistoryCommand = (e, inputRef) => {
-    const { historyCounter } = this.state;
-    if (e.keyCode === 38) {
-      this.setValueWithHistory(historyCounter - 1, inputRef);
-    } else if (e.keyCode === 40) {
-      this.setValueWithHistory(historyCounter + 1, inputRef);
-    }
-  };
+  toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
   handleChange = (e) => {
     if (e.key === 'Enter') {
