@@ -19,7 +19,7 @@ function handleLogging(method, addToOutput) {
     } catch (e) {
       throw new Error('Terminal was loaded more than once check script tags');
     }
-    const res = [...args].map((arg, i) => {
+    const res = [...args].slice(0, 15).map((arg, i) => {
       switch (typeof arg) {
         case 'object':
           return <ObjectInspector data={arg} key={`object-${i}`} />;
@@ -174,6 +174,7 @@ class Terminal extends Component {
     const promptStyles = { color: prompt };
     const barColorStyles = { backgroundColor: barColor };
     const backgroundColorStyles = { backgroundColor };
+    console.dir(backgroundColorStyles);
 
     const output = this.state.summary.map((content, i) => {
       if (typeof content === 'string' && content.length === 0) {
@@ -189,11 +190,11 @@ class Terminal extends Component {
       >
         <Bar style={barColorStyles} />
         <Content
-          backgroundColor={backgroundColorStyles}
           output={output}
           prompt={promptStyles}
           inputStyles={inputStyles}
           handleChange={this.handleChange}
+          backgroundColor={backgroundColorStyles}
           setHistoryCommand={this.setHistoryCommand}
         />
       </div>

@@ -75,6 +75,7 @@
   margin-top: 10px;
   margin-bottom: 10px;
   white-space: pre-wrap;
+  color: inherit;
 }
 
 .terminal-output-line > pre {
