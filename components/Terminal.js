@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ObjectInspector from 'react-object-inspector';
@@ -7,14 +8,14 @@ import Content from './Content';
 import './Terminal.css';
 
 (function setOldLogger() {
-  console['oldLog'] = console['log']; // eslint-disable-line no-console, dot-notation
+  console['oldLog'] = console['log']; // eslint-disable-line dot-notation
 }());
 
 function handleLogging(method, addToOutput) {
   // eslint-disable-next-line no-console
   console[method] = (...args) => {
     try {
-      console.oldLog(`[${method}]`, ...args); // eslint-disable-line no-console
+      console.oldLog(`[${method}]`, ...args);
     } catch (e) {
       throw new Error('Terminal was loaded more than once check script tags');
     }
@@ -33,6 +34,23 @@ function handleLogging(method, addToOutput) {
   Object.defineProperty(console[method], 'name', { value: method, writable: false }); // eslint-disable-line no-console
 }
 
+const commandsPropType = PropTypes.objectOf(PropTypes.oneOfType([
+  PropTypes.func,
+  PropTypes.shape({
+    options: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string,
+      defaultValue: PropTypes.any,
+    })),
+    method: PropTypes.func,
+  }),
+]));
+
+const descriptionsPropType = PropTypes.objectOf(PropTypes.oneOfType([
+  PropTypes.string,
+  PropTypes.bool,
+]));
+
 class Terminal extends Component {
   static displayName = 'Terminal';
 
@@ -43,24 +61,20 @@ class Terminal extends Component {
     prompt: PropTypes.string,
     barColor: PropTypes.string,
     backgroundColor: PropTypes.string,
-    commands: PropTypes.objectOf(PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.shape({
-        options: PropTypes.arrayOf(PropTypes.shape({
-          name: PropTypes.string,
-          description: PropTypes.string,
-          defaultValue: PropTypes.any,
-        })),
-        method: PropTypes.func,
-      }),
-    ])),
-    description: PropTypes.objectOf(PropTypes.string),
+    commands: commandsPropType,
+    descriptions: descriptionsPropType,
     watchConsoleLogging: PropTypes.bool,
     commandPassThrough: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.bool,
     ]),
     promptSymbol: PropTypes.string,
+    plugins: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      load: PropTypes.func,
+      commands: commandsPropType,
+      descriptions: descriptionsPropType,
+    })),
   };
 
   static defaultProps = {
@@ -71,10 +85,11 @@ class Terminal extends Component {
     barColor: 'black',
     backgroundColor: 'black',
     commands: {},
-    description: {},
+    descriptions: {},
     watchConsoleLogging: true,
     commandPassThrough: false,
     promptSymbol: '>',
+    plugins: [],
   };
 
   static childContextTypes = {
@@ -98,7 +113,7 @@ class Terminal extends Component {
     promptPrefix: '',
     summary: [],
     commands: {},
-    description: {},
+    descriptions: {},
     show: true,
     minimise: false,
     maximise: false,
@@ -127,8 +142,9 @@ class Terminal extends Component {
   };
 
   componentDidMount = () => {
+    this.loadPlugins();
     this.assembleCommands();
-    this.setDescription();
+    this.setDescriptions();
     this.showMsg();
 
     if (this.props.watchConsoleLogging) {
@@ -140,17 +156,24 @@ class Terminal extends Component {
     this.setState({ promptPrefix });
   };
 
-  setDescription = () => {
-    const description = {
+  setDescriptions = () => {
+    let descriptions = {
       show: 'show the msg',
       clear: 'clear the screen',
       help: 'list all the commands',
       echo: 'output the input',
       'edit-line': 'edit the contents of an output line',
-      ...this.props.description,
+      ...this.props.descriptions,
     };
-    this.setState({ description });
-    return description;
+    this.props.plugins.forEach((plugin) => {
+      if (plugin.descriptions) {
+        descriptions = {
+          ...descriptions,
+          ...plugin.descriptions,
+        };
+      }
+    });
+    this.setState({ descriptions });
   };
 
   setTrue = name => () => this.setState({ [name]: true });
@@ -168,6 +191,21 @@ class Terminal extends Component {
     return this.showContent();
   }
 
+  loadPlugins = () => {
+    this.props.plugins.forEach((plugin) => {
+      try {
+        plugin.load({
+          printLine: this.printLine,
+          runCommand: this.runCommand,
+          setPromptPrefix: this.setPromptPrefix,
+        });
+      } catch (e) {
+        console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
+        console.dir(e);
+      }
+    });
+  };
+
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
   editLine = (args) => {
@@ -181,11 +219,11 @@ class Terminal extends Component {
   }
 
   assembleCommands = () => {
-    const commands = {
+    let commands = {
       show: this.showMsg,
       clear: this.clearScreen,
       help: this.showHelp,
-      echo: (input) => { console.log(...input.slice(1)); }, // eslint-disable-line
+      echo: (input) => { console.log(...input.slice(1)); },
       'edit-line': {
         method: this.editLine,
         options: [
@@ -199,6 +237,15 @@ class Terminal extends Component {
       },
       ...this.props.commands,
     };
+
+    this.props.plugins.forEach((plugin) => {
+      if (plugin.commands) {
+        commands = {
+          ...commands,
+          ...plugin.commands,
+        };
+      }
+    });
 
     Object.keys(commands).forEach((name) => {
       const definition = commands[name];
@@ -252,10 +299,12 @@ class Terminal extends Component {
 
   showHelp = () => {
     const options = Object.keys(this.state.commands);
-    const description = this.state.description;
+    const { descriptions } = this.state;
     for (const option of options) {
       // eslint-disable-line no-restricted-syntax
-      this.printLine(`${option} - ${description[option]}`);
+      if (descriptions[option] !== false) {
+        this.printLine(`${option} - ${descriptions[option]}`);
+      }
     }
   };
 
