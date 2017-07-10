@@ -1,6 +1,6 @@
 {
   "name": "terminal-in-react",
-  "version": "3.0.0-beta.15",
+  "version": "3.0.0-beta.13",
   "description": "A component for making a terminal in React",
   "main": "index.js",
   "repository": "https://www.github.com/nitin42/terminal-in-react",
