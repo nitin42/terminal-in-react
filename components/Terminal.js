@@ -235,7 +235,7 @@ class Terminal extends Component {
     </span>
   );
 
-  // Set descriptions of the commands 
+  // Set descriptions of the commands
   setDescriptions = () => {
     let descriptions = {
       show: 'show the msg',
@@ -263,13 +263,10 @@ class Terminal extends Component {
 
   setTrue = name => () => this.setState({ [name]: true });
 
-  // Toggle the state of window
-  toggleState = name => () => this.setState({ [name]: !this.state[name] });
-  
   /**
-   * set the input value with the possible history value
-   * @param {number} next position on the history
-   */
+  * set the input value with the possible history value
+  * @param {number} next position on the history
+  */
   setValueWithHistory = (position, inputRef) => {
     const { history } = this.state;
     if (history[position]) {
@@ -278,7 +275,9 @@ class Terminal extends Component {
     }
   };
 
-  // Prepare built-in commands 
+  toggleState = name => () => this.setState({ [name]: !this.state[name] });
+
+  // Prepare built-in commands
   assembleCommands = () => {
     let commands = {
       show: this.showMsg,
