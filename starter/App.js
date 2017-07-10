@@ -7,11 +7,7 @@ import Terminal from '../components';
 const App = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
     <Terminal
-      backgroundColor="yellow"
       msg="Hello World. My name is Nitin Tulswani"
-      plugins={[
-        new PseudoFileSystem(),
-      ]}
       commands={{
         color: {
           method: (args) => {
@@ -33,10 +29,9 @@ const App = () => (
               runCommand(`edit-line ${text.slice(0, i + 1)}`);
             }, 100 * i);
           }
-        },
-        'echo': () => ''
+        }
       }}
-      descriptions={{ color: 'option for color. For eg - color red', 'type-text': false, 'color': false, show: false, clear: false, echo: false  }}
+      descriptions={{ color: 'option for color. For eg - color red', 'type-text': 'Types a tex' }}
     />
   </div>
 );
