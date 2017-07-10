@@ -8,10 +8,12 @@ import Bar from './Bar';
 import Content from './Content';
 import './Terminal.css';
 
+// Capture the console.log calls (hijacking)
 (function setOldLogger() {
   console['oldLog'] = console['log']; // eslint-disable-line dot-notation
 }());
 
+// Handle console logging
 function handleLogging(method, addToOutput) {
   // eslint-disable-next-line no-console
   console[method] = (...args) => {
@@ -141,11 +143,11 @@ class Terminal extends Component {
     };
   }
 
-  /* Life cycle */
   componentWillMount = () => {
     this.setState({ prompt: this.props.promptSymbol });
   };
 
+  // Load everything!
   componentDidMount = () => {
     this.loadPlugins();
     this.assembleCommands();
@@ -157,7 +159,7 @@ class Terminal extends Component {
     }
   };
 
-  /* Getters */
+  // Show the content on basis of the toggling
   getAppContent = () => {
     const { show, minimise } = this.state;
     if (!show) {
@@ -169,6 +171,7 @@ class Terminal extends Component {
     return this.getContent();
   };
 
+  // Shows the everything (normal window)
   getContent = () => {
     const { backgroundColor, color, style, barColor, prompt } = this.props;
 
@@ -202,6 +205,7 @@ class Terminal extends Component {
     );
   };
 
+  // Show only bar (minimise)
   getBar = () => {
     const { color, barColor, style } = this.props;
     const barColorStyles = { backgroundColor: barColor };
@@ -216,6 +220,7 @@ class Terminal extends Component {
     );
   }
 
+  // Show msg (on window close)
   getNote = () => (
     <span className="note">
       <h1>OOPS! You closed the window.</h1>
@@ -230,7 +235,7 @@ class Terminal extends Component {
     </span>
   );
 
-  /* Setters */
+  // Set descriptions of the commands 
   setDescriptions = () => {
     let descriptions = {
       show: 'show the msg',
@@ -258,6 +263,7 @@ class Terminal extends Component {
 
   setTrue = name => () => this.setState({ [name]: true });
 
+  // Toggle the state of window
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
   
   /**
@@ -272,7 +278,7 @@ class Terminal extends Component {
     }
   };
 
-  /* General */
+  // Prepare built-in commands 
   assembleCommands = () => {
     let commands = {
       show: this.showMsg,
@@ -361,6 +367,7 @@ class Terminal extends Component {
     this.setState({ summary });
   }
 
+  // Listen for user input
   handleChange = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
@@ -419,6 +426,7 @@ class Terminal extends Component {
     }
   }
 
+  // Plugins (beta)
   loadPlugins = () => {
     this.props.plugins.forEach((plugin) => {
       try {
@@ -434,12 +442,14 @@ class Terminal extends Component {
     });
   };
 
+  // Print the summary (input -> output)
   printLine = (inp) => {
     const summary = this.state.summary;
     summary.push(inp);
     this.setState({ summary });
   };
 
+  // Exec commands
   runCommand = (inputText) => {
     const inputArray = inputText.split(' ');
     const input = inputArray[0];
@@ -464,6 +474,7 @@ class Terminal extends Component {
     return res;
   }
 
+  // Listen for console logging and pass the input to handler (handleLogging)
   watchConsoleLogging = () => {
     handleLogging('log', this.printLine);
     handleLogging('info', this.printLine);
