@@ -10,7 +10,7 @@ class Content extends Component {
     prompt: PropTypes.objectOf(PropTypes.string),
     inputStyles: PropTypes.objectOf(PropTypes.string),
     handleChange: PropTypes.func,
-    setHistoryCommand: PropTypes.func,
+    handlerKeyPress: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -32,22 +32,22 @@ class Content extends Component {
 
   render() {
     const {
-      backgroundColor,
       output,
       prompt,
       inputStyles,
       handleChange,
-      setHistoryCommand,
+      backgroundColor,
+      handlerKeyPress,
     } = this.props;
     const { symbol, maximise } = this.context;
 
     return (
       <div
         className="terminal-container terminal-container-main"
-        style={(
-          backgroundColor,
-          maximise ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' } : null
-        )}
+        style={{
+          ...backgroundColor,
+          ...(maximise ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' } : {}),
+        }}
         onClick={this.focusInput}
       >
         <div className="terminal-holder">
@@ -60,9 +60,10 @@ class Content extends Component {
                   className="terminal-main-input"
                   style={inputStyles}
                   type="text"
+                  tabIndex="-1"
                   ref={com => (this.com = com)}
                   onKeyPress={handleChange}
-                  onKeyDown={(e) => setHistoryCommand(e, this.com)}
+                  onKeyDown={e => handlerKeyPress(e, this.com)}
                 />
               </div>
             </div>
