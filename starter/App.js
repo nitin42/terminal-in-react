@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
 // Bundle generated with npm run build:production ('../build/terminal') or use '../components'
-import Terminal from '../components';
+import Terminal from '../build/terminal';
 
 const App = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
