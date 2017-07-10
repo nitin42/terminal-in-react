@@ -156,7 +156,7 @@ With the option `-h` or `--help`.
   <img src="https://i.gyazo.com/65468696bece70704bd8bcc50e6504e9.gif"/>
 </p>
 
-The command Api has three parameters `arguments`, `print`, and `runCommand`.
+The command API has three parameters `arguments`, `print`, and `runCommand`.
 
  - `arguments` will be an array of the input split on spaces or and object with
  parameters meeting the options given as well as a `_` option with any strings given
