@@ -22,6 +22,7 @@ class Content extends Component {
     this.focusInput();
   };
 
+  // Adjust scrolling
   componentDidUpdate = () => {
     this.inputWrapper.scrollIntoView(false);
   }
