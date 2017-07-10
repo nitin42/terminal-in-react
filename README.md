@@ -152,7 +152,9 @@ With the option `-h` or `--help`.
   }}
 />
 ```
-<img src="https://i.gyazo.com/65468696bece70704bd8bcc50e6504e9.gif"/>
+<p align="center">
+  <img src="https://i.gyazo.com/65468696bece70704bd8bcc50e6504e9.gif"/>
+</p>
 
 The command Api has three parameters `arguments`, `print`, and `runCommand`.
 
@@ -183,7 +185,9 @@ Let's take an another example -
 
 ```
 
-<img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
+<p align="center">
+  <img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
+</p>
 
 ### Using plugins 🔥
 
