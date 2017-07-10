@@ -20,14 +20,17 @@ class Bar extends Component {
     toggleMaximise: PropTypes.func,
   };
 
+  // Close the window
   handleClose = () => {
     this.context.toggleShow();
   };
 
+  // Minimise the window
   handleMinimise = () => {
     this.context.toggleMinimize();
   };
 
+  // Maximise the window
   handleMaximise = () => {
     this.context.toggleMaximise();
   };
