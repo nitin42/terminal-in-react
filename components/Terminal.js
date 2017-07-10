@@ -161,12 +161,12 @@ class Terminal extends Component {
   getAppContent = () => {
     const { show, minimise } = this.state;
     if (!show) {
-      return this.showNote();
+      return this.getNote();
     }
     if (minimise) {
-      return this.showBar();
+      return this.getBar();
     }
-    return this.showContent();
+    return this.getContent();
   };
 
   getContent = () => {
@@ -236,7 +236,6 @@ class Terminal extends Component {
       show: 'show the msg',
       clear: 'clear the screen',
       help: 'list all the commands',
-      echo: 'output the input',
       'edit-line': 'edit the contents of an output line',
       ...this.props.descriptions,
     };
@@ -251,14 +250,16 @@ class Terminal extends Component {
     this.setState({ descriptions });
   };
 
-  setFalse = name => () => this.setState({ [name]: false });
-
   setPromptPrefix = (promptPrefix) => {
     this.setState({ promptPrefix });
   };
 
+  setFalse = name => () => this.setState({ [name]: false });
+
   setTrue = name => () => this.setState({ [name]: true });
 
+  toggleState = name => () => this.setState({ [name]: !this.state[name] });
+  
   /**
    * set the input value with the possible history value
    * @param {number} next position on the history
@@ -463,8 +464,6 @@ class Terminal extends Component {
     return res;
   }
 
-  toggleState = name => () => this.setState({ [name]: !this.state[name] });
-
   watchConsoleLogging = () => {
     handleLogging('log', this.printLine);
     handleLogging('info', this.printLine);
@@ -487,11 +486,10 @@ class Terminal extends Component {
     this.printLine(this.props.msg);
   };
 
-  /* Render */
   render() {
     return (
       <div className="terminal-base" style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}>
-        {this.getContent()}
+        {this.getAppContent()}
       </div>
     );
   }
