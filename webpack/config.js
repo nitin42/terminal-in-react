@@ -12,9 +12,11 @@ const common = {
   ],
 };
 
+// , /node_modules\/camelcase/, /node_modules\/chalk/, /node_modules\/string-similarity/, /node_modules\/minimist/
+
 const jsLoader = () => ({
   test: /\.js$/,
-  include: [/components/, /node_modules\/args/, /node_modules\/camelcase/], // Added module `args` and `camelcase` because babel-loader skips everything from node_modules before transpiliing the code but we need args to be transpiled along with the components folder.
+  include: [/components/, /node_modules\/args/], // Added module `args` because babel-loader skips everything from node_modules before transpiling the code but we need args to be transpiled along with the components folder.
   use: ['babel-loader'],
 });
 
@@ -28,9 +30,7 @@ const output = () => ({
   filename: 'terminal.js',
   path: resolve(__dirname, '../build'),
   libraryTarget: 'umd',
-  library: 'terminalReact',
-  publicPath: '/',
-  pathinfo: true,
+  library: 'terminalReact'
 });
 
 const plugins = () => [
@@ -43,6 +43,7 @@ const plugins = () => [
   }),
   new webpack.optimize.ModuleConcatenationPlugin(),
     // Better results
+  // new webpack.optimize.UglifyJsPlugin(),
   new BabiliPlugin(),
   new webpack.DefinePlugin({
     'process.env': {
@@ -55,7 +56,7 @@ const plugins = () => [
     test: /\.js$|\.css$|\.html$/,
     threshold: 10240,
     minRatio: 0,
-  }),
+  })
 ];
 
 const externals = () => ({
@@ -63,6 +64,7 @@ const externals = () => ({
   'react-dom': 'react-dom',
   'prop-types': 'prop-types',
   'react-object-inspector': 'react-object-inspector',
+  args: 'args',
   camelcase: 'camelcase',
   chalk: 'chalk',
   'lodash.clonedeep': 'lodash.clonedeep',
