@@ -10,12 +10,12 @@ class Content extends Component {
     prompt: PropTypes.objectOf(PropTypes.string),
     inputStyles: PropTypes.objectOf(PropTypes.string),
     handleChange: PropTypes.func,
-    handlerKeyPress: PropTypes.func.isRequired
+    handlerKeyPress: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
     symbol: PropTypes.string,
-    maximise: PropTypes.bool
+    maximise: PropTypes.bool,
   };
 
   componentDidMount = () => {
@@ -38,7 +38,7 @@ class Content extends Component {
       inputStyles,
       handleChange,
       backgroundColor,
-      handlerKeyPress
+      handlerKeyPress,
     } = this.props;
     const { symbol, maximise } = this.context;
 
@@ -49,7 +49,7 @@ class Content extends Component {
           ...backgroundColor,
           ...(maximise
             ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' }
-            : {})
+            : {}),
         }}
         onClick={this.focusInput}
       >
