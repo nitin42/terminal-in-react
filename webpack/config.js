@@ -14,7 +14,7 @@ const common = {
 
 const jsLoader = () => ({
   test: /\.js$/,
-  include: [/components/, /node_modules\/args/], // Added module `args` because babel-loader skips everything from node_modules before transpiliing the code but we need args to be transpiled along with the components folder.
+  include: [/components/, /node_modules\/args/, /node_modules\/camelcase/], // Added module `args` and `camelcase` because babel-loader skips everything from node_modules before transpiliing the code but we need args to be transpiled along with the components folder.
   use: ['babel-loader'],
 });
 
