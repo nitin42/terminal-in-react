@@ -1,4 +1,4 @@
-// Taken from Enzyme docs
+// Copied from Enzyme docs
 
 const { JSDOM } = require('jsdom');
 
