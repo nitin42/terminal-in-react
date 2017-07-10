@@ -102,7 +102,7 @@ you can also handle the result with a callback
 />
 ```
 
-Minimize, maximize and close the window
+Minimise, maximise and close the window
 
 <p align="center">
   <img src="https://camo.githubusercontent.com/3748e38abc72cb7860ba8f2272c0329ded5bfe23/687474703a2f2f672e7265636f726469742e636f2f5a5965554b6d62414e512e676966" />
