@@ -7,9 +7,7 @@ import Terminal from '../components';
 const App = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
     <Terminal
-      color="red"
-      backgroundColor="green"
-      barColor="blue"
+      backgroundColor="yellow"
       msg="Hello World. My name is Nitin Tulswani"
       plugins={[
         new PseudoFileSystem(),
@@ -36,9 +34,9 @@ const App = () => (
             }, 100 * i);
           }
         },
+        'echo': () => ''
       }}
-      descriptions={{ color: 'option for color. For eg - color red', 'type-text': false }}
-      commandPassThrough={cmd => `-PassedThrough:${cmd}: command not found`}
+      descriptions={{ color: 'option for color. For eg - color red', 'type-text': false, 'color': false, show: false, clear: false, echo: false  }}
     />
   </div>
 );
