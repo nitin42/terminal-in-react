@@ -10,12 +10,12 @@ class Content extends Component {
     prompt: PropTypes.objectOf(PropTypes.string),
     inputStyles: PropTypes.objectOf(PropTypes.string),
     handleChange: PropTypes.func,
-    handlerKeyPress: PropTypes.func.isRequired,
+    handlerKeyPress: PropTypes.func.isRequired
   };
 
   static contextTypes = {
     symbol: PropTypes.string,
-    maximise: PropTypes.bool,
+    maximise: PropTypes.bool
   };
 
   componentDidMount = () => {
@@ -24,11 +24,11 @@ class Content extends Component {
 
   // Adjust scrolling
   componentDidUpdate = () => {
-    this.inputWrapper.scrollIntoView(false);
-  }
+    if (this.inputWrapper !== null) this.inputWrapper.scrollIntoView(false);
+  };
 
   focusInput = () => {
-    this.com.focus();
+    if (this.com !== null) this.com.focus();
   };
 
   render() {
@@ -38,7 +38,7 @@ class Content extends Component {
       inputStyles,
       handleChange,
       backgroundColor,
-      handlerKeyPress,
+      handlerKeyPress
     } = this.props;
     const { symbol, maximise } = this.context;
 
@@ -47,7 +47,9 @@ class Content extends Component {
         className="terminal-container terminal-container-main"
         style={{
           ...backgroundColor,
-          ...(maximise ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' } : {}),
+          ...(maximise
+            ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' }
+            : {})
         }}
         onClick={this.focusInput}
       >
@@ -55,7 +57,10 @@ class Content extends Component {
           <div className="terminal-content">
             <div className="terminal-input-area">
               {output}
-              <div className="terminal-input" ref={elm => (this.inputWrapper = elm)}>
+              <div
+                className="terminal-input"
+                ref={elm => (this.inputWrapper = elm)}
+              >
                 <span className="terminal-prompt" style={prompt}>{symbol}</span>
                 <input
                   className="terminal-main-input"
