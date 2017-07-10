@@ -161,6 +161,8 @@ Use
 
 * will support images, gifs
 * plugins
+* tab autocomplete
+* multiline input
 
 Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
 
