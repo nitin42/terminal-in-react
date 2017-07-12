@@ -29,9 +29,17 @@ const App = () => (
               runCommand(`edit-line ${text.slice(0, i + 1)}`);
             }, 100 * i);
           }
-        }
+        },
       }}
-      descriptions={{ color: 'option for color. For eg - color red', 'type-text': 'Types a tex' }}
+      descriptions={{
+        color: 'option for color. For eg - color red',
+        'type-text': 'Types out input text',
+      }}
+      shortcuts={{
+        'darwin,win,linux': {
+          'ctrl + a': 'echo whoo',
+        },
+      }}
     />
   </div>
 );
