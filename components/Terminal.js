@@ -430,7 +430,7 @@ class Terminal extends Component {
     }
   }
 
-  // Plugins 
+  // Plugins
   loadPlugins = () => {
     this.props.plugins.forEach((plugin) => {
       try {
