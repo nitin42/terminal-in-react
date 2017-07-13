@@ -13,7 +13,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: /components/,
+        include: [/components/, /starter/],
         use: ['style-loader', 'css-loader'],
       },
     ],
