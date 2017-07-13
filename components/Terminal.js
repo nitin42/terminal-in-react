@@ -143,6 +143,7 @@ class Terminal extends Component {
     };
   }
 
+  // Prepare the symbol
   componentWillMount = () => {
     this.setState({ prompt: this.props.promptSymbol });
   };
@@ -159,7 +160,7 @@ class Terminal extends Component {
     }
   };
 
-  // Show the content on basis of the toggling
+  // Show the content on toggling
   getAppContent = () => {
     const { show, minimise } = this.state;
     if (!show) {
@@ -171,7 +172,7 @@ class Terminal extends Component {
     return this.getContent();
   };
 
-  // Shows the everything (normal window)
+  // Shows everything (normal window)
   getContent = () => {
     const { backgroundColor, color, style, barColor, prompt } = this.props;
 
@@ -259,8 +260,10 @@ class Terminal extends Component {
     this.setState({ promptPrefix });
   };
 
+  // Hide window
   setFalse = name => () => this.setState({ [name]: false });
 
+  // Show window
   setTrue = name => () => this.setState({ [name]: true });
 
   /**
@@ -277,7 +280,7 @@ class Terminal extends Component {
 
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
-  // Prepare built-in commands
+  // Prepare the built-in commands
   assembleCommands = () => {
     let commands = {
       show: this.showMsg,
@@ -352,10 +355,12 @@ class Terminal extends Component {
     return inputRef.value;
   }
 
+  // Refresh or clear the screen
   clearScreen = () => {
     this.setState({ summary: [] });
   };
 
+  // edit-line command
   editLine = (args) => {
     const { summary } = this.state;
     let index = args.line;
@@ -425,7 +430,7 @@ class Terminal extends Component {
     }
   }
 
-  // Plugins (beta)
+  // Plugins 
   loadPlugins = () => {
     this.props.plugins.forEach((plugin) => {
       try {
@@ -448,7 +453,7 @@ class Terminal extends Component {
     this.setState({ summary });
   };
 
-  // Exec commands
+  // Execute the commands
   runCommand = (inputText) => {
     const inputArray = inputText.split(' ');
     const input = inputArray[0];
@@ -481,6 +486,7 @@ class Terminal extends Component {
     // handleLogging('error', this.printLine);
   };
 
+  // List all the commands (state + user defined)
   showHelp = () => {
     const options = Object.keys(this.state.commands);
     const descriptions = this.state.descriptions;
@@ -492,6 +498,7 @@ class Terminal extends Component {
     }
   };
 
+  // Show the msg (prop msg)
   showMsg = () => {
     this.printLine(this.props.msg);
   };
