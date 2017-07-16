@@ -7,6 +7,7 @@
 
 .terminal-container-wrapper {
   height: 100%;
+  animation: fadeIn 0.18s ease-in;
 }
 
 .terminal-container-wrapper,
@@ -26,6 +27,21 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .terminal-input-area {
