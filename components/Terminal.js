@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, react/sort-comp */
 import React, { Component } from 'react';
 import stringSimilarity from 'string-similarity';
 import whatkey from 'whatkey';
@@ -38,6 +38,8 @@ class Terminal extends Component {
 
   constructor(props) {
     super(props);
+
+    this.pluginMethods = {};
 
     this.defaultCommands = { // eslint-disable-line react/sort-comp
       show: this.showMsg,
@@ -318,6 +320,7 @@ class Terminal extends Component {
     this.setState({ summary: [] });
   };
 
+  // Method to check for shortcut and invoking commands
   checkShortcuts = (key) => {
     const shortcuts = Object.keys(this.state.shortcuts);
     if (shortcuts.length > 0) {
@@ -361,7 +364,7 @@ class Terminal extends Component {
   // Listen for user input
   handleChange = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
+      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
       const { input } = this.state;
 
       const res = this.runCommand(
@@ -380,7 +383,7 @@ class Terminal extends Component {
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     } else if (e.key === 'Enter' && e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
+      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
       const { input } = this.state;
       const history = [...this.state.history, e.target.value];
       this.setState({
@@ -395,8 +398,6 @@ class Terminal extends Component {
   /**
    * Base of key code set the value of the input
    * with the history
-   * 38 is key up
-   * 40 is key down
    * @param {event} event of input
    */
   handlerKeyPress = (e, inputRef) => {
@@ -425,23 +426,65 @@ class Terminal extends Component {
   loadPlugins = () => {
     this.props.plugins.forEach((plugin) => {
       try {
-        plugin.load({
-          printLine: this.printLine,
-          runCommand: this.runCommand,
-          setPromptPrefix: this.setPromptPrefix,
-        });
+        plugin.load(
+          {
+            printLine: this.printLine,
+            runCommand: this.runCommand,
+            setPromptPrefix: this.setPromptPrefix,
+            getPluginMethod: this.getPluginMethod,
+          },
+        );
+
+        this.pluginMethods[plugin.name] = {
+          ...plugin.getPublicMethods(),
+          _getName: () => plugin.name,
+          _getVersion: () => plugin.version,
+        };
       } catch (e) {
         console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
         console.dir(e);
       }
     });
+
+    this.props.plugins.forEach((plugin) => {
+      try {
+        plugin.afterLoad();
+      } catch (e) {
+        // Do nothing
+      }
+    });
   };
 
+  // Plugin api method to get a public plugin method
+  getPluginMethod = (name, method) => {
+    if (this.pluginMethods[name]) {
+      if (this.pluginMethods[name][method]) {
+        return this.pluginMethods[name][method];
+      }
+      throw new Error(`No method with name ${name} has been registered for plugin ${name}`);
+    } else {
+      throw new Error(`No plugin with name ${name} has been registered`);
+    }
+  }
+
   // Print the summary (input -> output)
-  printLine = (inp) => {
-    const summary = this.state.summary;
-    summary.push(inp);
-    this.setState({ summary });
+  printLine = (inp, std = true) => {
+    let print = true;
+    if (std) {
+      const { plugins } = this.props;
+      for (let i = 0; i < plugins.length; i += 1) {
+        try {
+          print = plugins[i].readStdOut(inp);
+        } catch (e) {
+          // Do nothing
+        }
+      }
+    }
+    if (print === false) {
+      const summary = this.state.summary;
+      summary.push(inp);
+      this.setState({ summary });
+    }
   };
 
   // Execute the commands
