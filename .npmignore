@@ -35,6 +35,9 @@ xunit.xml
 components
 starter
 webpack
+__mocks__
+__tests__
+examples
 
 CONTRIBUTING.md
 todo.md

@@ -1,115 +1,81 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, react/sort-comp */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import ObjectInspector from 'react-object-inspector';
 import stringSimilarity from 'string-similarity';
+import whatkey from 'whatkey';
+import isEqual from 'lodash.isequal';
+import { handleLogging, getOs } from './utils';
+import { TerminalPropTypes, TerminalContextTypes, TerminalDefaultProps } from './types';
 import Command from './args';
 import Bar from './Bar';
 import Content from './Content';
 import './Terminal.css';
 
-// Capture the console.log calls (hijacking)
-(function setOldLogger() {
-  console['oldLog'] = console['log']; // eslint-disable-line dot-notation
-}());
+const os = getOs();
 
-// Handle console logging
-function handleLogging(method, addToOutput) {
-  // eslint-disable-next-line no-console
-  console[method] = (...args) => {
-    try {
-      console.oldLog(`[${method}]`, ...args);
-    } catch (e) {
-      throw new Error('Terminal was loaded more than once check script tags');
-    }
-    const res = [...args].slice(0, 15).map((arg, i) => {
-      switch (typeof arg) {
-        case 'object':
-          return <ObjectInspector data={arg} key={`object-${i}`} />;
-        case 'function':
-          return `${arg}`;
-        default:
-          return arg;
+function getShortcuts(shortcuts, obj) {
+  Object.keys(obj).forEach((key) => {
+    const split = key.toLowerCase().replace(/\s/g, '').split(',');
+    split.forEach((osName) => {
+      if (osName === os) {
+        shortcuts = {
+          ...shortcuts,
+          ...obj[key],
+        };
       }
     });
-    addToOutput(res);
-  };
-  Object.defineProperty(console[method], 'name', { value: method, writable: false }); // eslint-disable-line no-console
+  });
+  return shortcuts;
 }
-
-const commandsPropType = PropTypes.objectOf(PropTypes.oneOfType([
-  PropTypes.func,
-  PropTypes.shape({
-    options: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string,
-      description: PropTypes.string,
-      defaultValue: PropTypes.any,
-    })),
-    method: PropTypes.func,
-  }),
-]));
-
-const descriptionsPropType = PropTypes.objectOf(PropTypes.oneOfType([
-  PropTypes.string,
-  PropTypes.bool,
-]));
 
 class Terminal extends Component {
   static displayName = 'Terminal';
 
-  static propTypes = {
-    msg: PropTypes.string,
-    color: PropTypes.string,
-    style: PropTypes.object, // eslint-disable-line
-    prompt: PropTypes.string,
-    barColor: PropTypes.string,
-    backgroundColor: PropTypes.string,
-    commands: commandsPropType,
-    descriptions: descriptionsPropType,
-    watchConsoleLogging: PropTypes.bool,
-    commandPassThrough: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.bool,
-    ]),
-    promptSymbol: PropTypes.string,
-    plugins: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      load: PropTypes.func,
-      commands: commandsPropType,
-      descriptions: descriptionsPropType,
-    })),
-  };
+  static propTypes = TerminalPropTypes;
 
-  static defaultProps = {
-    msg: '',
-    color: 'green',
-    style: {},
-    prompt: 'green',
-    barColor: 'black',
-    backgroundColor: 'black',
-    commands: {},
-    descriptions: {},
-    watchConsoleLogging: true,
-    commandPassThrough: false,
-    promptSymbol: '>',
-    plugins: [],
-  };
+  static defaultProps = TerminalDefaultProps;
 
-  static childContextTypes = {
-    symbol: PropTypes.string,
-    show: PropTypes.bool,
-    minimise: PropTypes.bool,
-    maximise: PropTypes.bool,
-    closeWindow: PropTypes.func,
-    openWindow: PropTypes.func,
-    minimiseWindow: PropTypes.func,
-    unminimiseWindow: PropTypes.func,
-    maximiseWindow: PropTypes.func,
-    unmaximiseWindow: PropTypes.func,
-    toggleShow: PropTypes.func,
-    toggleMaximise: PropTypes.func,
-    toggleMinimize: PropTypes.func,
-  };
+  static childContextTypes = TerminalContextTypes;
+
+  constructor(props) {
+    super(props);
+
+    this.pluginMethods = {};
+
+    this.defaultCommands = { // eslint-disable-line react/sort-comp
+      show: this.showMsg,
+      clear: this.clearScreen,
+      help: this.showHelp,
+      echo: (input) => { console.log(...input.slice(1)); },
+      'edit-line': {
+        method: this.editLine,
+        options: [
+          {
+            name: 'line',
+            description: 'the line you want to edit. -1 is the last line',
+            init: value => parseInt(value, 10),
+            defaultValue: -1,
+          },
+        ],
+      },
+    };
+
+    this.defaultDesciptions = {
+      show: 'show the msg',
+      clear: 'clear the screen',
+      help: 'list all the commands',
+      echo: 'output the input',
+      'edit-line': 'edit the contents of an output line',
+    };
+
+    this.defaultShortcuts = {
+      'win, linux': {
+        'ctrl + l': 'clear',
+      },
+      darwin: {
+        'cmd + k': 'clear',
+      },
+    };
+  }
 
   state = {
     prompt: '>',
@@ -123,6 +89,8 @@ class Terminal extends Component {
     minimise: false,
     maximise: false,
     input: [],
+    shortcuts: {},
+    keyInputs: [],
   };
 
   getChildContext() {
@@ -153,6 +121,7 @@ class Terminal extends Component {
     this.loadPlugins();
     this.assembleCommands();
     this.setDescriptions();
+    this.setShortcuts();
     this.showMsg();
 
     if (this.props.watchConsoleLogging) {
@@ -172,7 +141,7 @@ class Terminal extends Component {
     return this.getContent();
   };
 
-  // Shows everything (normal window)
+  // Shows the full window (normal window)
   getContent = () => {
     const { backgroundColor, color, style, barColor, prompt } = this.props;
 
@@ -239,10 +208,7 @@ class Terminal extends Component {
   // Set descriptions of the commands
   setDescriptions = () => {
     let descriptions = {
-      show: 'show the msg',
-      clear: 'clear the screen',
-      help: 'list all the commands',
-      'edit-line': 'edit the contents of an output line',
+      ...this.defaultDesciptions,
       ...this.props.descriptions,
     };
     this.props.plugins.forEach((plugin) => {
@@ -255,6 +221,14 @@ class Terminal extends Component {
     });
     this.setState({ descriptions });
   };
+
+  // Set command shortcuts
+  setShortcuts = () => {
+    let shortcuts = getShortcuts({}, this.defaultShortcuts);
+    shortcuts = getShortcuts(shortcuts, this.props.shortcuts);
+    console.log(shortcuts);
+    this.setState({ shortcuts });
+  }
 
   setPromptPrefix = (promptPrefix) => {
     this.setState({ promptPrefix });
@@ -283,21 +257,7 @@ class Terminal extends Component {
   // Prepare the built-in commands
   assembleCommands = () => {
     let commands = {
-      show: this.showMsg,
-      clear: this.clearScreen,
-      help: this.showHelp,
-      echo: (input) => { console.log(...input.slice(1)); },
-      'edit-line': {
-        method: this.editLine,
-        options: [
-          {
-            name: 'line',
-            description: 'the line you want to edit. -1 is the last line',
-            init: value => parseInt(value, 10),
-            defaultValue: -1,
-          },
-        ],
-      },
+      ...this.defaultCommands,
       ...this.props.commands,
     };
 
@@ -360,6 +320,36 @@ class Terminal extends Component {
     this.setState({ summary: [] });
   };
 
+  // Method to check for shortcut and invoking commands
+  checkShortcuts = (key) => {
+    const shortcuts = Object.keys(this.state.shortcuts);
+    if (shortcuts.length > 0) {
+      const { keyInputs } = this.state;
+      let modKey = key;
+      if (key === 'meta') {
+        // eslint-disable-next-line no-nested-ternary
+        modKey = os === 'darwin' ? 'cmd' : (os === 'win' ? 'win' : 'meta');
+      }
+      keyInputs.push(modKey);
+      const len = keyInputs.length;
+
+      const options = shortcuts
+        .map((cut, i) => [cut.replace(/\s/g, '').split('+'), i])
+        .filter(cut => cut[0].length >= keyInputs.length)
+        .filter(cut => isEqual(cut[0].slice(0, len), keyInputs));
+
+      if (options.length > 0) {
+        if (options.length === 1 && options[0][0].length === len) {
+          const shortcut = shortcuts[options[0][1]];
+          this.runCommand(this.state.shortcuts[shortcut]);
+          this.setState({ keyInputs: [] });
+        }
+      } else if (keyInputs.length > 0) {
+        this.setState({ keyInputs: [] });
+      }
+    }
+  }
+
   // edit-line command
   editLine = (args) => {
     const { summary } = this.state;
@@ -374,7 +364,7 @@ class Terminal extends Component {
   // Listen for user input
   handleChange = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
+      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
       const { input } = this.state;
 
       const res = this.runCommand(
@@ -393,7 +383,7 @@ class Terminal extends Component {
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     } else if (e.key === 'Enter' && e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`);
+      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
       const { input } = this.state;
       const history = [...this.state.history, e.target.value];
       this.setState({
@@ -408,49 +398,93 @@ class Terminal extends Component {
   /**
    * Base of key code set the value of the input
    * with the history
-   * 38 is key up
-   * 40 is key down
    * @param {event} event of input
    */
   handlerKeyPress = (e, inputRef) => {
-    const { historyCounter } = this.state;
-    switch (e.keyCode) {
-      case 38:
-        this.setValueWithHistory(historyCounter - 1, inputRef);
-        break;
-      case 40:
-        this.setValueWithHistory(historyCounter + 1, inputRef);
-        break;
-      case 9:
-        inputRef.value = this.autocompleteValue(inputRef);
-        e.preventDefault();
-        break;
-      default:
-        break;
+    const key = whatkey(e).key;
+    const { historyCounter, keyInputs } = this.state;
+    if (keyInputs.length === 0) {
+      switch (key) {
+        case 'up':
+          this.setValueWithHistory(historyCounter - 1, inputRef);
+          break;
+        case 'down':
+          this.setValueWithHistory(historyCounter + 1, inputRef);
+          break;
+        case 'tab':
+          inputRef.value = this.autocompleteValue(inputRef);
+          e.preventDefault();
+          break;
+        default:
+          break;
+      }
     }
+    this.checkShortcuts(key);
   }
 
   // Plugins
   loadPlugins = () => {
     this.props.plugins.forEach((plugin) => {
       try {
-        plugin.load({
-          printLine: this.printLine,
-          runCommand: this.runCommand,
-          setPromptPrefix: this.setPromptPrefix,
-        });
+        plugin.load(
+          {
+            printLine: this.printLine,
+            runCommand: this.runCommand,
+            setPromptPrefix: this.setPromptPrefix,
+            getPluginMethod: this.getPluginMethod,
+          },
+        );
+
+        this.pluginMethods[plugin.name] = {
+          ...plugin.getPublicMethods(),
+          _getName: () => plugin.name,
+          _getVersion: () => plugin.version,
+        };
       } catch (e) {
         console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
         console.dir(e);
       }
     });
+
+    this.props.plugins.forEach((plugin) => {
+      try {
+        plugin.afterLoad();
+      } catch (e) {
+        // Do nothing
+      }
+    });
   };
 
+  // Plugin api method to get a public plugin method
+  getPluginMethod = (name, method) => {
+    if (this.pluginMethods[name]) {
+      if (this.pluginMethods[name][method]) {
+        return this.pluginMethods[name][method];
+      }
+      throw new Error(`No method with name ${name} has been registered for plugin ${name}`);
+    } else {
+      throw new Error(`No plugin with name ${name} has been registered`);
+    }
+  }
+
   // Print the summary (input -> output)
-  printLine = (inp) => {
-    const summary = this.state.summary;
-    summary.push(inp);
-    this.setState({ summary });
+  printLine = (inp, std = true) => {
+    let print = true;
+    if (std) {
+      const { plugins } = this.props;
+      for (let i = 0; i < plugins.length; i += 1) {
+        try {
+          print = plugins[i].readStdOut(inp);
+        } catch (e) {
+          // Do nothing
+        }
+      }
+    }
+    if (print === false) {
+      const summary = this.state.summary;
+      summary.push(inp);
+      this.setState({ summary });
+    }
   };
 
   // Execute the commands

@@ -74,7 +74,7 @@ Let's take an example. You want to open a website with a command `open-google`
 <Terminal commands={{ 'open-google': () => window.open("https://www.google.com/", "_blank")}} />
 ```
 
-### Adding description of your command 
+### Adding description of your command
 
 Add a description of your command using prop `description`.
 
@@ -84,7 +84,8 @@ Add a description of your command using prop `description`.
 
 ### Console logging
 
-You can have the terminal watch console.log/info function and print out. 
+You can have the terminal watch console.log/info function and print out.
+It does so by default.
 
 ```jsx
 <Terminal watchConsoleLogging />
@@ -166,11 +167,11 @@ The command API has three parameters `arguments`, `print`, and `runCommand`.
  - `runCommand` is a method to call other commands it takes a string and will
  attempt to run the command given
 
-Let's take an another example - 
+Let's take an another example -
 
 ```jsx
 <Terminal
-  commands={{ 
+  commands={{
     'type-text': (args, print, runCommand) => {
       const text = args.slice(1).join(' ');
       print('');
@@ -189,6 +190,63 @@ Let's take an another example -
   <img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
 </p>
 
+### Keyboard shortcuts
+You can define keyboard shortcuts. They have to be grouped by os. The three available are
+`win`, `darwin`, and `linux`. You can group multiple os by a `,` for example if the
+shortcut was for all platforms `win,darwin,linux` would be fine as a key
+
+```jsx
+<Terminal
+  shortcuts={{
+    'darwin,win,linux': {
+      'ctrl + a': 'echo whoo',
+    },
+  }}
+/>
+```
+
+But you might want to specific
+
+```jsx
+<Terminal
+  shortcuts={{
+    'win': {
+      'ctrl + a': 'echo hi windows',
+    },
+    'darwin': {
+      'cmd + a': 'echo hi mac'
+    },
+    'linux': {
+      'ctrl + a': 'echo hi linux'
+    }
+  }}
+/>
+```
+
+You can mix and match
+
+```jsx
+<Terminal
+  shortcuts={{
+    'win,linux': {
+      'ctrl + b': 'echo we are special',
+    },
+    'win': {
+      'ctrl + a': 'echo hi windows',
+    },
+    'darwin': {
+      'cmd + a': 'echo hi mac'
+    },
+    'linux': {
+      'ctrl + a': 'echo hi linux'
+    }
+  }}
+/>
+```
+
+The value of the shortcut should be a command to run.
+
+
 ### Using plugins 🔥
 
 We have also developed a plugin system for the `<Terminal />` component which helps you develop custom plugins. Here is one example of plugin which creates a fake file system called [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin).
@@ -198,7 +256,7 @@ We have also developed a plugin system for the `<Terminal />` component which he
 ```jsx
 import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'
 
-<Terminal 
+<Terminal
   plugins={[
     new PseudoFileSystem(),
   ]}
@@ -214,7 +272,7 @@ Awesome! Right? Let us know if you make something interesting 😃
 
 <p align="center">
   <img src="https://i.gyazo.com/3e719f4091cbd72f3e1f99209493e50d.gif" />
-</p> 
+</p>
 
 ### Multiline input
 
@@ -222,13 +280,13 @@ via `shift + enter`
 
 <p align="center">
   <img src="http://g.recordit.co/AznpOohzJL.gif" />
-</p> 
+</p>
 
 ### Check history of your commands
 
 <p align="center">
   <img src="https://i.gyazo.com/6fa55a8fbb961787c51e406e612e0bb8.gif" />
-</p> 
+</p>
 
 ## Customization
 
