@@ -26,6 +26,7 @@ yarn add terminal-in-react
 ```jsx
 import React, { Component } from 'react';
 import Terminal from 'terminal-in-react';
+import 'terminal-in-react/lib/css/index.css';
 
 class App extends Component {
   showMsg = () => 'Hello World'
