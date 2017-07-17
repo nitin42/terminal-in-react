@@ -7,5 +7,10 @@
         "react": "React"
       }
     }]
-  ]
+  ],
+  "env": {
+    "production": {
+      "presets": ["babili"]
+    }
+  }
 }

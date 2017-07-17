@@ -29,10 +29,8 @@ pids
 logs
 results
 coverage
-lib-cov
 html-report
 xunit.xml
-components
 starter
 webpack
 __mocks__

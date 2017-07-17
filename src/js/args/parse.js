@@ -4,32 +4,6 @@ export default function (argv, options) {
   // Override default option values
   Object.assign(this.config, options);
 
-  if (Array.isArray(this.config.mainColor)) {
-    for (const item in this.config.mainColor) {
-      if (!{}.hasOwnProperty.call(this.config.mainColor, item)) {
-        continue; // eslint-disable-line no-continue
-      }
-
-      // Chain all colors to our print method
-      this.printMainColor = this.printMainColor[this.config.mainColor[item]];
-    }
-  } else {
-    this.printMainColor = this.printMainColor[this.config.mainColor];
-  }
-
-  if (Array.isArray(this.config.subColor)) {
-    for (const item in this.config.subColor) {
-      if (!{}.hasOwnProperty.call(this.config.subColor, item)) {
-        continue; // eslint-disable-line no-continue
-      }
-
-      // Chain all colors to our print method
-      this.printSubColor = this.printSubColor[this.config.subColor[item]];
-    }
-  } else {
-    this.printSubColor = this.printSubColor[this.config.subColor];
-  }
-
   if (this.config.help) {
     // Register default options and commands
     this.option('help', 'Output usage information');
