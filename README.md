@@ -286,3 +286,7 @@ Sure! Create an issue for that and I will look into it.
 **Getting build errors when using `create-react-app`**<br/>
 
 * Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
+
+**Style issues when maximizing**
+
+* Set the style to `height: 100vh`
