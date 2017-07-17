@@ -289,4 +289,4 @@ Sure! Create an issue for that and I will look into it.
 
 **Style issues when maximizing**
 
-* Set the style to `height: 100vh`
+* Set the style to `height: 100vh` on parent element.
