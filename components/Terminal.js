@@ -480,7 +480,8 @@ class Terminal extends Component {
         }
       }
     }
-    if (print === false) {
+
+    if (print !== false) {
       const summary = this.state.summary;
       summary.push(inp);
       this.setState({ summary });
