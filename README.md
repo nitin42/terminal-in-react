@@ -32,7 +32,7 @@ class App extends Component {
 
   render() {
     return (
-      <div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
         <Terminal
           color="green"
           backgroundColor="black"
@@ -190,63 +190,6 @@ Let's take an another example -
   <img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
 </p>
 
-### Keyboard shortcuts
-You can define keyboard shortcuts. They have to be grouped by os. The three available are
-`win`, `darwin`, and `linux`. You can group multiple os by a `,` for example if the
-shortcut was for all platforms `win,darwin,linux` would be fine as a key
-
-```jsx
-<Terminal
-  shortcuts={{
-    'darwin,win,linux': {
-      'ctrl + a': 'echo whoo',
-    },
-  }}
-/>
-```
-
-But you might want to specific
-
-```jsx
-<Terminal
-  shortcuts={{
-    'win': {
-      'ctrl + a': 'echo hi windows',
-    },
-    'darwin': {
-      'cmd + a': 'echo hi mac'
-    },
-    'linux': {
-      'ctrl + a': 'echo hi linux'
-    }
-  }}
-/>
-```
-
-You can mix and match
-
-```jsx
-<Terminal
-  shortcuts={{
-    'win,linux': {
-      'ctrl + b': 'echo we are special',
-    },
-    'win': {
-      'ctrl + a': 'echo hi windows',
-    },
-    'darwin': {
-      'cmd + a': 'echo hi mac'
-    },
-    'linux': {
-      'ctrl + a': 'echo hi linux'
-    }
-  }}
-/>
-```
-
-The value of the shortcut should be a command to run.
-
-
 ### Using plugins 🔥
 
 We have also developed a plugin system for the `<Terminal />` component which helps you develop custom plugins. Here is one example of plugin which creates a fake file system called [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin).
@@ -342,4 +285,8 @@ Sure! Create an issue for that and I will look into it.
 
 **Getting build errors when using `create-react-app`**<br/>
 
-Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
+* Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
+
+**Style issues when maximizing**
+
+* Set the style to `height: 100vh` on parent element.
