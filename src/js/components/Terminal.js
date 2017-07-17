@@ -1,14 +1,13 @@
 /* eslint-disable no-console, react/sort-comp */
-import React, { Component } from 'react';
+import React, { Component } from 'react'; // eslint-disable-line
 import stringSimilarity from 'string-similarity';
 import whatkey from 'whatkey';
 import isEqual from 'lodash.isequal';
-import { handleLogging, getOs } from './utils';
+import Command from '../args';
+import { handleLogging, getOs } from '../utils';
 import { TerminalPropTypes, TerminalContextTypes, TerminalDefaultProps } from './types';
-import Command from './args';
 import Bar from './Bar';
 import Content from './Content';
-import './Terminal.css';
 
 const os = getOs();
 
@@ -192,7 +191,7 @@ class Terminal extends Component {
 
   // Show msg (on window close)
   getNote = () => (
-    <span className="note">
+    <span className="terminal-note">
       <h1>OOPS! You closed the window.</h1>
       <img
         src="https://camo.githubusercontent.com/95ad3fffa11193f85dedbf14ca67e4c5c07182d0/687474703a2f2f69636f6e732e69636f6e617263686976652e636f6d2f69636f6e732f70616f6d656469612f736d616c6c2d6e2d666c61742f313032342f7465726d696e616c2d69636f6e2e706e67"
@@ -480,7 +479,8 @@ class Terminal extends Component {
         }
       }
     }
-    if (print === false) {
+
+    if (print !== false) {
       const summary = this.state.summary;
       summary.push(inp);
       this.setState({ summary });

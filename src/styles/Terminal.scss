@@ -3,6 +3,7 @@
   max-width: 600px;
   height: 630px;
   max-height: 100vh;
+  text-align: initial;
 }
 
 .terminal-container-wrapper {
@@ -22,15 +23,15 @@
   margin: 0 auto;
 }
 
-.note {
+.terminal-note {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  animation: fadeIn 0.3s ease-in;
+  animation: terminalFadeIn 0.3s ease-in;
 }
 
-@keyframes fadeIn {
+@keyframes terminalFadeIn {
   0% {
     opacity: 0;
   }

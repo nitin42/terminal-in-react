@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import parse from './parse';
 import example from './example';
 import examples from './examples';
@@ -35,8 +34,8 @@ export default function Args() {
     subColor: 'dim',
   };
 
-  this.printMainColor = chalk;
-  this.printSubColor = chalk;
+  this.printMainColor = i => i;
+  this.printSubColor = i => i;
 
   this.parent = module.parent;
 }

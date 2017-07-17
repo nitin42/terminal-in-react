@@ -7,7 +7,7 @@
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
 </p>
 
-> A tiny component that renders a terminal
+> A component that renders a terminal
 
 ## Install
 
@@ -26,6 +26,7 @@ yarn add terminal-in-react
 ```jsx
 import React, { Component } from 'react';
 import Terminal from 'terminal-in-react';
+import 'terminal-in-react/lib/css/index.css';
 
 class App extends Component {
   showMsg = () => 'Hello World'

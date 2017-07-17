@@ -1,6 +1,5 @@
 import camelcase from 'camelcase';
 import stringSimilarity from 'string-similarity';
-import cloneDeep from 'lodash.clonedeep';
 
 export default {
   handleType(value) {
@@ -104,7 +103,7 @@ export default {
 
     // Copy over the arguments
     Object.assign(args, this.raw);
-    const _ = cloneDeep(args._);
+    const _ = [...args._];
     delete args._;
 
     // Override defaults if used in command line
@@ -178,7 +177,7 @@ export default {
 
   generateDetails(kind) {
     // Get all properties of kind from global scope
-    const items = typeof kind === 'string' ? cloneDeep(this.details[kind]) : cloneDeep(kind);
+    const items = typeof kind === 'string' ? [...this.details[kind]] : [...kind];
     const parts = [];
     const isCmd = kind === 'commands';
 

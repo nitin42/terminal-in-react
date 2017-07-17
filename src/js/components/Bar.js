@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
-import './Bar.css';
 
 class Bar extends Component {
   static displayName = 'Bar';

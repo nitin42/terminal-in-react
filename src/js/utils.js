@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React from 'react'; // eslint-disable-line
 import ObjectInspector from 'react-object-inspector';
 import platform from 'platform';
 
