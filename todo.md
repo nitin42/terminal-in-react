@@ -1,5 +1,8 @@
 # Todos
 
 - [ ] Refactor the code
-- [ ] Animations
-- [ ] Media support
+- [x] Animations
+- [x] Media support
+- [ ] Upgrades to the plugin system
+- [ ] Bash to js ast
+- [ ] Tabs
