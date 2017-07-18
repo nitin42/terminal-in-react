@@ -43,18 +43,16 @@ const plugins = () => [
 ];
 
 const externals = () => ({
-  react: {
-    amd: 'react',
-    commonjs: 'react',
-    commonjs2: 'react',
-    root: 'React',
-  },
-  'react-dom': {
-    amd: 'react-dom',
-    commonjs: 'react-dom',
-    commonjs2: 'react-dom',
-    root: 'ReactDOM',
-  },
+  react: 'react',
+  'react-dom': 'react-dom',
+  camelcase: 'camelcase',
+  'lodash.isequal': 'lodash.isequal',
+  minimist: 'minimist',
+  platform: 'platform',
+  'prop-types': 'prop-types',
+  'react-object-inspector': 'react-object-inspector',
+  'string-similarity': 'string-similarity',
+  'whatkey': 'whatkey'
 });
 
 const entry = () => ({
