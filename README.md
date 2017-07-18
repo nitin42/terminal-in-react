@@ -237,6 +237,62 @@ using arrow down and up keys
   <img src="https://i.gyazo.com/6fa55a8fbb961787c51e406e612e0bb8.gif" />
 </p>
 
+### Keyboard shortcuts
+You can define keyboard shortcuts. They have to be grouped by os. The three available are
+`win`, `darwin`, and `linux`. You can group multiple os by a `,` for example if the
+shortcut was for all platforms `win,darwin,linux` would be fine as a key
+
+```jsx
+<Terminal
+  shortcuts={{
+    'darwin,win,linux': {
+      'ctrl + a': 'echo whoo',
+    },
+  }}
+/>
+```
+
+But you might want to specific
+
+```jsx
+<Terminal
+  shortcuts={{
+    'win': {
+      'ctrl + a': 'echo hi windows',
+    },
+    'darwin': {
+      'cmd + a': 'echo hi mac'
+    },
+    'linux': {
+      'ctrl + a': 'echo hi linux'
+    }
+  }}
+/>
+```
+
+You can mix and match
+
+```jsx
+<Terminal
+  shortcuts={{
+    'win,linux': {
+      'ctrl + b': 'echo we are special',
+    },
+    'win': {
+      'ctrl + a': 'echo hi windows',
+    },
+    'darwin': {
+      'cmd + a': 'echo hi mac'
+    },
+    'linux': {
+      'ctrl + a': 'echo hi linux'
+    }
+  }}
+/>
+```
+
+The value of the shortcut should be a command to run.
+
 ## Customization
 
 Use
