@@ -31,6 +31,12 @@
 
 * [Where to use ?](#where-to-use-)
 
+* [Add a feature](#you-want-a-x-feature)
+
+* [Contributing](#contributing)
+
+* [Troubleshooting](#troubleshooting)
+
 ## Install
 
 ```
