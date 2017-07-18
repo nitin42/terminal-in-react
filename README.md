@@ -9,6 +9,28 @@
 
 > A component that renders a terminal
 
+## Table of contents
+
+* [Install](#install)
+
+* [Usage](#usage)
+
+* [Styling](#include-the-css)
+
+* [Working](#working)
+
+* [Plugins](#using-plugins-)
+
+* [Features](#more-features)
+
+* [Customization](#customization)
+
+* [API reference](#api)
+
+* [Built-in commands](#built-in-commands)
+
+* [Where to use ?](#where-to-use-)
+
 ## Install
 
 ```
@@ -194,11 +216,11 @@ Let's take an another example -
   <img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
 </p>
 
-### Using plugins 🔥
+## Using plugins 🔥
 
 We have also developed a plugin system for the `<Terminal />` component which helps you develop custom plugins. Here is one example of plugin which creates a fake file system called [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin).
 
-#### Instantiating the plugin
+### Instantiating the plugin
 
 ```jsx
 import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'
@@ -214,6 +236,8 @@ import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'
 </p>
 
 Awesome! Right? Let us know if you make something interesting 😃
+
+## More features
 
 ### Tab autocomplete
 
