@@ -375,7 +375,7 @@ Sure! Check our [todolist](./todo.md) or create an issue and I will look into it
 
 ## Troubleshooting
 
-**Getting build errors when using `create-react-app`**<br/>
+**Build errors when using with `create-react-app`**<br/>
 
 * Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
 
