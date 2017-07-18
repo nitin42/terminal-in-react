@@ -1,7 +1,7 @@
 # Terminal in React
-![version](https://img.shields.io/badge/terminal--in--react-3.0.1-brightgreen.svg)
-![size](https://img.shields.io/badge/size-33.4%20KB-brightgreen.svg)
-![size](https://img.shields.io/badge/gzip-9.85%20KB-brightgreen.svg)
+![version](https://img.shields.io/badge/terminal--in--react-3.3.1-brightgreen.svg)
+![size](https://img.shields.io/badge/size-31.4%20KB-brightgreen.svg)
+![size](https://img.shields.io/badge/gzip-8.63%20KB-brightgreen.svg)
 
 <p align="center">
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
@@ -56,6 +56,9 @@ class App extends Component {
   }
 }
 ```
+#### Include the CSS
+
+Ensure that `terminal-in-react/lib/css/index.css` is loaded
 
 > Be careful when copying this example because it uses `window` object (`'open-google': () => window.open("https://www.google.com/", "_blank"),`) which is only available on the client-side and it will give you an error if you're doing server side rendering.
 
@@ -228,6 +231,8 @@ via `shift + enter`
 
 ### Check history of your commands
 
+using arrow down and up keys
+
 <p align="center">
   <img src="https://i.gyazo.com/6fa55a8fbb961787c51e406e612e0bb8.gif" />
 </p>
@@ -264,7 +269,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `clear` - Clears the screen
 * `help` - List all the commands
 * `show` - Shows a msg if any
-* `echo` - Outputs anything given
+* `echo` - Display the input message
 * `edit-line` - Edits the last line or a given line using the `-l` argument
 
 ## Where to use ?
@@ -276,7 +281,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 
 ## You want a X feature
 
-Sure! Create an issue for that and I will look into it.
+Sure! Check our [todolist](./todo.md) or create an issue and I will look into it. 
 
 ## Contributing
 
