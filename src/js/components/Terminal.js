@@ -5,20 +5,24 @@ import whatkey from 'whatkey';
 import isEqual from 'lodash.isequal';
 import Command from '../args';
 import { handleLogging, getOs } from '../utils';
-import { TerminalPropTypes, TerminalContextTypes, TerminalDefaultProps } from './types';
+import {
+  TerminalPropTypes,
+  TerminalContextTypes,
+  TerminalDefaultProps
+} from './types';
 import Bar from './Bar';
 import Content from './Content';
 
 const os = getOs();
 
 function getShortcuts(shortcuts, obj) {
-  Object.keys(obj).forEach((key) => {
+  Object.keys(obj).forEach(key => {
     const split = key.toLowerCase().replace(/\s/g, '').split(',');
-    split.forEach((osName) => {
+    split.forEach(osName => {
       if (osName === os) {
         shortcuts = {
           ...shortcuts,
-          ...obj[key],
+          ...obj[key]
         };
       }
     });
@@ -40,11 +44,12 @@ class Terminal extends Component {
 
     this.pluginMethods = {};
 
-    this.defaultCommands = { // eslint-disable-line react/sort-comp
+    this.defaultCommands = {
+      // eslint-disable-line react/sort-comp
       show: this.showMsg,
       clear: this.clearScreen,
       help: this.showHelp,
-      echo: (input) => input.slice(1).join(' '),
+      echo: input => input.slice(1).join(' '),
       'edit-line': {
         method: this.editLine,
         options: [
@@ -52,10 +57,10 @@ class Terminal extends Component {
             name: 'line',
             description: 'the line you want to edit. -1 is the last line',
             init: value => parseInt(value, 10),
-            defaultValue: -1,
-          },
-        ],
-      },
+            defaultValue: -1
+          }
+        ]
+      }
     };
 
     this.defaultDesciptions = {
@@ -63,16 +68,16 @@ class Terminal extends Component {
       clear: 'clear the screen',
       help: 'list all the commands',
       echo: 'output the input',
-      'edit-line': 'edit the contents of an output line',
+      'edit-line': 'edit the contents of an output line'
     };
 
     this.defaultShortcuts = {
       'win, linux': {
-        'ctrl + l': 'clear',
+        'ctrl + l': 'clear'
       },
       darwin: {
-        'cmd + k': 'clear',
-      },
+        'cmd + k': 'clear'
+      }
     };
   }
 
@@ -89,7 +94,7 @@ class Terminal extends Component {
     maximise: false,
     input: [],
     shortcuts: {},
-    keyInputs: [],
+    keyInputs: []
   };
 
   getChildContext() {
@@ -106,7 +111,7 @@ class Terminal extends Component {
       unmaximiseWindow: this.setFalse('maximise'),
       toggleShow: this.toggleState('show'),
       toggleMaximise: this.toggleState('maximise'),
-      toggleMinimize: this.toggleState('minimise'),
+      toggleMinimize: this.toggleState('minimise')
     };
   }
 
@@ -157,10 +162,7 @@ class Terminal extends Component {
     });
 
     return (
-      <div
-        className="terminal-container-wrapper"
-        style={{ color, ...style }}
-      >
+      <div className="terminal-container-wrapper" style={{ color, ...style }}>
         <Bar style={barColorStyles} />
         <Content
           output={output}
@@ -180,17 +182,14 @@ class Terminal extends Component {
     const barColorStyles = { backgroundColor: barColor };
 
     return (
-      <div
-        className="terminal-container-wrapper"
-        style={{ color, ...style }}
-      >
+      <div className="terminal-container-wrapper" style={{ color, ...style }}>
         <Bar style={barColorStyles} />
       </div>
     );
-  }
+  };
 
   // Show msg (on window close)
-  getNote = () => (
+  getNote = () =>
     <span className="terminal-note">
       <h1>OOPS! You closed the window.</h1>
       <img
@@ -201,20 +200,19 @@ class Terminal extends Component {
         onClick={this.toggleState('show')}
       />
       Click on the icon to reopen.
-    </span>
-  );
+    </span>;
 
   // Set descriptions of the commands
   setDescriptions = () => {
     let descriptions = {
       ...this.defaultDesciptions,
-      ...this.props.descriptions,
+      ...this.props.descriptions
     };
-    this.props.plugins.forEach((plugin) => {
+    this.props.plugins.forEach(plugin => {
       if (plugin.descriptions) {
         descriptions = {
           ...descriptions,
-          ...plugin.descriptions,
+          ...plugin.descriptions
         };
       }
     });
@@ -226,9 +224,9 @@ class Terminal extends Component {
     let shortcuts = getShortcuts({}, this.defaultShortcuts);
     shortcuts = getShortcuts(shortcuts, this.props.shortcuts);
     this.setState({ shortcuts });
-  }
+  };
 
-  setPromptPrefix = (promptPrefix) => {
+  setPromptPrefix = promptPrefix => {
     this.setState({ promptPrefix });
   };
 
@@ -256,19 +254,19 @@ class Terminal extends Component {
   assembleCommands = () => {
     let commands = {
       ...this.defaultCommands,
-      ...this.props.commands,
+      ...this.props.commands
     };
 
-    this.props.plugins.forEach((plugin) => {
+    this.props.plugins.forEach(plugin => {
       if (plugin.commands) {
         commands = {
           ...commands,
-          ...plugin.commands,
+          ...plugin.commands
         };
       }
     });
 
-    Object.keys(commands).forEach((name) => {
+    Object.keys(commands).forEach(name => {
       const definition = commands[name];
       let method = definition;
       let parse = i => i;
@@ -281,17 +279,18 @@ class Terminal extends Component {
             throw new Error('options for command wrong format');
           }
         }
-        parse = i => cmd.parse(i, {
-          name,
-          help: true,
-          version: false,
-        });
+        parse = i =>
+          cmd.parse(i, {
+            name,
+            help: true,
+            version: false
+          });
         method = definition.method;
       }
 
       commands[name] = {
         parse,
-        method,
+        method
       };
     });
     this.setState({ commands });
@@ -301,17 +300,22 @@ class Terminal extends Component {
    * autocomplete with the command the have the best match
    * @param {object} input reference
    */
-  autocompleteValue = (inputRef) => {
+  autocompleteValue = inputRef => {
     const { descriptions } = this.state;
-    const keysToCheck = Object.keys(descriptions).filter(key => descriptions[key] !== false);
-    const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, keysToCheck);
+    const keysToCheck = Object.keys(descriptions).filter(
+      key => descriptions[key] !== false
+    );
+    const { bestMatch } = stringSimilarity.findBestMatch(
+      inputRef.value,
+      keysToCheck
+    );
 
     if (bestMatch.rating >= 0.5) {
       return bestMatch.target;
     }
 
     return inputRef.value;
-  }
+  };
 
   // Refresh or clear the screen
   clearScreen = () => {
@@ -319,14 +323,14 @@ class Terminal extends Component {
   };
 
   // Method to check for shortcut and invoking commands
-  checkShortcuts = (key) => {
+  checkShortcuts = key => {
     const shortcuts = Object.keys(this.state.shortcuts);
     if (shortcuts.length > 0) {
       const { keyInputs } = this.state;
       let modKey = key;
       if (key === 'meta') {
         // eslint-disable-next-line no-nested-ternary
-        modKey = os === 'darwin' ? 'cmd' : (os === 'win' ? 'win' : 'meta');
+        modKey = os === 'darwin' ? 'cmd' : os === 'win' ? 'win' : 'meta';
       }
       keyInputs.push(modKey);
       const len = keyInputs.length;
@@ -346,10 +350,10 @@ class Terminal extends Component {
         this.setState({ keyInputs: [] });
       }
     }
-  }
+  };
 
   // edit-line command
-  editLine = (args) => {
+  editLine = args => {
     const { summary } = this.state;
     let index = args.line;
     if (index === -1) {
@@ -357,16 +361,19 @@ class Terminal extends Component {
     }
     summary[index] = args._.join(' ');
     this.setState({ summary });
-  }
+  };
 
   // Listen for user input
-  handleChange = (e) => {
+  handleChange = e => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
+      this.printLine(
+        `${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`,
+        false
+      );
       const { input } = this.state;
 
       const res = this.runCommand(
-        `${input.join('\n')}${input.length > 0 ? '\n' : ''}${e.target.value}`,
+        `${input.join('\n')}${input.length > 0 ? '\n' : ''}${e.target.value}`
       );
 
       if (typeof res !== 'undefined') {
@@ -377,17 +384,20 @@ class Terminal extends Component {
       this.setState({
         input: [],
         history,
-        historyCounter: history.length,
+        historyCounter: history.length
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     } else if (e.key === 'Enter' && e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
+      this.printLine(
+        `${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`,
+        false
+      );
       const { input } = this.state;
       const history = [...this.state.history, e.target.value];
       this.setState({
         input: [...input, e.target.value],
         history,
-        historyCounter: history.length,
+        historyCounter: history.length
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
@@ -418,39 +428,39 @@ class Terminal extends Component {
       }
     }
     this.checkShortcuts(key);
-  }
+  };
 
   // Plugins
   loadPlugins = () => {
-    this.props.plugins.forEach((plugin) => {
-      try {
-        plugin.load(
-          {
+    if (this.props.plugins) {
+      this.props.plugins.forEach(plugin => {
+        try {
+          plugin.load({
             printLine: this.printLine,
             runCommand: this.runCommand,
             setPromptPrefix: this.setPromptPrefix,
-            getPluginMethod: this.getPluginMethod,
-          },
-        );
+            getPluginMethod: this.getPluginMethod
+          });
 
-        this.pluginMethods[plugin.name] = {
-          ...plugin.getPublicMethods(),
-          _getName: () => plugin.name,
-          _getVersion: () => plugin.version,
-        };
-      } catch (e) {
-        console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
-        console.dir(e);
-      }
-    });
+          this.pluginMethods[plugin.name] = {
+            ...plugin.getPublicMethods(),
+            _getName: () => plugin.name,
+            _getVersion: () => plugin.version
+          };
+        } catch (e) {
+          console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
+          console.dir(e);
+        }
+      });
 
-    this.props.plugins.forEach((plugin) => {
-      try {
-        plugin.afterLoad();
-      } catch (e) {
-        // Do nothing
-      }
-    });
+      this.props.plugins.forEach(plugin => {
+        try {
+          plugin.afterLoad();
+        } catch (e) {
+          // Do nothing
+        }
+      });
+    }
   };
 
   // Plugin api method to get a public plugin method
@@ -459,11 +469,13 @@ class Terminal extends Component {
       if (this.pluginMethods[name][method]) {
         return this.pluginMethods[name][method];
       }
-      throw new Error(`No method with name ${name} has been registered for plugin ${name}`);
+      throw new Error(
+        `No method with name ${name} has been registered for plugin ${name}`
+      );
     } else {
       throw new Error(`No plugin with name ${name} has been registered`);
     }
-  }
+  };
 
   // Print the summary (input -> output)
   printLine = (inp, std = true) => {
@@ -487,7 +499,7 @@ class Terminal extends Component {
   };
 
   // Execute the commands
-  runCommand = (inputText) => {
+  runCommand = inputText => {
     const inputArray = inputText.split(' ');
     const input = inputArray[0];
     const args = inputArray; // Undefined for function call
@@ -498,18 +510,25 @@ class Terminal extends Component {
       // do nothing
     } else if (command === undefined) {
       if (typeof this.props.commandPassThrough === 'function') {
-        res = this.props.commandPassThrough(inputArray, this.printLine, this.runCommand);
+        res = this.props.commandPassThrough(
+          inputArray,
+          this.printLine,
+          this.runCommand
+        );
       } else {
         this.printLine(`-bash:${input}: command not found`);
       }
     } else {
       const parsedArgs = command.parse(args);
-      if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
+      if (
+        typeof parsedArgs !== 'object' ||
+        (typeof parsedArgs === 'object' && !parsedArgs.help)
+      ) {
         res = command.method(parsedArgs, this.printLine, this.runCommand);
       }
     }
     return res;
-  }
+  };
 
   // Listen for console logging and pass the input to handler (handleLogging)
   watchConsoleLogging = () => {
@@ -538,7 +557,10 @@ class Terminal extends Component {
 
   render() {
     return (
-      <div className="terminal-base" style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}>
+      <div
+        className="terminal-base"
+        style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}
+      >
         {this.getAppContent()}
       </div>
     );
