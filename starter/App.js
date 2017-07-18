@@ -31,10 +31,12 @@ const App = () => (
             }, 100 * i);
           }
         },
+        open: () => window.open('https://www.nitintulswani.surge.sh', '_blank')
       }}
       descriptions={{
         color: 'option for color. For eg - color red',
         'type-text': 'Types out input text',
+        open: 'Open a website'
       }}
       shortcuts={{
         'darwin,win,linux': {
