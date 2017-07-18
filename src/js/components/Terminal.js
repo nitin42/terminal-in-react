@@ -44,7 +44,7 @@ class Terminal extends Component {
       show: this.showMsg,
       clear: this.clearScreen,
       help: this.showHelp,
-      echo: (input) => { console.log(...input.slice(1)); },
+      echo: (input) => input.slice(1).join(' '),
       'edit-line': {
         method: this.editLine,
         options: [
@@ -225,7 +225,6 @@ class Terminal extends Component {
   setShortcuts = () => {
     let shortcuts = getShortcuts({}, this.defaultShortcuts);
     shortcuts = getShortcuts(shortcuts, this.props.shortcuts);
-    console.log(shortcuts);
     this.setState({ shortcuts });
   }
 
