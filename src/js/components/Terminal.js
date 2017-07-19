@@ -44,7 +44,7 @@ class Terminal extends Component {
       show: this.showMsg,
       clear: this.clearScreen,
       help: this.showHelp,
-      echo: (input) => { console.log(...input.slice(1)); },
+      echo: input => input.slice(1).join(' '),
       'edit-line': {
         method: this.editLine,
         options: [
@@ -78,23 +78,18 @@ class Terminal extends Component {
 
   state = {
     prompt: '>',
-    promptPrefix: '',
-    summary: [],
     commands: {},
     descriptions: {},
-    history: [],
-    historyCounter: 0,
     show: true,
     minimise: false,
     maximise: false,
-    input: [],
     shortcuts: {},
-    keyInputs: [],
+    instances: [],
   };
 
   getChildContext() {
     return {
-      symbol: this.state.promptPrefix + this.state.prompt,
+      symbol: this.state.prompt,
       show: this.state.show,
       minimise: this.state.minimise,
       maximise: this.state.maximise,
@@ -121,7 +116,7 @@ class Terminal extends Component {
     this.assembleCommands();
     this.setDescriptions();
     this.setShortcuts();
-    this.showMsg();
+    this.showMsg({}, this.printLine.bind(this, this.state.instances[0]));
 
     if (this.props.watchConsoleLogging) {
       this.watchConsoleLogging();
@@ -149,13 +144,6 @@ class Terminal extends Component {
     const barColorStyles = { backgroundColor: barColor };
     const backgroundColorStyles = { backgroundColor };
 
-    const output = this.state.summary.map((content, i) => {
-      if (typeof content === 'string' && content.length === 0) {
-        return <div className="terminal-output-line" key={i}>&nbsp;</div>;
-      }
-      return <pre className="terminal-output-line" key={i}>{content}</pre>;
-    });
-
     return (
       <div
         className="terminal-container-wrapper"
@@ -163,7 +151,7 @@ class Terminal extends Component {
       >
         <Bar style={barColorStyles} />
         <Content
-          output={output}
+          register={this.registerInstance}
           prompt={promptStyles}
           inputStyles={inputStyles}
           handleChange={this.handleChange}
@@ -229,6 +217,7 @@ class Terminal extends Component {
     this.setState({ shortcuts });
   }
 
+  // Setter to change the prefix of the input prompt
   setPromptPrefix = (promptPrefix) => {
     this.setState({ promptPrefix });
   };
@@ -243,13 +232,25 @@ class Terminal extends Component {
   * set the input value with the possible history value
   * @param {number} next position on the history
   */
-  setValueWithHistory = (position, inputRef) => {
-    const { history } = this.state;
+  setValueWithHistory = (instance, position, inputRef) => {
+    const { history } = instance.state;
     if (history[position]) {
-      this.setState({ historyCounter: position });
+      instance.setState({ historyCounter: position });
       inputRef.value = history[position];
     }
   };
+
+  // Used to keep track of all instances
+  registerInstance = (instance) => {
+    const { instances } = this.state;
+    instances.push(instance);
+    this.setState({ instances });
+    return () => {
+      this.setState({
+        instances: this.state.instances.filter(i => !isEqual(i, instance)),
+      });
+    };
+  }
 
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
@@ -315,15 +316,15 @@ class Terminal extends Component {
   }
 
   // Refresh or clear the screen
-  clearScreen = () => {
+  clearScreen = function clearScreen() {
     this.setState({ summary: [] });
   };
 
   // Method to check for shortcut and invoking commands
-  checkShortcuts = (key) => {
+  checkShortcuts = (instance, key) => {
     const shortcuts = Object.keys(this.state.shortcuts);
     if (shortcuts.length > 0) {
-      const { keyInputs } = this.state;
+      const { keyInputs } = instance.state;
       let modKey = key;
       if (key === 'meta') {
         // eslint-disable-next-line no-nested-ternary
@@ -340,17 +341,17 @@ class Terminal extends Component {
       if (options.length > 0) {
         if (options.length === 1 && options[0][0].length === len) {
           const shortcut = shortcuts[options[0][1]];
-          this.runCommand(this.state.shortcuts[shortcut]);
-          this.setState({ keyInputs: [] });
+          this.runCommand(instance, this.state.shortcuts[shortcut]);
+          instance.setState({ keyInputs: [] });
         }
       } else if (keyInputs.length > 0) {
-        this.setState({ keyInputs: [] });
+        instance.setState({ keyInputs: [] });
       }
     }
   }
 
   // edit-line command
-  editLine = (args) => {
+  editLine = function editLine(args) {
     const { summary } = this.state;
     let index = args.line;
     if (index === -1) {
@@ -361,34 +362,40 @@ class Terminal extends Component {
   }
 
   // Listen for user input
-  handleChange = (e) => {
+  handleChange = (instance, e) => {
+    const { input, promptPrefix, history } = instance.state;
     if (e.key === 'Enter' && !e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
-      const { input } = this.state;
+      this.printLine.bind(this, instance)(
+        `${promptPrefix}${this.state.prompt} ${e.target.value}`,
+        false,
+      );
 
       const res = this.runCommand(
+        instance,
         `${input.join('\n')}${input.length > 0 ? '\n' : ''}${e.target.value}`,
       );
 
       if (typeof res !== 'undefined') {
-        this.printLine(res);
+        this.printLine.bind(this, instance)(res);
       }
 
-      const history = [...this.state.history, e.target.value];
-      this.setState({
+      const newHistory = [...history, e.target.value];
+      instance.setState({
         input: [],
-        history,
-        historyCounter: history.length,
+        history: newHistory,
+        historyCounter: newHistory.length,
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     } else if (e.key === 'Enter' && e.shiftKey) {
-      this.printLine(`${this.state.promptPrefix}${this.state.prompt} ${e.target.value}`, false);
-      const { input } = this.state;
-      const history = [...this.state.history, e.target.value];
+      this.printLine.bind(this, instance)(
+        `${promptPrefix}${this.state.prompt} ${e.target.value}`,
+        false,
+      );
+      const newHistory = [...history, e.target.value];
       this.setState({
         input: [...input, e.target.value],
-        history,
-        historyCounter: history.length,
+        history: newHistory,
+        historyCounter: newHistory.length,
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
@@ -399,16 +406,16 @@ class Terminal extends Component {
    * with the history
    * @param {event} event of input
    */
-  handlerKeyPress = (e, inputRef) => {
+  handlerKeyPress = (instance, e, inputRef) => {
     const key = whatkey(e).key;
-    const { historyCounter, keyInputs } = this.state;
+    const { historyCounter, keyInputs } = instance.state;
     if (keyInputs.length === 0) {
       switch (key) {
         case 'up':
-          this.setValueWithHistory(historyCounter - 1, inputRef);
+          this.setValueWithHistory(instance, historyCounter - 1, inputRef);
           break;
         case 'down':
-          this.setValueWithHistory(historyCounter + 1, inputRef);
+          this.setValueWithHistory(instance, historyCounter + 1, inputRef);
           break;
         case 'tab':
           inputRef.value = this.autocompleteValue(inputRef);
@@ -418,7 +425,7 @@ class Terminal extends Component {
           break;
       }
     }
-    this.checkShortcuts(key);
+    this.checkShortcuts(instance, key);
   }
 
   // Plugins
@@ -427,8 +434,8 @@ class Terminal extends Component {
       try {
         plugin.load(
           {
-            printLine: this.printLine,
-            runCommand: this.runCommand,
+            printLine: this.printLine.bind(this, this),
+            runCommand: this.runCommand.bind(this, this),
             setPromptPrefix: this.setPromptPrefix,
             getPluginMethod: this.getPluginMethod,
           },
@@ -467,7 +474,7 @@ class Terminal extends Component {
   }
 
   // Print the summary (input -> output)
-  printLine = (inp, std = true) => {
+  printLine = (instance, inp, std = true) => {
     let print = true;
     if (std) {
       const { plugins } = this.props;
@@ -481,14 +488,14 @@ class Terminal extends Component {
     }
 
     if (print !== false) {
-      const summary = this.state.summary;
+      const summary = instance.state.summary;
       summary.push(inp);
-      this.setState({ summary });
+      instance.setState({ summary });
     }
   };
 
   // Execute the commands
-  runCommand = (inputText) => {
+  runCommand = (instance, inputText) => {
     const inputArray = inputText.split(' ');
     const input = inputArray[0];
     const args = inputArray; // Undefined for function call
@@ -499,14 +506,22 @@ class Terminal extends Component {
       // do nothing
     } else if (command === undefined) {
       if (typeof this.props.commandPassThrough === 'function') {
-        res = this.props.commandPassThrough(inputArray, this.printLine, this.runCommand);
+        res = this.props.commandPassThrough(
+          inputArray,
+          this.printLine.bind(this, instance),
+          this.runCommand.bind(this, instance),
+        );
       } else {
-        this.printLine(`-bash:${input}: command not found`);
+        this.printLine.bind(this, instance)(`-bash:${input}: command not found`);
       }
     } else {
       const parsedArgs = command.parse(args);
       if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
-        res = command.method(parsedArgs, this.printLine, this.runCommand);
+        res = command.method.bind(instance)(
+          parsedArgs,
+          this.printLine.bind(this, instance),
+          this.runCommand.bind(this, instance),
+        );
       }
     }
     return res;
@@ -514,32 +529,35 @@ class Terminal extends Component {
 
   // Listen for console logging and pass the input to handler (handleLogging)
   watchConsoleLogging = () => {
-    handleLogging('log', this.printLine);
-    handleLogging('info', this.printLine);
-    // handleLogging('warn', this.printLine);
-    // handleLogging('error', this.printLine);
+    handleLogging('log', this.printLine.bind(this, this.state.instances[0]));
+    handleLogging('info', this.printLine.bind(this, this.state.instances[0]));
+    // handleLogging('warn', this.printLine.bind(this, this.state.instances[0]));
+    // handleLogging('error', this.printLine.bind(this, this.state.instances[0]));
   };
 
   // List all the commands (state + user defined)
-  showHelp = () => {
+  showHelp = (args, printLine) => {
     const options = Object.keys(this.state.commands);
     const descriptions = this.state.descriptions;
     for (const option of options) {
       // eslint-disable-line no-restricted-syntax
       if (descriptions[option] !== false) {
-        this.printLine(`${option} - ${descriptions[option]}`);
+        printLine(`${option} - ${descriptions[option]}`);
       }
     }
   };
 
   // Show the msg (prop msg)
-  showMsg = () => {
-    this.printLine(this.props.msg);
+  showMsg = (args, printLine) => {
+    printLine(this.props.msg);
   };
 
   render() {
     return (
-      <div className="terminal-base" style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}>
+      <div
+        className="terminal-base"
+        style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}
+      >
         {this.getAppContent()}
       </div>
     );
