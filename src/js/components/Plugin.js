@@ -1,12 +1,11 @@
 export default class Plugin {
-  constructor(name = '', version = '1.0.0') {
-    this.name = name;
-    this.version = version;
+  static defaultData = '';
+  static name = '';
+  static version = '1.0.0';
+
+  constructor(api) {
+    this.api = api;
   }
-
-  load = () => {};
-
-  afterLoad = () => {};
 
   getPublicMethods = () => ({});
 

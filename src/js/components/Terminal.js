@@ -42,7 +42,7 @@ class Terminal extends Component {
   constructor(props) {
     super(props);
 
-    this.pluginMethods = {};
+    this.instances = [];
 
     this.defaultCommands = {
       // eslint-disable-line react/sort-comp
@@ -89,7 +89,7 @@ class Terminal extends Component {
     minimise: false,
     maximise: false,
     shortcuts: {},
-    instances: [],
+    pluginData: {},
   };
 
   getChildContext() {
@@ -121,7 +121,7 @@ class Terminal extends Component {
     this.assembleCommands();
     this.setDescriptions();
     this.setShortcuts();
-    this.showMsg({}, this.printLine.bind(this, this.state.instances[0]));
+    this.showMsg({}, this.printLine.bind(this, this.instances[0].instance));
 
     if (this.props.watchConsoleLogging) {
       this.watchConsoleLogging();
@@ -240,13 +240,37 @@ class Terminal extends Component {
 
   // Used to keep track of all instances
   registerInstance = (instance) => {
-    const { instances } = this.state;
-    instances.push(instance);
-    this.setState({ instances });
+    const pluginInstances = {};
+    const pluginMethods = {};
+
+    this.props.plugins.forEach((PluginClass) => {
+      try {
+        const plugin = new PluginClass({
+          printLine: this.printLine.bind(this, instance),
+          runCommand: this.runCommand.bind(this, instance),
+          setPromptPrefix: this.setPromptPrefix.bind(this, instance),
+          getPluginMethod: this.getPluginMethod.bind(this, instance),
+        });
+
+        pluginMethods[PluginClass.name] = {
+          ...plugin.getPublicMethods(),
+          _getName: () => PluginClass.name,
+          _getVersion: () => PluginClass.version,
+        };
+        pluginInstances[PluginClass.name] = plugin;
+      } catch (e) {
+        console.error(`Error instantiating plugin ${PluginClass.name}`, e); // eslint-disable-line no-console
+      }
+    });
+
+    this.instances.push({
+      instance,
+      pluginMethods,
+      pluginInstances,
+    });
+
     return () => {
-      this.setState({
-        instances: this.state.instances.filter(i => !isEqual(i, instance)),
-      });
+      this.instances = this.instances.filter(i => !isEqual(i.instance, instance));
     };
   }
 
@@ -435,59 +459,48 @@ class Terminal extends Component {
   // Plugins
   loadPlugins = () => {
     // TODO intance plugins
+    const pluginData = {};
     this.props.plugins.forEach((plugin) => {
       try {
-        plugin.load({
-          printLine: this.printLine.bind(this, this),
-          runCommand: this.runCommand.bind(this, this),
-          setPromptPrefix: this.setPromptPrefix.bind(this, this),
-          getPluginMethod: this.getPluginMethod,
-        });
-
-        this.pluginMethods[plugin.name] = {
-          ...plugin.getPublicMethods(),
-          _getName: () => plugin.name,
-          _getVersion: () => plugin.version,
-        };
+        pluginData[plugin.name] = plugin.defaultData;
       } catch (e) {
-        console.error(`Error loading plugin ${plugin.name}`); // eslint-disable-line no-console
-        console.dir(e);
+        console.error(`Error loading plugin ${plugin.name}`, e); // eslint-disable-line no-console
       }
     });
-
-    this.props.plugins.forEach((plugin) => {
-      try {
-        plugin.afterLoad();
-      } catch (e) {
-        // Do nothing
-      }
-    });
+    this.setState({ pluginData });
   };
 
   // Plugin api method to get a public plugin method
-  getPluginMethod = (name, method) => {
-    if (this.pluginMethods[name]) {
-      if (this.pluginMethods[name][method]) {
-        return this.pluginMethods[name][method];
+  getPluginMethod = (instance, name, method) => {
+    const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+    if (instanceData) {
+      if (instanceData.pluginMethods[name]) {
+        if (instanceData.pluginMethods[name][method]) {
+          return instanceData.pluginMethods[name][method];
+        }
+        throw new Error(
+          `No method with name ${name} has been registered for plugin ${name}`,
+        );
+      } else {
+        throw new Error(`No plugin with name ${name} has been registered`);
       }
-      throw new Error(
-        `No method with name ${name} has been registered for plugin ${name}`,
-      );
-    } else {
-      throw new Error(`No plugin with name ${name} has been registered`);
     }
+    return null;
   };
 
   // Print the summary (input -> output)
   printLine = (instance, inp, std = true) => {
     let print = true;
     if (std) {
-      const { plugins } = this.props;
-      for (let i = 0; i < plugins.length; i += 1) {
-        try {
-          print = plugins[i].readStdOut(inp);
-        } catch (e) {
-          // Do nothing
+      const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+      if (instanceData) {
+        const plugins = instanceData.pluginInstances;
+        for (let i = 0; i < plugins.length; i += 1) {
+          try {
+            print = plugins[i].readStdOut(inp);
+          } catch (e) {
+            // Do nothing
+          }
         }
       }
     }
@@ -536,10 +549,10 @@ class Terminal extends Component {
   // Listen for console logging and pass the input to handler (handleLogging)
   watchConsoleLogging = () => {
     // TODO switch to a print to all instances method
-    handleLogging('log', this.printLine.bind(this, this.state.instances[0]));
-    handleLogging('info', this.printLine.bind(this, this.state.instances[0]));
-    // handleLogging('warn', this.printLine.bind(this, this.state.instances[0]));
-    // handleLogging('error', this.printLine.bind(this, this.state.instances[0]));
+    handleLogging('log', this.printLine.bind(this, this.instances[0].instance));
+    handleLogging('info', this.printLine.bind(this, this.instances[0].instance));
+    // handleLogging('warn', this.printLine.bind(this, this.instances[0].instance));
+    // handleLogging('error', this.printLine.bind(this, this.instances[0].instance));
   };
 
   // List all the commands (state + user defined)
