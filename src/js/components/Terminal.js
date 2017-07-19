@@ -44,14 +44,23 @@ class Terminal extends Component {
 
     this.instances = [];
 
+    this.pluginData = {};
+
     this.defaultCommands = {
       // eslint-disable-line react/sort-comp
       show: this.showMsg,
-      clear: this.clearScreen,
-      help: this.showHelp,
+      clear: {
+        method: this.clearScreen,
+        needsInstance: true,
+      },
+      help: {
+        method: this.showHelp,
+        needsInstance: true,
+      },
       echo: input => input.slice(1).join(' '),
       'edit-line': {
         method: this.editLine,
+        needsInstance: true,
         options: [
           {
             name: 'line',
@@ -89,7 +98,6 @@ class Terminal extends Component {
     minimise: false,
     maximise: false,
     shortcuts: {},
-    pluginData: {},
   };
 
   getChildContext() {
@@ -191,6 +199,12 @@ class Terminal extends Component {
     </span>
   );
 
+  // Plugin data getter
+  getPluginData = name => this.pluginData[name];
+
+  // Plugin data setter
+  setPluginData = (name, data) => (this.pluginData[name] = data);
+
   // Set descriptions of the commands
   setDescriptions = () => {
     let descriptions = {
@@ -250,6 +264,8 @@ class Terminal extends Component {
           runCommand: this.runCommand.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
+          getData: () => this.getPluginData(PluginClass.name),
+          setData: data => this.setPluginData(PluginClass.name, data),
         });
 
         pluginMethods[PluginClass.name] = {
@@ -274,6 +290,7 @@ class Terminal extends Component {
     };
   }
 
+  // Toggle a state boolean
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
 
   // Prepare the built-in commands
@@ -293,6 +310,7 @@ class Terminal extends Component {
     });
 
     Object.keys(commands).forEach((name) => {
+      let needsInstance = false;
       const definition = commands[name];
       let method = definition;
       let parse = i => i;
@@ -312,11 +330,13 @@ class Terminal extends Component {
             version: false,
           });
         method = definition.method;
+        needsInstance = definition.needsInstance || false;
       }
 
       commands[name] = {
         parse,
         method,
+        needsInstance,
       };
     });
     this.setState({ commands });
@@ -344,8 +364,8 @@ class Terminal extends Component {
   };
 
   // Refresh or clear the screen
-  clearScreen = function clearScreen() {
-    this.setState({ summary: [] });
+  clearScreen = (args, printLine, runCommand, instance) => {
+    instance.setState({ summary: [] });
   };
 
   // Method to check for shortcut and invoking commands
@@ -379,14 +399,14 @@ class Terminal extends Component {
   };
 
   // edit-line command
-  editLine = function editLine(args) {
-    const { summary } = this.state;
+  editLine = (args, printLine, runCommand, instance) => {
+    const { summary } = instance.state;
     let index = args.line;
     if (index === -1) {
       index = summary.length === 0 ? 0 : summary.length - 1;
     }
     summary[index] = args._.join(' ');
-    this.setState({ summary });
+    instance.setState({ summary });
   };
 
   // Listen for user input
@@ -467,7 +487,7 @@ class Terminal extends Component {
         console.error(`Error loading plugin ${plugin.name}`, e); // eslint-disable-line no-console
       }
     });
-    this.setState({ pluginData });
+    this.pluginData = pluginData;
   };
 
   // Plugin api method to get a public plugin method
@@ -517,7 +537,17 @@ class Terminal extends Component {
     const inputArray = inputText.split(' ');
     const input = inputArray[0];
     const args = inputArray; // Undefined for function call
-    const command = this.state.commands[input];
+    const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+    let commands = { ...this.state.commands };
+    if (instanceData) {
+      instanceData.pluginInstances.forEach((i) => {
+        commands = {
+          ...commands,
+          ...i.commands,
+        };
+      });
+    }
+    const command = commands[input];
     let res;
 
     if (input === '') {
@@ -536,10 +566,11 @@ class Terminal extends Component {
       const parsedArgs = command.parse(args);
       const type = typeof parsedArgs;
       if (type !== 'object' || (type === 'object' && !parsedArgs.help)) {
-        res = command.method.bind(instance)(
+        res = command.method(
           parsedArgs,
           this.printLine.bind(this, instance),
           this.runCommand.bind(this, instance),
+          command.needsInstance === true ? instance : undefined,
         );
       }
     }
@@ -556,9 +587,24 @@ class Terminal extends Component {
   };
 
   // List all the commands (state + user defined)
-  showHelp = (args, printLine) => {
-    const options = Object.keys(this.state.commands);
-    const descriptions = this.state.descriptions;
+  showHelp = (args, printLine, runCommand, instance) => {
+    let commands = { ...this.state.commands };
+    let descriptions = { ...this.state.descriptions };
+    const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+    if (instanceData) {
+      instanceData.pluginInstances.forEach((i) => {
+        commands = {
+          ...commands,
+          ...i.commands,
+        };
+        descriptions = {
+          ...descriptions,
+          ...i.descriptions,
+        };
+      });
+    }
+    const options = Object.keys(commands);
+
     for (const option of options) {
       // eslint-disable-line no-restricted-syntax
       if (descriptions[option] !== false) {
