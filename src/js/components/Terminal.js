@@ -264,18 +264,18 @@ class Terminal extends Component {
           runCommand: this.runCommand.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
-          getData: () => this.getPluginData(PluginClass.name),
-          setData: data => this.setPluginData(PluginClass.name, data),
+          getData: () => this.getPluginData(PluginClass.displayName),
+          setData: data => this.setPluginData(PluginClass.displayName, data),
         });
 
-        pluginMethods[PluginClass.name] = {
+        pluginMethods[PluginClass.displayName] = {
           ...plugin.getPublicMethods(),
-          _getName: () => PluginClass.name,
+          _getName: () => PluginClass.displayName,
           _getVersion: () => PluginClass.version,
         };
-        pluginInstances[PluginClass.name] = plugin;
+        pluginInstances[PluginClass.displayName] = plugin;
       } catch (e) {
-        console.error(`Error instantiating plugin ${PluginClass.name}`, e); // eslint-disable-line no-console
+        console.error(`Error instantiating plugin ${PluginClass.displayName}`, e); // eslint-disable-line no-console
       }
     });
 
@@ -482,9 +482,9 @@ class Terminal extends Component {
     const pluginData = {};
     this.props.plugins.forEach((plugin) => {
       try {
-        pluginData[plugin.name] = plugin.defaultData;
+        pluginData[plugin.displayName] = plugin.defaultData;
       } catch (e) {
-        console.error(`Error loading plugin ${plugin.name}`, e); // eslint-disable-line no-console
+        console.error(`Error loading plugin ${plugin.displayName}`, e); // eslint-disable-line no-console
       }
     });
     this.pluginData = pluginData;

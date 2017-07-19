@@ -1,5 +1,5 @@
 export default class Plugin {
-  static name = '';
+  static displayName = '';
   static version = '1.0.0';
   static defaultData = '';
 
