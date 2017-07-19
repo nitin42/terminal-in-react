@@ -5,7 +5,11 @@ import whatkey from 'whatkey';
 import isEqual from 'lodash.isequal';
 import Command from '../args';
 import { handleLogging, getOs } from '../utils';
-import { TerminalPropTypes, TerminalContextTypes, TerminalDefaultProps } from './types';
+import {
+  TerminalPropTypes,
+  TerminalContextTypes,
+  TerminalDefaultProps,
+} from './types';
 import Bar from './Bar';
 import Content from './Content';
 
@@ -40,7 +44,8 @@ class Terminal extends Component {
 
     this.pluginMethods = {};
 
-    this.defaultCommands = { // eslint-disable-line react/sort-comp
+    this.defaultCommands = {
+      // eslint-disable-line react/sort-comp
       show: this.showMsg,
       clear: this.clearScreen,
       help: this.showHelp,
@@ -145,10 +150,7 @@ class Terminal extends Component {
     const backgroundColorStyles = { backgroundColor };
 
     return (
-      <div
-        className="terminal-container-wrapper"
-        style={{ color, ...style }}
-      >
+      <div className="terminal-container-wrapper" style={{ color, ...style }}>
         <Bar style={barColorStyles} />
         <Content
           register={this.registerInstance}
@@ -168,14 +170,11 @@ class Terminal extends Component {
     const barColorStyles = { backgroundColor: barColor };
 
     return (
-      <div
-        className="terminal-container-wrapper"
-        style={{ color, ...style }}
-      >
+      <div className="terminal-container-wrapper" style={{ color, ...style }}>
         <Bar style={barColorStyles} />
       </div>
     );
-  }
+  };
 
   // Show msg (on window close)
   getNote = () => (
@@ -213,13 +212,12 @@ class Terminal extends Component {
   setShortcuts = () => {
     let shortcuts = getShortcuts({}, this.defaultShortcuts);
     shortcuts = getShortcuts(shortcuts, this.props.shortcuts);
-    console.log(shortcuts);
     this.setState({ shortcuts });
-  }
+  };
 
   // Setter to change the prefix of the input prompt
-  setPromptPrefix = (promptPrefix) => {
-    this.setState({ promptPrefix });
+  setPromptPrefix = (instance, promptPrefix) => {
+    instance.setState({ promptPrefix });
   };
 
   // Hide window
@@ -283,11 +281,12 @@ class Terminal extends Component {
             throw new Error('options for command wrong format');
           }
         }
-        parse = i => cmd.parse(i, {
-          name,
-          help: true,
-          version: false,
-        });
+        parse = i =>
+          cmd.parse(i, {
+            name,
+            help: true,
+            version: false,
+          });
         method = definition.method;
       }
 
@@ -305,15 +304,20 @@ class Terminal extends Component {
    */
   autocompleteValue = (inputRef) => {
     const { descriptions } = this.state;
-    const keysToCheck = Object.keys(descriptions).filter(key => descriptions[key] !== false);
-    const { bestMatch } = stringSimilarity.findBestMatch(inputRef.value, keysToCheck);
+    const keysToCheck = Object.keys(descriptions).filter(
+      key => descriptions[key] !== false,
+    );
+    const { bestMatch } = stringSimilarity.findBestMatch(
+      inputRef.value,
+      keysToCheck,
+    );
 
     if (bestMatch.rating >= 0.5) {
       return bestMatch.target;
     }
 
     return inputRef.value;
-  }
+  };
 
   // Refresh or clear the screen
   clearScreen = function clearScreen() {
@@ -328,7 +332,7 @@ class Terminal extends Component {
       let modKey = key;
       if (key === 'meta') {
         // eslint-disable-next-line no-nested-ternary
-        modKey = os === 'darwin' ? 'cmd' : (os === 'win' ? 'win' : 'meta');
+        modKey = os === 'darwin' ? 'cmd' : os === 'win' ? 'win' : 'meta';
       }
       keyInputs.push(modKey);
       const len = keyInputs.length;
@@ -348,7 +352,7 @@ class Terminal extends Component {
         instance.setState({ keyInputs: [] });
       }
     }
-  }
+  };
 
   // edit-line command
   editLine = function editLine(args) {
@@ -359,7 +363,7 @@ class Terminal extends Component {
     }
     summary[index] = args._.join(' ');
     this.setState({ summary });
-  }
+  };
 
   // Listen for user input
   handleChange = (instance, e) => {
@@ -430,16 +434,15 @@ class Terminal extends Component {
 
   // Plugins
   loadPlugins = () => {
+    // TODO intance plugins
     this.props.plugins.forEach((plugin) => {
       try {
-        plugin.load(
-          {
-            printLine: this.printLine.bind(this, this),
-            runCommand: this.runCommand.bind(this, this),
-            setPromptPrefix: this.setPromptPrefix,
-            getPluginMethod: this.getPluginMethod,
-          },
-        );
+        plugin.load({
+          printLine: this.printLine.bind(this, this),
+          runCommand: this.runCommand.bind(this, this),
+          setPromptPrefix: this.setPromptPrefix.bind(this, this),
+          getPluginMethod: this.getPluginMethod,
+        });
 
         this.pluginMethods[plugin.name] = {
           ...plugin.getPublicMethods(),
@@ -467,11 +470,13 @@ class Terminal extends Component {
       if (this.pluginMethods[name][method]) {
         return this.pluginMethods[name][method];
       }
-      throw new Error(`No method with name ${name} has been registered for plugin ${name}`);
+      throw new Error(
+        `No method with name ${name} has been registered for plugin ${name}`,
+      );
     } else {
       throw new Error(`No plugin with name ${name} has been registered`);
     }
-  }
+  };
 
   // Print the summary (input -> output)
   printLine = (instance, inp, std = true) => {
@@ -516,7 +521,8 @@ class Terminal extends Component {
       }
     } else {
       const parsedArgs = command.parse(args);
-      if (typeof parsedArgs !== 'object' || (typeof parsedArgs === 'object' && !parsedArgs.help)) {
+      const type = typeof parsedArgs;
+      if (type !== 'object' || (type === 'object' && !parsedArgs.help)) {
         res = command.method.bind(instance)(
           parsedArgs,
           this.printLine.bind(this, instance),
@@ -525,10 +531,11 @@ class Terminal extends Component {
       }
     }
     return res;
-  }
+  };
 
   // Listen for console logging and pass the input to handler (handleLogging)
   watchConsoleLogging = () => {
+    // TODO switch to a print to all instances method
     handleLogging('log', this.printLine.bind(this, this.state.instances[0]));
     handleLogging('info', this.printLine.bind(this, this.state.instances[0]));
     // handleLogging('warn', this.printLine.bind(this, this.state.instances[0]));

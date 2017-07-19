@@ -42,13 +42,13 @@ const darwinPlatforms = ['OS X', 'iOS'];
 
 export function getOs() {
   const { os } = platform;
-  if (os.family.indexOf('Windows') === 0) {
+  if (os.family !== null && os.family.indexOf('Windows') === 0) {
     return 'win';
   }
-  if (linuxPlatforms.indexOf(os.family) > -1) {
+  if (os.family !== null && linuxPlatforms.indexOf(os.family) > -1) {
     return 'linux';
   }
-  if (darwinPlatforms.indexOf(os.family) > -1) {
+  if (os.family !== null && darwinPlatforms.indexOf(os.family) > -1) {
     return 'darwin';
   }
   return 'unknown';

@@ -1,13 +1,41 @@
 # Terminal in React
-![version](https://img.shields.io/badge/terminal--in--react-3.0.1-brightgreen.svg)
-![size](https://img.shields.io/badge/size-33.4%20KB-brightgreen.svg)
-![size](https://img.shields.io/badge/gzip-9.85%20KB-brightgreen.svg)
+![version](https://img.shields.io/badge/terminal--in--react-3.3.1-brightgreen.svg)
+![size](https://img.shields.io/badge/size-31.4%20KB-brightgreen.svg)
+![size](https://img.shields.io/badge/gzip-8.63%20KB-brightgreen.svg)
 
 <p align="center">
   <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/terminal-icon.png"  width="300" height="300" />
 </p>
 
 > A component that renders a terminal
+
+## Table of contents
+
+* [Install](#install)
+
+* [Usage](#usage)
+
+* [Styling](#include-the-css)
+
+* [Working](#working)
+
+* [Plugins](#using-plugins-)
+
+* [Features](#more-features)
+
+* [Customization](#customization)
+
+* [API reference](#api)
+
+* [Built-in commands](#built-in-commands)
+
+* [Where to use ?](#where-to-use-)
+
+* [Add a feature](#you-want-a-x-feature)
+
+* [Contributing](#contributing)
+
+* [Troubleshooting](#troubleshooting)
 
 ## Install
 
@@ -33,29 +61,32 @@ class App extends Component {
 
   render() {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
         <Terminal
-          color="green"
-          backgroundColor="black"
-          barColor="black"
-          style={{ fontWeight: 'bold', fontSize: '1em' }}
+          color='green'
+          backgroundColor='black'
+          barColor='black'
+          style={{ fontWeight: "bold", fontSize: "1em" }}
           commands={{
-            'open-google': () => window.open("https://www.google.com/", "_blank"),
+            'open-google': () => window.open('https://www.google.com/', '_blank'),
             showmsg: this.showMsg,
-            popup: () => alert("Terminal in React")
+            popup: () => alert('Terminal in React')
           }}
           descriptions={{
             'open-google': 'opens google.com',
             showmsg: 'shows a message',
             alert: 'alert', popup: 'alert'
           }}
-          msg="You can write anything here. Example - Hello! My name is Foo and I like Bar."
+          msg='You can write anything here. Example - Hello! My name is Foo and I like Bar.'
         />
       </div>
     );
   }
 }
 ```
+#### Include the CSS
+
+Ensure that `terminal-in-react/lib/css/index.css` is loaded
 
 > Be careful when copying this example because it uses `window` object (`'open-google': () => window.open("https://www.google.com/", "_blank"),`) which is only available on the client-side and it will give you an error if you're doing server side rendering.
 
@@ -191,11 +222,11 @@ Let's take an another example -
   <img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
 </p>
 
-### Using plugins 🔥
+## Using plugins 🔥
 
 We have also developed a plugin system for the `<Terminal />` component which helps you develop custom plugins. Here is one example of plugin which creates a fake file system called [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin).
 
-#### Instantiating the plugin
+### Instantiating the plugin
 
 ```jsx
 import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'
@@ -211,6 +242,8 @@ import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'
 </p>
 
 Awesome! Right? Let us know if you make something interesting 😃
+
+## More features
 
 ### Tab autocomplete
 
@@ -228,9 +261,67 @@ via `shift + enter`
 
 ### Check history of your commands
 
+using arrow down and up keys
+
 <p align="center">
   <img src="https://i.gyazo.com/6fa55a8fbb961787c51e406e612e0bb8.gif" />
 </p>
+
+### Keyboard shortcuts
+You can define keyboard shortcuts. They have to be grouped by os. The three available are
+`win`, `darwin`, and `linux`. You can group multiple os by a `,` for example if the
+shortcut was for all platforms `win,darwin,linux` would be fine as a key
+
+```jsx
+<Terminal
+  shortcuts={{
+    'darwin,win,linux': {
+      'ctrl + a': 'echo whoo',
+    },
+  }}
+/>
+```
+
+But you might want to specific
+
+```jsx
+<Terminal
+  shortcuts={{
+    'win': {
+      'ctrl + a': 'echo hi windows',
+    },
+    'darwin': {
+      'cmd + a': 'echo hi mac'
+    },
+    'linux': {
+      'ctrl + a': 'echo hi linux'
+    }
+  }}
+/>
+```
+
+You can mix and match
+
+```jsx
+<Terminal
+  shortcuts={{
+    'win,linux': {
+      'ctrl + b': 'echo we are special',
+    },
+    'win': {
+      'ctrl + a': 'echo hi windows',
+    },
+    'darwin': {
+      'cmd + a': 'echo hi mac'
+    },
+    'linux': {
+      'ctrl + a': 'echo hi linux'
+    }
+  }}
+/>
+```
+
+The value of the shortcut should be a command to run.
 
 ## Customization
 
@@ -264,7 +355,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 * `clear` - Clears the screen
 * `help` - List all the commands
 * `show` - Shows a msg if any
-* `echo` - Outputs anything given
+* `echo` - Display the input message
 * `edit-line` - Edits the last line or a given line using the `-l` argument
 
 ## Where to use ?
@@ -276,7 +367,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 
 ## You want a X feature
 
-Sure! Create an issue for that and I will look into it.
+Sure! Check our [todolist](./todo.md) or create an issue and I will look into it. 
 
 ## Contributing
 
@@ -284,7 +375,7 @@ Sure! Create an issue for that and I will look into it.
 
 ## Troubleshooting
 
-**Getting build errors when using `create-react-app`**<br/>
+**Build errors when using with `create-react-app`**<br/>
 
 * Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
 
