@@ -1,0 +1,33 @@
+.terminal-tab-bar {
+  height: 30px;
+  max-width: 600px;
+  transition: all 0.4s ease-out;
+  background: #222;
+}
+
+.adjust-tab-bar {
+  display: block;
+  margin: 0 auto;
+}
+
+.terminal-tab {
+  display: inline-block;
+  vertical-align: top;
+  height: 30px;
+  background-color: #333;
+  border-bottom: 2px solid #333;
+  text-align: center;
+  line-height: 30px;
+  min-width: 50px;
+  max-width: 150px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 3px;
+  padding-right: 3px;
+  cursor: pointer;
+}
+
+.terminal-tab-active {
+  border-bottom-color: #777;
+}

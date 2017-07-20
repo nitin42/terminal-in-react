@@ -12,6 +12,15 @@ import {
 } from './types';
 import Bar from './Bar';
 import Content from './Content';
+import Tabs from './Tabs';
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0; // eslint-disable-line no-bitwise
+    const v = c === 'x' ? r : (r & 0x3 | 0x8); // eslint-disable-line
+    return v.toString(16);
+  });
+}
 
 const os = getOs();
 
@@ -41,8 +50,6 @@ class Terminal extends Component {
 
   constructor(props) {
     super(props);
-
-    this.instances = [];
 
     this.pluginData = {};
 
@@ -98,10 +105,14 @@ class Terminal extends Component {
     minimise: false,
     maximise: false,
     shortcuts: {},
+    activeTab: '',
+    tabs: [],
+    instances: [],
   };
 
   getChildContext() {
     return {
+      instances: this.state.instances,
       symbol: this.state.prompt,
       show: this.state.show,
       minimise: this.state.minimise,
@@ -120,21 +131,26 @@ class Terminal extends Component {
 
   // Prepare the symbol
   componentWillMount = () => {
+    this.loadPlugins();
+    this.assembleCommands();
+    this.setDescriptions();
+    this.setShortcuts();
+
+    this.createTab();
     this.setState({ prompt: this.props.promptSymbol });
   };
 
   // Load everything!
   componentDidMount = () => {
-    this.loadPlugins();
-    this.assembleCommands();
-    this.setDescriptions();
-    this.setShortcuts();
-    this.showMsg({}, this.printLine.bind(this, this.instances[0].instance));
-
     if (this.props.watchConsoleLogging) {
       this.watchConsoleLogging();
     }
   };
+
+  // Tab creation
+  createTab = () => {
+    this.setState({ activeTab: uuidv4() });
+  }
 
   // Show the content on toggling
   getAppContent = () => {
@@ -150,24 +166,36 @@ class Terminal extends Component {
 
   // Shows the full window (normal window)
   getContent = () => {
-    const { backgroundColor, color, style, barColor, prompt } = this.props;
+    const { color, style, barColor, backgroundColor, prompt } = this.props;
+    const { activeTab, instances } = this.state;
 
+    const barColorStyles = { backgroundColor: barColor };
     const inputStyles = { backgroundColor, color };
     const promptStyles = { color: prompt };
-    const barColorStyles = { backgroundColor: barColor };
     const backgroundColorStyles = { backgroundColor };
+
+    const data = instances.find(i => i.index === activeTab);
 
     return (
       <div className="terminal-container-wrapper" style={{ color, ...style }}>
         <Bar style={barColorStyles} />
-        <Content
-          register={this.registerInstance}
-          prompt={promptStyles}
-          inputStyles={inputStyles}
-          handleChange={this.handleChange}
-          backgroundColor={backgroundColorStyles}
-          handlerKeyPress={this.handlerKeyPress}
+        <Tabs
+          active={activeTab}
+          setActiveTab={this.setActiveTab}
+          createTab={this.createTab}
         />
+        {[(
+          <Content
+            key={activeTab}
+            prompt={promptStyles}
+            inputStyles={inputStyles}
+            handleChange={this.handleChange}
+            handlerKeyPress={this.handlerKeyPress}
+            backgroundColor={backgroundColorStyles}
+            oldData={data ? data.oldData : undefined}
+            register={(...args) => this.registerInstance(activeTab, ...args)}
+          />
+        )]}
       </div>
     );
   };
@@ -234,6 +262,10 @@ class Terminal extends Component {
     instance.setState({ promptPrefix });
   };
 
+  setActiveTab = (activeTab) => {
+    this.setState({ activeTab });
+  };
+
   // Hide window
   setFalse = name => () => this.setState({ [name]: false });
 
@@ -253,40 +285,70 @@ class Terminal extends Component {
   };
 
   // Used to keep track of all instances
-  registerInstance = (instance) => {
+  registerInstance = (index, instance) => {
+    const { instances } = this.state;
     const pluginInstances = {};
     const pluginMethods = {};
 
+    const old = instances.find(i => i.index === index);
+
     this.props.plugins.forEach((PluginClass) => {
       try {
-        const plugin = new PluginClass({
+        const api = {
           printLine: this.printLine.bind(this, instance),
           runCommand: this.runCommand.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
           getData: () => this.getPluginData(PluginClass.displayName),
           setData: data => this.setPluginData(PluginClass.displayName, data),
-        });
-
-        pluginMethods[PluginClass.displayName] = {
-          ...plugin.getPublicMethods(),
-          _getName: () => PluginClass.displayName,
-          _getVersion: () => PluginClass.version,
         };
+
+        let plugin;
+        if (old) {
+          old.pluginInstances[PluginClass.displayName].updateApi(api);
+        } else {
+          plugin = new PluginClass(api);
+
+          pluginMethods[PluginClass.displayName] = {
+            ...plugin.getPublicMethods(),
+            _getName: () => PluginClass.displayName,
+            _getVersion: () => PluginClass.version,
+          };
+        }
+
         pluginInstances[PluginClass.displayName] = plugin;
       } catch (e) {
         console.error(`Error instantiating plugin ${PluginClass.displayName}`, e); // eslint-disable-line no-console
       }
     });
 
-    this.instances.push({
+    const data = {
+      index,
       instance,
-      pluginMethods,
-      pluginInstances,
-    });
+      pluginMethods: old ? old.pluginMethods : pluginMethods,
+      pluginInstances: old ? old.pluginInstances : pluginInstances,
+    };
 
-    return () => {
-      this.instances = this.instances.filter(i => !isEqual(i.instance, instance));
+    if (old) {
+      const realIndex = instances.indexOf(old);
+      instances[realIndex] = data;
+    } else {
+      instances.push(data);
+    }
+
+    this.setState({ instances });
+
+    return (oldData = {}) => {
+      const insts = this.state.instances;
+      this.setState({
+        instances: insts.map((i) => {
+          if (isEqual(i.instance, instance)) {
+            i.instance = null;
+            i.oldData = oldData;
+          }
+          return i;
+        }),
+      });
     };
   }
 
@@ -413,10 +475,12 @@ class Terminal extends Component {
   handleChange = (instance, e) => {
     const { input, promptPrefix, history } = instance.state;
     if (e.key === 'Enter' && !e.shiftKey) {
-      this.printLine.bind(this, instance)(
-        `${promptPrefix}${this.state.prompt} ${e.target.value}`,
-        false,
-      );
+      if (typeof e.dontShowCommand === 'undefined') {
+        this.printLine.bind(this, instance)(
+          `${promptPrefix}${this.state.prompt} ${e.target.value}`,
+          false,
+        );
+      }
 
       const res = this.runCommand(
         instance,
@@ -492,7 +556,7 @@ class Terminal extends Component {
 
   // Plugin api method to get a public plugin method
   getPluginMethod = (instance, name, method) => {
-    const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
     if (instanceData) {
       if (instanceData.pluginMethods[name]) {
         if (instanceData.pluginMethods[name][method]) {
@@ -512,7 +576,7 @@ class Terminal extends Component {
   printLine = (instance, inp, std = true) => {
     let print = true;
     if (std) {
-      const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+      const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
       if (instanceData) {
         const plugins = instanceData.pluginInstances;
         for (let i = 0; i < plugins.length; i += 1) {
@@ -537,10 +601,10 @@ class Terminal extends Component {
     const inputArray = inputText.split(' ');
     const input = inputArray[0];
     const args = inputArray; // Undefined for function call
-    const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
     let commands = { ...this.state.commands };
     if (instanceData) {
-      instanceData.pluginInstances.forEach((i) => {
+      Object.values(instanceData.pluginInstances).forEach((i) => {
         commands = {
           ...commands,
           ...i.commands,
@@ -577,22 +641,29 @@ class Terminal extends Component {
     return res;
   };
 
+  // Print to active instance
+  printToActive = (...args) => {
+    const data = this.state.instances[this.state.activeTab];
+    if (data && data.instance !== null) {
+      this.printLine(data.instance, ...args);
+    }
+  }
+
   // Listen for console logging and pass the input to handler (handleLogging)
   watchConsoleLogging = () => {
-    // TODO switch to a print to all instances method
-    handleLogging('log', this.printLine.bind(this, this.instances[0].instance));
-    handleLogging('info', this.printLine.bind(this, this.instances[0].instance));
-    // handleLogging('warn', this.printLine.bind(this, this.instances[0].instance));
-    // handleLogging('error', this.printLine.bind(this, this.instances[0].instance));
+    handleLogging('log', this.printToActive);
+    handleLogging('info', this.printToActive);
+    // handleLogging('warn', this.printToActive);
+    // handleLogging('error', this.printToActive);
   };
 
   // List all the commands (state + user defined)
   showHelp = (args, printLine, runCommand, instance) => {
     let commands = { ...this.state.commands };
     let descriptions = { ...this.state.descriptions };
-    const instanceData = this.instances.find(i => isEqual(i.instance, instance));
+    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
     if (instanceData) {
-      instanceData.pluginInstances.forEach((i) => {
+      Object.values(instanceData.pluginInstances).forEach((i) => {
         commands = {
           ...commands,
           ...i.commands,

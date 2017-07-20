@@ -5,12 +5,17 @@ class Content extends Component {
   static displayName = 'Content';
 
   static propTypes = {
+    oldData: PropTypes.object, // eslint-disable-line
     backgroundColor: PropTypes.objectOf(PropTypes.string),
     prompt: PropTypes.objectOf(PropTypes.string),
     inputStyles: PropTypes.objectOf(PropTypes.string),
     register: PropTypes.func,
     handleChange: PropTypes.func,
     handlerKeyPress: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    oldData: {},
   };
 
   static contextTypes = {
@@ -27,9 +32,16 @@ class Content extends Component {
     keyInputs: [],
   };
 
+  componentWillMount = () => {
+    this.setState(this.props.oldData);
+  };
+
   componentDidMount = () => {
     this.focusInput();
     this.unregister = this.props.register(this);
+    if (Object.keys(this.props.oldData).length === 0) {
+      this.handleChange({ target: { value: 'show' }, key: 'Enter', dontShowCommand: true });
+    }
   };
 
   // Adjust scrolling
@@ -40,7 +52,7 @@ class Content extends Component {
   };
 
   componentWillUnmount() {
-    this.unregister();
+    this.unregister(this.state);
   }
 
   focusInput = () => {

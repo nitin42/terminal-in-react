@@ -12,6 +12,8 @@ export default class Plugin {
     this.descriptions = {};
   }
 
+  updateApi = api => (this.api = api);
+
   getPublicMethods = () => ({});
 
   readStdOut = () => true;

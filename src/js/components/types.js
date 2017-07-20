@@ -52,6 +52,7 @@ export const TerminalPropTypes = {
 // }
 
 export const TerminalContextTypes = {
+  instances: PropTypes.array,
   symbol: PropTypes.string,
   show: PropTypes.bool,
   minimise: PropTypes.bool,
