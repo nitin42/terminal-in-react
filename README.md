@@ -336,6 +336,8 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 
 ## API
 
+**component props**
+
 | Props        | Type           | Default  |
 | ------------- |:-------------:| -----:|
 | **color**      | string | 'green' |
