@@ -31,6 +31,10 @@
   animation: terminalFadeIn 0.3s ease-in;
 }
 
+.terminal-note > img:focus {
+  outline: none;
+}
+
 @keyframes terminalFadeIn {
   0% {
     opacity: 0;
