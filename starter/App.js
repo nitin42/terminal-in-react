@@ -9,7 +9,6 @@ const App = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
     <Terminal
       startState="maximised"
-      allowTabs
       msg="Hello World. My name is Nitin Tulswani"
       commands={{
         color: {

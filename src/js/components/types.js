@@ -83,7 +83,7 @@ export const TerminalContextTypes = {
 export const TerminalDefaultProps = {
   startState: 'open',
   hideTopBar: false,
-  allowTabs: false,
+  allowTabs: true,
   showActions: true,
   msg: '',
   color: 'green',
