@@ -31,6 +31,7 @@ class Tabs extends Component {
 
   state = {
     showingPlus: false,
+    mouseOver: false,
   };
 
   handleBarClick = (e) => {
@@ -76,7 +77,6 @@ class Tabs extends Component {
           className={`terminal-tab${active === index ? ' terminal-tab-active' : ''}`}
           onClick={e => this.handleTabClick(e, index)}
           onFocus={e => this.handleTabClick(e, index)}
-          onMouseEnter={this.removePlus}
           title={title}
           tabIndex={0}
         >
@@ -99,14 +99,18 @@ class Tabs extends Component {
           ...(this.context.maximise ? { maxWidth: '100%' } : {}),
         }}
         className="terminal-tab-bar"
-        onClick={this.handleBarClick}
-        onMouseEnter={this.showPlus}
-        onMouseLeave={this.removePlus}
       >
         {tabs}
         <div
-          className={`terminal-tab-plus${showingPlus ? ' terminal-tab-plus-visible' : ''}`}
-        >+</div>
+          className="terminal-tab-bar-empty"
+          onMouseEnter={this.showPlus}
+          onMouseLeave={this.removePlus}
+        >
+          <div
+            className={`terminal-tab-plus${showingPlus ? ' terminal-tab-plus-visible' : ''}`}
+            onClick={this.handleBarClick}
+          >+</div>
+        </div>
       </div>
     );
   }

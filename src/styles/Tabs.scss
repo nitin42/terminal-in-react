@@ -3,13 +3,8 @@
   max-width: 600px;
   transition: all 0.4s ease-out;
   background: #222;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-  display: block;
+  display: flex;
   margin: 0 auto;
-  padding-bottom: 15px;
-  margin-bottom: -14px;
 }
 
 .terminal-tab {
@@ -77,4 +72,11 @@
 
 .terminal-tab-plus-visible {
   opacity: 0.7;
+}
+
+.terminal-tab-bar-empty {
+  display: inline-block;
+  min-width: 25px;
+  height: 100%;
+  flex: 1;
 }
