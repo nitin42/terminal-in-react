@@ -480,8 +480,6 @@ class Terminal extends Component {
         .filter(cut => cut[0].length >= keyInputs.length)
         .filter(cut => isEqual(cut[0].slice(0, len), keyInputs));
 
-      console.log(keyInputs);
-
       if (options.length > 0) {
         if (options.length === 1 && options[0][0].length === len) {
           const shortcut = shortcuts[options[0][1]];
