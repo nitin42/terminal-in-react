@@ -725,7 +725,9 @@ class Terminal extends Component {
 
   // Show the msg (prop msg)
   showMsg = (args, printLine) => {
-    printLine(this.props.msg);
+    if (this.props.msg && this.props.msg.length > 0) {
+      printLine(this.props.msg);
+    }
   };
 
   render() {
