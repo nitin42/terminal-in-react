@@ -88,6 +88,9 @@ class Terminal extends Component {
     };
 
     this.defaultShortcuts = {
+      'win, linux, darwin': {
+        'alt + t': this.createTab,
+      },
       'win, linux': {
         'ctrl + l': 'clear',
       },
@@ -95,20 +98,20 @@ class Terminal extends Component {
         'cmd + k': 'clear',
       },
     };
-  }
 
-  state = {
-    prompt: '>',
-    commands: {},
-    descriptions: {},
-    show: true,
-    minimise: false,
-    maximise: false,
-    shortcuts: {},
-    activeTab: '',
-    tabs: [],
-    instances: [],
-  };
+    this.state = {
+      prompt: '>',
+      commands: {},
+      descriptions: {},
+      show: props.startState !== 'closed',
+      minimise: props.startState === 'minimised',
+      maximise: props.startState === 'maximised',
+      shortcuts: {},
+      activeTab: '',
+      tabs: [],
+      instances: [],
+    };
+  }
 
   getChildContext() {
     return {
@@ -117,6 +120,9 @@ class Terminal extends Component {
       show: this.state.show,
       minimise: this.state.minimise,
       maximise: this.state.maximise,
+      activeTab: this.state.activeTab,
+      barShowing: !this.props.hideTopBar,
+      tabsShowing: this.props.allowTabs,
       openWindow: this.setTrue('show'),
       closeWindow: this.setFalse('show'),
       minimiseWindow: this.setTrue('minimise'),
@@ -149,7 +155,37 @@ class Terminal extends Component {
 
   // Tab creation
   createTab = () => {
-    this.setState({ activeTab: uuidv4() });
+    const { color, backgroundColor, prompt, allowTabs } = this.props;
+    if (allowTabs) {
+      const { tabs } = this.state;
+      const id = uuidv4();
+
+      const inputStyles = { backgroundColor, color };
+      const promptStyles = { color: prompt };
+      const backgroundColorStyles = { backgroundColor };
+
+      tabs.push((
+        <Content
+          key={id}
+          id={id}
+          prompt={promptStyles}
+          inputStyles={inputStyles}
+          handleChange={this.handleChange}
+          handlerKeyPress={this.handlerKeyPress}
+          backgroundColor={backgroundColorStyles}
+          register={(...args) => this.registerInstance(id, ...args)}
+        />
+      ));
+
+      this.setState({ activeTab: id, tabs });
+    }
+  }
+
+  // Tab removal
+  removeTab = (index) => {
+    const { tabs } = this.state;
+    tabs.splice(index, 1);
+    this.setState({ tabs });
   }
 
   // Show the content on toggling
@@ -166,48 +202,49 @@ class Terminal extends Component {
 
   // Shows the full window (normal window)
   getContent = () => {
-    const { color, style, barColor, backgroundColor, prompt } = this.props;
-    const { activeTab, instances } = this.state;
+    const {
+      color,
+      style,
+      barColor,
+      showActions,
+      hideTopBar,
+      allowTabs,
+      actionHandlers,
+    } = this.props;
+    const { activeTab, tabs } = this.state;
 
     const barColorStyles = { backgroundColor: barColor };
-    const inputStyles = { backgroundColor, color };
-    const promptStyles = { color: prompt };
-    const backgroundColorStyles = { backgroundColor };
-
-    const data = instances.find(i => i.index === activeTab);
 
     return (
       <div className="terminal-container-wrapper" style={{ color, ...style }}>
-        <Bar style={barColorStyles} />
-        <Tabs
-          active={activeTab}
-          setActiveTab={this.setActiveTab}
-          createTab={this.createTab}
-        />
-        {[(
-          <Content
-            key={activeTab}
-            prompt={promptStyles}
-            inputStyles={inputStyles}
-            handleChange={this.handleChange}
-            handlerKeyPress={this.handlerKeyPress}
-            backgroundColor={backgroundColorStyles}
-            oldData={data ? data.oldData : undefined}
-            register={(...args) => this.registerInstance(activeTab, ...args)}
+        {!hideTopBar && (
+          <Bar showActions={showActions} style={barColorStyles} {...actionHandlers} />
+        )}
+        {allowTabs && (
+          <Tabs
+            active={activeTab}
+            setActiveTab={this.setActiveTab}
+            createTab={this.createTab}
+            removeTab={this.removeTab}
           />
-        )]}
+        )}
+        {tabs}
       </div>
     );
   };
 
   // Show only bar (minimise)
   getBar = () => {
-    const { color, barColor, style } = this.props;
+    const { color, barColor, style, showActions, actionHandlers } = this.props;
     const barColorStyles = { backgroundColor: barColor };
 
     return (
       <div className="terminal-container-wrapper" style={{ color, ...style }}>
-        <Bar style={barColorStyles} />
+        <Bar
+          showActions={showActions}
+          style={barColorStyles}
+          {...actionHandlers}
+        />
       </div>
     );
   };
@@ -262,6 +299,7 @@ class Terminal extends Component {
     instance.setState({ promptPrefix });
   };
 
+  // Set the currently active tab
   setActiveTab = (activeTab) => {
     this.setState({ activeTab });
   };
@@ -338,16 +376,10 @@ class Terminal extends Component {
 
     this.setState({ instances });
 
-    return (oldData = {}) => {
+    return () => {
       const insts = this.state.instances;
       this.setState({
-        instances: insts.map((i) => {
-          if (isEqual(i.instance, instance)) {
-            i.instance = null;
-            i.oldData = oldData;
-          }
-          return i;
-        }),
+        instances: insts.filter(i => !isEqual(i.instance, instance)),
       });
     };
   }
@@ -431,7 +463,7 @@ class Terminal extends Component {
   };
 
   // Method to check for shortcut and invoking commands
-  checkShortcuts = (instance, key) => {
+  checkShortcuts = (instance, key, e) => {
     const shortcuts = Object.keys(this.state.shortcuts);
     if (shortcuts.length > 0) {
       const { keyInputs } = instance.state;
@@ -448,10 +480,19 @@ class Terminal extends Component {
         .filter(cut => cut[0].length >= keyInputs.length)
         .filter(cut => isEqual(cut[0].slice(0, len), keyInputs));
 
+      console.log(keyInputs);
+
       if (options.length > 0) {
         if (options.length === 1 && options[0][0].length === len) {
           const shortcut = shortcuts[options[0][1]];
-          this.runCommand(instance, this.state.shortcuts[shortcut]);
+          const action = this.state.shortcuts[shortcut];
+          if (typeof action === 'string') {
+            this.runCommand(instance, this.state.shortcuts[shortcut]);
+          } else if (typeof action === 'function') {
+            e.preventDefault();
+            e.stopPropagation();
+            action();
+          }
           instance.setState({ keyInputs: [] });
         }
       } else if (keyInputs.length > 0) {
@@ -537,7 +578,7 @@ class Terminal extends Component {
           break;
       }
     }
-    this.checkShortcuts(instance, key);
+    this.checkShortcuts(instance, key, e);
   }
 
   // Plugins
@@ -643,7 +684,7 @@ class Terminal extends Component {
 
   // Print to active instance
   printToActive = (...args) => {
-    const data = this.state.instances[this.state.activeTab];
+    const data = this.state.instances.find(i => i.index === this.state.activeTab);
     if (data && data.instance !== null) {
       this.printLine(data.instance, ...args);
     }

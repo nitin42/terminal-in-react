@@ -8,6 +8,8 @@ import '../src/styles/index.scss'; // (../lib/css/index.css) or  '../src/styles/
 const App = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
     <Terminal
+      startState="maximised"
+      allowTabs
       msg="Hello World. My name is Nitin Tulswani"
       commands={{
         color: {
@@ -31,12 +33,12 @@ const App = () => (
             }, 100 * i);
           }
         },
-        open: () => window.open('https://www.nitintulswani.surge.sh', '_blank')
+        open: () => window.open('https://www.nitintulswani.surge.sh', '_blank'),
       }}
       descriptions={{
         color: 'option for color. For eg - color red',
         'type-text': 'Types out input text',
-        open: 'Open a website'
+        open: 'Open a website',
       }}
       shortcuts={{
         'darwin,win,linux': {

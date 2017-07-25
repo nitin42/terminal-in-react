@@ -3,11 +3,13 @@
   max-width: 600px;
   transition: all 0.4s ease-out;
   background: #222;
-}
-
-.adjust-tab-bar {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
   display: block;
   margin: 0 auto;
+  padding-bottom: 15px;
+  margin-bottom: -14px;
 }
 
 .terminal-tab {
@@ -18,16 +20,61 @@
   border-bottom: 2px solid #333;
   text-align: center;
   line-height: 30px;
-  min-width: 50px;
-  max-width: 150px;
+  width: 100px;
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
   padding-left: 3px;
   padding-right: 3px;
   cursor: pointer;
+  white-space: pre;
+  position: relative;
 }
 
 .terminal-tab-active {
   border-bottom-color: #777;
+}
+
+.terminal-tab:focus {
+  outline: none;
+}
+
+.terminal-tab-close {
+  position: absolute;
+  top: 8px;
+  height: 13px;
+  line-height: 11px;
+  right: 3px;
+  font-size: 11px;
+  width: 13px;
+  text-align: center;
+  color: black;
+  cursor: pointer;
+
+  &:hover {
+    color: white;
+    background-color: black;
+    border-radius: 50%;
+  }
+}
+
+.terminal-tab-plus {
+  display: inline-block;
+  color: white;
+  border: 1px solid white;
+  border-radius: 2px;
+  width: 13px;
+  height: 13px;
+  line-height: 13px;
+  margin-left: 5px;
+  margin-top: 8px;
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.terminal-tab-plus-visible {
+  opacity: 0.7;
 }

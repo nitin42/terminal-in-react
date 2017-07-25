@@ -5,6 +5,7 @@ class Content extends Component {
   static displayName = 'Content';
 
   static propTypes = {
+    id: PropTypes.string,
     oldData: PropTypes.object, // eslint-disable-line
     backgroundColor: PropTypes.objectOf(PropTypes.string),
     prompt: PropTypes.objectOf(PropTypes.string),
@@ -21,6 +22,10 @@ class Content extends Component {
   static contextTypes = {
     symbol: PropTypes.string,
     maximise: PropTypes.bool,
+    instances: PropTypes.array,
+    activeTab: PropTypes.string,
+    barShowing: PropTypes.bool,
+    tabsShowing: PropTypes.bool,
   };
 
   state = {
@@ -33,13 +38,17 @@ class Content extends Component {
   };
 
   componentWillMount = () => {
-    this.setState(this.props.oldData);
+    const data = this.context.instances.find(i => i.index === this.props.id);
+    if (data) {
+      this.setState(data.oldData);
+    }
   };
 
   componentDidMount = () => {
     this.focusInput();
+    const data = this.context.instances.find(i => i.index === this.props.id);
     this.unregister = this.props.register(this);
-    if (Object.keys(this.props.oldData).length === 0) {
+    if (!data || Object.keys(data.oldData).length === 0) {
       this.handleChange({ target: { value: 'show' }, key: 'Enter', dontShowCommand: true });
     }
   };
@@ -70,8 +79,12 @@ class Content extends Component {
   }
 
   render() {
-    const { prompt, inputStyles, backgroundColor } = this.props;
-    const { symbol, maximise } = this.context;
+    const { prompt, inputStyles, backgroundColor, id } = this.props;
+    const { symbol, maximise, activeTab, barShowing, tabsShowing } = this.context;
+
+    if (id !== activeTab) {
+      return null;
+    }
 
     const output = this.state.summary.map((content, i) => {
       if (typeof content === 'string' && content.length === 0) {
@@ -80,13 +93,21 @@ class Content extends Component {
       return <pre className="terminal-output-line" key={i}>{content}</pre>;
     });
 
+    let toSubtract = 30;
+    if (!barShowing) {
+      toSubtract -= 30;
+    }
+    if (tabsShowing) {
+      toSubtract += 30;
+    }
+
     return (
       <div
         className="terminal-container terminal-container-main"
         style={{
           ...backgroundColor,
           ...(maximise
-            ? { maxWidth: '100%', maxHeight: 'calc(100% - 30px)' }
+            ? { maxWidth: '100%', maxHeight: `calc(100% - ${toSubtract}px)` }
             : {}),
         }}
         onClick={this.focusInput}
