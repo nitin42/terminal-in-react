@@ -6,7 +6,7 @@ function last(arr, pre = '') {
   if (base.indexOf(`${pre}> `) !== 0) {
     base = 'bash';
   }
-  return base.replace(`${pre}> `, '');
+  return base.replace(`${pre}> `, '').split(' ')[0];
 }
 
 class Tabs extends Component {
