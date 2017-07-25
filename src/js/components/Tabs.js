@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function last(arr, pre = '') {
   let base = arr.length > 2 ? `${arr[arr.length - 2]}` : '';
-  if (base.indexOf(`${pre}> ` !== 0)) {
+  if (base.indexOf(`${pre}> `) !== 0) {
     base = 'bash';
   }
   return base.replace(`${pre}> `, '');
