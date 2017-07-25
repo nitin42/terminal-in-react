@@ -39,6 +39,43 @@ function getShortcuts(shortcuts, obj) {
   return shortcuts;
 }
 
+function modCommands(commands) {
+  const newCommands = {};
+
+  Object.keys(commands).forEach((name) => {
+    let needsInstance = false;
+    const definition = commands[name];
+    let method = definition;
+    let parse = i => i;
+    if (typeof definition === 'object') {
+      const cmd = new Command();
+      if (typeof definition.options !== 'undefined') {
+        try {
+          cmd.options(definition.options);
+        } catch (e) {
+          throw new Error('options for command wrong format');
+        }
+      }
+      parse = i =>
+        cmd.parse(i, {
+          name,
+          help: true,
+          version: false,
+        });
+      method = definition.method;
+      needsInstance = definition.needsInstance || false;
+    }
+
+    newCommands[name] = {
+      parse,
+      method,
+      needsInstance,
+    };
+  });
+
+  return newCommands;
+}
+
 class Terminal extends Component {
   static displayName = 'Terminal';
 
@@ -403,37 +440,7 @@ class Terminal extends Component {
       }
     });
 
-    Object.keys(commands).forEach((name) => {
-      let needsInstance = false;
-      const definition = commands[name];
-      let method = definition;
-      let parse = i => i;
-      if (typeof definition === 'object') {
-        const cmd = new Command();
-        if (typeof definition.options !== 'undefined') {
-          try {
-            cmd.options(definition.options);
-          } catch (e) {
-            throw new Error('options for command wrong format');
-          }
-        }
-        parse = i =>
-          cmd.parse(i, {
-            name,
-            help: true,
-            version: false,
-          });
-        method = definition.method;
-        needsInstance = definition.needsInstance || false;
-      }
-
-      commands[name] = {
-        parse,
-        method,
-        needsInstance,
-      };
-    });
-    this.setState({ commands });
+    this.setState({ commands: modCommands(commands) });
   };
 
   /**
@@ -646,7 +653,7 @@ class Terminal extends Component {
       Object.values(instanceData.pluginInstances).forEach((i) => {
         commands = {
           ...commands,
-          ...i.commands,
+          ...modCommands(i.commands),
         };
       });
     }
