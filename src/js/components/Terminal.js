@@ -383,7 +383,6 @@ class Terminal extends Component {
           old.pluginInstances[PluginClass.displayName].updateApi(api);
         } else {
           plugin = new PluginClass(api);
-
           pluginMethods[PluginClass.displayName] = {
             ...plugin.getPublicMethods(),
             _getName: () => PluginClass.displayName,
@@ -528,10 +527,8 @@ class Terminal extends Component {
         );
       }
 
-      const res = this.runCommand(
-        instance,
-        `${input.join('\n')}${input.length > 0 ? '\n' : ''}${e.target.value}`,
-      );
+      input.push(e.target.value);
+      const res = this.runCommand(instance, `${input.join('\n')}`);
 
       if (typeof res !== 'undefined') {
         this.printLine.bind(this, instance)(res);
@@ -550,7 +547,7 @@ class Terminal extends Component {
         false,
       );
       const newHistory = [...history, e.target.value];
-      this.setState({
+      instance.setState({
         input: [...input, e.target.value],
         history: newHistory,
         historyCounter: newHistory.length,
@@ -608,8 +605,9 @@ class Terminal extends Component {
         if (instanceData.pluginMethods[name][method]) {
           return instanceData.pluginMethods[name][method];
         }
+        console.log(instanceData.pluginMethods[name]);
         throw new Error(
-          `No method with name ${name} has been registered for plugin ${name}`,
+          `No method with name ${method} has been registered for plugin ${name}`,
         );
       } else {
         throw new Error(`No plugin with name ${name} has been registered`);

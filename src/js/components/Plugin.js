@@ -10,11 +10,9 @@ export default class Plugin {
     this.api = api;
     this.commands = {};
     this.descriptions = {};
+
+    this.updateApi = newApi => (this.api = newApi);
+    this.getPublicMethods = () => ({});
+    this.readStdOut = () => true;
   }
-
-  updateApi = api => (this.api = api);
-
-  getPublicMethods = () => ({});
-
-  readStdOut = () => true;
 }
