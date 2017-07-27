@@ -1,9 +1,12 @@
 import React from 'react'; // eslint-disable-line
 import { render } from 'react-dom';
-import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
+// import pseudoFileSystemPlugin from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
+// import NodeEvalPlugin from 'terminal-in-react-node-eval-plugin'; // eslint-disable-line
 // Bundle generated with npm run build:production ('../lib/js/index') or use '../src/js'
 import Terminal from '../src/js';
 import '../src/styles/index.scss'; // (../lib/css/index.css) or  '../src/styles/index.scss'
+
+// const FileSystemPlugin = pseudoFileSystemPlugin();
 
 const App = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -31,18 +34,27 @@ const App = () => (
             }, 100 * i);
           }
         },
-        open: () => window.open('https://www.nitintulswani.surge.sh', '_blank'),
+        open: () => window.open('http://terminal-in-react.surge.sh', '_blank'),
       }}
       descriptions={{
         color: 'option for color. For eg - color red',
         'type-text': 'Types out input text',
-        open: 'Open a website',
+        open: 'Open a terminal website',
       }}
       shortcuts={{
         'darwin,win,linux': {
           'ctrl + a': 'echo whoo',
         },
       }}
+      // plugins={[
+      //   FileSystemPlugin,
+      //   {
+      //     class: NodeEvalPlugin,
+      //     config: {
+      //       filesystem: FileSystemPlugin.displayName,
+      //     },
+      //   },
+      // ]}
     />
   </div>
 );
