@@ -6,8 +6,11 @@ export default class Plugin {
   static commands = {};
   static descriptions = {};
 
-  constructor(api) {
+  static defaultConfig = {};
+
+  constructor(api, config = Plugin.defaultConfig) {
     this.api = api;
+    this.config = config;
     this.commands = {};
     this.descriptions = {};
 

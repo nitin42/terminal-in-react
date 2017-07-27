@@ -14,6 +14,18 @@ import Bar from './Bar';
 import Content from './Content';
 import Tabs from './Tabs';
 
+function pluginMap(plugins, eachHandler) {
+  return plugins.map((plugin) => {
+    if (typeof plugin === 'function') {
+      plugin = {
+        class: plugin,
+        config: undefined,
+      };
+    }
+    return plugin;
+  }).forEach(pluginObj => eachHandler(pluginObj.class, pluginObj.config));
+}
+
 function uuidv4() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = Math.random() * 16 | 0; // eslint-disable-line no-bitwise
@@ -313,7 +325,7 @@ class Terminal extends Component {
       ...this.defaultDesciptions,
       ...this.props.descriptions,
     };
-    this.props.plugins.forEach((plugin) => {
+    pluginMap(this.props.plugins, (plugin) => {
       if (plugin.descriptions) {
         descriptions = {
           ...descriptions,
@@ -367,7 +379,7 @@ class Terminal extends Component {
 
     const old = instances.find(i => i.index === index);
 
-    this.props.plugins.forEach((PluginClass) => {
+    pluginMap(this.props.plugins, (PluginClass, config) => {
       try {
         const api = {
           printLine: this.printLine.bind(this, instance),
@@ -382,7 +394,7 @@ class Terminal extends Component {
         if (old) {
           old.pluginInstances[PluginClass.displayName].updateApi(api);
         } else {
-          plugin = new PluginClass(api);
+          plugin = new PluginClass(api, config);
           pluginMethods[PluginClass.displayName] = {
             ...plugin.getPublicMethods(),
             _getName: () => PluginClass.displayName,
@@ -430,7 +442,7 @@ class Terminal extends Component {
       ...this.props.commands,
     };
 
-    this.props.plugins.forEach((plugin) => {
+    pluginMap(this.props.plugins, (plugin) => {
       if (plugin.commands) {
         commands = {
           ...commands,
@@ -586,7 +598,7 @@ class Terminal extends Component {
   // Plugins
   loadPlugins = () => {
     const pluginData = {};
-    this.props.plugins.forEach((plugin) => {
+    pluginMap(this.props.plugins, (plugin) => {
       try {
         pluginData[plugin.displayName] = plugin.defaultData;
       } catch (e) {

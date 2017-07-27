@@ -36,7 +36,13 @@ export const TerminalPropTypes = {
     PropTypes.bool,
   ]),
   promptSymbol: PropTypes.string,
-  plugins: PropTypes.arrayOf(PropTypes.func),
+  plugins: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      class: PropTypes.func,
+      config: PropTypes.object,
+    }),
+  ])),
   shortcuts: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)),
   actionHandlers: PropTypes.shape({
     handleClose: PropTypes.func,
