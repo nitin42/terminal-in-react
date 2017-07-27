@@ -129,11 +129,11 @@ class Terminal extends Component {
     };
 
     this.defaultDesciptions = {
-      show: 'show the msg',
+      show: (props.msg && props.msg.length > 0) ? 'show the msg' : false,
       clear: 'clear the screen',
       help: 'list all the commands',
-      echo: 'output the input',
-      'edit-line': 'edit the contents of an output line',
+      echo: false,
+      'edit-line': false,
     };
 
     this.defaultShortcuts = {
@@ -383,11 +383,13 @@ class Terminal extends Component {
       try {
         const api = {
           printLine: this.printLine.bind(this, instance),
+          removeLine: this.removeLine.bind(this, instance),
           runCommand: this.runCommand.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
           getData: () => this.getPluginData(PluginClass.displayName),
           setData: data => this.setPluginData(PluginClass.displayName, data),
+          os,
         };
 
         let plugin;
@@ -521,8 +523,8 @@ class Terminal extends Component {
   editLine = (args, printLine, runCommand, instance) => {
     const { summary } = instance.state;
     let index = args.line;
-    if (index === -1) {
-      index = summary.length === 0 ? 0 : summary.length - 1;
+    if (index < 0) {
+      index = summary.length === 0 ? 0 : summary.length - index;
     }
     summary[index] = args._.join(' ');
     instance.setState({ summary });
@@ -650,6 +652,13 @@ class Terminal extends Component {
       instance.setState({ summary });
     }
   };
+
+  // Remove a line from the summary
+  removeLine = (instance, lineNumber = -1) => {
+    const summary = instance.state.summary;
+    summary.splice(lineNumber, 1);
+    instance.setState({ summary });
+  }
 
   // Execute the commands
   runCommand = (instance, inputText) => {
