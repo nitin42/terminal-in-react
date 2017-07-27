@@ -1,5 +1,6 @@
 import React, { Component } from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
+import whatkey, { unprintableKeys } from 'whatkey';
 
 class Content extends Component {
   static displayName = 'Content';
@@ -78,6 +79,19 @@ class Content extends Component {
     this.props.handlerKeyPress(this, e, this.com);
   }
 
+  handleOuterKeypress = (e) => {
+    const key = whatkey(e).key;
+    const actionKeys = ['up', 'down', 'left', 'right', 'enter'];
+    if (unprintableKeys.indexOf(key) < 0) {
+      if (document.activeElement !== this.com) {
+        this.com.focus();
+        this.com.value += whatkey(e).char;
+      }
+    } else if (actionKeys.indexOf(key) > -1) {
+      this.com.focus();
+    }
+  }
+
   render() {
     const { prompt, inputStyles, backgroundColor, id } = this.props;
     const { symbol, maximise, activeTab, barShowing, tabsShowing } = this.context;
@@ -110,7 +124,8 @@ class Content extends Component {
             ? { maxWidth: '100%', maxHeight: `calc(100% - ${toSubtract}px)` }
             : {}),
         }}
-        onClick={this.focusInput}
+        tabIndex="0"
+        onKeyUp={this.handleOuterKeypress}
       >
         <div className="terminal-holder">
           <div className="terminal-content">

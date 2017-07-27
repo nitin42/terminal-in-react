@@ -585,7 +585,6 @@ class Terminal extends Component {
 
   // Plugins
   loadPlugins = () => {
-    // TODO intance plugins
     const pluginData = {};
     this.props.plugins.forEach((plugin) => {
       try {
