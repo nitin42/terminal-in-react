@@ -61,7 +61,14 @@ class App extends Component {
 
   render() {
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh"
+        }}
+      >
         <Terminal
           color='green'
           backgroundColor='black'
@@ -222,7 +229,7 @@ Let's take an another example -
   <img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
 </p>
 
-## Using plugins 🔥
+## Using plugins 🔥 [WIP]
 
 We have also developed a plugin system for the `<Terminal />` component which helps you develop custom plugins. Here is one example of plugin which creates a fake file system called [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin).
 
@@ -323,6 +330,31 @@ You can mix and match
 
 The value of the shortcut should be a command to run.
 
+
+## Override the top bar buttons actionHandlers
+
+Use the prop `actionHandlers`.
+
+The object allows for 3 methods `handleClose`, `handleMaximise`, `handleMinimise`;
+
+Each one is a function and will pass in the default method as the first param.
+Any method not passed in will use the default.
+
+```jsx
+<Terminal
+  actionHandlers={{
+    handleClose: (toggleClose) => {
+      // do something on close
+      toggleClose();
+    },
+    handleMaximise: (toggleMaximise) => {
+      // do something on maximise
+      toggleMaximise();
+    }
+  }}
+/>
+```
+
 ## Customization
 
 Use
@@ -331,6 +363,9 @@ Use
 * prop `backgroundColor` to change the background.
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`>`) color.
+* prop `showActions` to change if the three circles are shown.
+* prop `hideTopBar` to hide the top bar altogether.
+* prop `allowTabs` to allow multiple tabs.
 
 Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
 
@@ -351,6 +386,11 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 | **commandPassThrough** | function | null |
 | **promptSymbol** | string | > |
 | **plugins** | array | [ { name: '', load: new Plugin(), commands: {} descriptions: {} } ] |
+| **startState** | string ['open', 'maximised', 'minimised', 'closed'] | 'open' |
+| **showActions** | bool | true |
+| **hideTopBar** | bool | false |
+| **allowTabs** | bool | true |
+| **actionHandlers** | object | undefined |
 
 ## Built-in commands
 
@@ -369,7 +409,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 
 ## You want a X feature
 
-Sure! Check our [todolist](./todo.md) or create an issue and I will look into it. 
+Sure! Check our [todolist](./todo.md) or create an issue and I will look into it.
 
 ## Contributing
 

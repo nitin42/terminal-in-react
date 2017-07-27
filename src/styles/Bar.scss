@@ -3,9 +3,10 @@
   max-width: 600px;
   transition: all 0.4s ease-out;
   background: black;
-}
-
-.adjust-bar {
   display: block;
   margin: 0 auto;
+
+  circle {
+    cursor: pointer;
+  }
 }

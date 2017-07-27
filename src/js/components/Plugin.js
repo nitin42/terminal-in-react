@@ -1,14 +1,21 @@
 export default class Plugin {
-  constructor(name = '', version = '1.0.0') {
-    this.name = name;
-    this.version = version;
+  static displayName = '';
+  static version = '1.0.0';
+  static defaultData = '';
+
+  static commands = {};
+  static descriptions = {};
+
+  static defaultConfig = {};
+
+  constructor(api, config = Plugin.defaultConfig) {
+    this.api = api;
+    this.config = config;
+    this.commands = {};
+    this.descriptions = {};
+
+    this.updateApi = newApi => (this.api = newApi);
+    this.getPublicMethods = () => ({});
+    this.readStdOut = () => true;
   }
-
-  load = () => {};
-
-  afterLoad = () => {};
-
-  getPublicMethods = () => ({});
-
-  readStdOut = () => true;
 }

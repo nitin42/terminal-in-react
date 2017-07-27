@@ -18,6 +18,10 @@ export const descriptionsPropType = PropTypes.objectOf(PropTypes.oneOfType([
 ]));
 
 export const TerminalPropTypes = {
+  startState: PropTypes.oneOf(['minimised', 'maximised', 'open', 'closed']),
+  showActions: PropTypes.bool,
+  hideTopBar: PropTypes.bool,
+  allowTabs: PropTypes.bool,
   msg: PropTypes.string,
   color: PropTypes.string,
   style: PropTypes.object, // eslint-disable-line
@@ -32,13 +36,19 @@ export const TerminalPropTypes = {
     PropTypes.bool,
   ]),
   promptSymbol: PropTypes.string,
-  plugins: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    load: PropTypes.func,
-    commands: commandsPropType,
-    descriptions: descriptionsPropType,
-  })),
+  plugins: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      class: PropTypes.func,
+      config: PropTypes.object,
+    }),
+  ])),
   shortcuts: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)),
+  actionHandlers: PropTypes.shape({
+    handleClose: PropTypes.func,
+    handleMinimise: PropTypes.func,
+    handleMaximise: PropTypes.func,
+  }),
 };
 
 // shortcuts example
@@ -52,6 +62,10 @@ export const TerminalPropTypes = {
 // }
 
 export const TerminalContextTypes = {
+  barShowing: PropTypes.bool,
+  tabsShowing: PropTypes.bool,
+  activeTab: PropTypes.string,
+  instances: PropTypes.array,
   symbol: PropTypes.string,
   show: PropTypes.bool,
   minimise: PropTypes.bool,
@@ -68,6 +82,10 @@ export const TerminalContextTypes = {
 };
 
 export const TerminalDefaultProps = {
+  startState: 'open',
+  hideTopBar: false,
+  allowTabs: true,
+  showActions: true,
   msg: '',
   color: 'green',
   style: {},

@@ -72,6 +72,11 @@
   max-height: 600px;
   height: 100%;
   overflow: scroll;
+  position: relative;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .terminal-holder {
