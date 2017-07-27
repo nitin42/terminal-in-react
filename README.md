@@ -236,19 +236,50 @@ We have also developed a plugin system for the `<Terminal />` component which he
 ### Instantiating the plugin
 
 ```jsx
-import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'
+import pseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin';
+const FileSystemPlugin = pseudoFileSystem();
 
 <Terminal
   plugins={[
-    new PseudoFileSystem(),
+    FileSystemPlugin,
   ]}
 />
 ```
+
+or if the plugin requires config
+
+```jsx
+import NodeEvalPlugin from 'terminal-in-react-node-eval-plugin';
+import pseudoFileSystemPlugin from 'terminal-in-react-pseudo-file-system-plugin';
+const FileSystemPlugin = pseudoFileSystemPlugin();
+
+...
+<Terminal
+  plugins={[
+    FileSystemPlugin,
+    {
+      class: NodeEvalPlugin,
+      config: {
+        filesystem: FileSystemPlugin.displayName
+      }
+    }
+  ]}
+/>
+...
+```
+
 <p align="center">
   <img src="http://g.recordit.co/4xcIZRKJCD.gif" />
 </p>
 
 Awesome! Right? Let us know if you make something interesting 😃
+
+## Plugin List
+
+ - [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin) : A client-side only filesystem
+ - [terminal-in-react-node-eval-plugin](https://github.com/jcgertig/terminal-in-react-node-eval-plugin) : used with a filesystem to evaluate js code
+ - [terminal-in-react-vi-plugin](https://github.com/jcgertig/terminal-in-react-vi-plugin) : used with a filesystem to edit the contents of files more easily
+
 
 ## More features
 
