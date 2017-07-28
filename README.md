@@ -461,7 +461,7 @@ Set the style to `height: 100vh` on parent element.
 
 **Interface issues due to plugins**
 
-If you are having any issues with **plugins** or related api, fallback to `3.3.0`. Because plugins are still **WIP** !
+If you are having any issues with **plugins** or related api, fallback to `3.3.3`. Because plugins are still **WIP** !
 
 [npm-dm]: https://img.shields.io/npm/dm/terminal-in-react.svg
 [npm-dt]: https://img.shields.io/npm/dt/terminal-in-react.svg
