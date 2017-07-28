@@ -414,7 +414,7 @@ Use
 | **prompt** | string      |    'green' |
 | **barColor** | string      |    'black' |
 | **description** | object      |    {} |
-| **commands** | object      |    { clear: this.clearScreen(), help: this.showHelp(), show: this.showMsg() } |
+| **commands** | object      |    { clear, help, show, } |
 | **msg** | string      |    - |
 | **watchConsoleLogging** | bool | false |
 | **commandPassThrough** | function | null |
