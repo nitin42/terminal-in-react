@@ -455,11 +455,15 @@ Sure! Check our [todolist](./todo.md) or create an issue and I will look into it
 
 **Build errors when using with `create-react-app`**<br/>
 
-* Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
+Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
 
 **Style issues when maximizing**
 
-* Set the style to `height: 100vh` on parent element.
+Set the style to `height: 100vh` on parent element.
+
+**Interface issues due to plugins**
+
+If you are having any issues with **plugins** or related api, fallback to `3.3.0`. Because plugins are still **WIP** !
 
 [npm-dm]: https://img.shields.io/npm/dm/terminal-in-react.svg
 [npm-dt]: https://img.shields.io/npm/dt/terminal-in-react.svg
