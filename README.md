@@ -426,7 +426,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 | **showActions** | bool | true |
 | **hideTopBar** | bool | false |
 | **allowTabs** | bool | true |
-| **actionHandlers** | object | undefined |
+| **actionHandlers** | object | - |
 
 ## Built-in commands
 
