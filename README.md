@@ -403,8 +403,6 @@ Use
 * prop `hideTopBar` to hide the top bar altogether.
 * prop `allowTabs` to allow multiple tabs.
 
-Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
-
 ## API
 
 **component props**
@@ -445,7 +443,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 
 ## You want a X feature
 
-Sure! Check our [todolist](./todo.md) or create an issue and I will look into it.
+Sure! Check our [todolist](./todo.md) or create an issue.
 
 ## Contributing
 
@@ -472,3 +470,8 @@ If you are having any issues with **plugins** or related api, fallback to `3.3.0
 [dev-deps]: https://img.shields.io/david/dev/nitin42/terminal-in-react.svg
 [license]: https://img.shields.io/npm/l/terminal-in-react.svg
 [package-url]: https://npmjs.com/package/terminal-in-react
+
+## New updates
+
+Follow [@NTulswani](https://twitter.com/NTulswani) on Twitter for new updates and progress 😄
+
