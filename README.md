@@ -1,5 +1,10 @@
 # Terminal in React
-![version](https://img.shields.io/badge/terminal--in--react-3.4.1-brightgreen.svg)
+[![Downloads][npm-dm]][package-url]
+[![Downloads][npm-dt]][package-url]
+[![NPM Version][npm-v]][package-url]
+[![Dependencies][deps]][package-url]
+[![Dev Dependencies][dev-deps]][package-url]
+[![License][license]][package-url]
 ![size](https://img.shields.io/badge/size-31.4%20KB-brightgreen.svg)
 ![size](https://img.shields.io/badge/gzip-8.63%20KB-brightgreen.svg)
 
@@ -455,3 +460,11 @@ Sure! Check our [todolist](./todo.md) or create an issue and I will look into it
 **Style issues when maximizing**
 
 * Set the style to `height: 100vh` on parent element.
+
+[npm-dm]: https://img.shields.io/npm/dm/terminal-in-react.svg
+[npm-dt]: https://img.shields.io/npm/dt/terminal-in-react.svg
+[npm-v]: https://img.shields.io/npm/v/terminal-in-react.svg
+[deps]: https://img.shields.io/david/nitin42/terminal-in-react.svg
+[dev-deps]: https://img.shields.io/david/dev/nitin42/terminal-in-react.svg
+[license]: https://img.shields.io/npm/l/terminal-in-react.svg
+[package-url]: https://npmjs.com/package/terminal-in-react
