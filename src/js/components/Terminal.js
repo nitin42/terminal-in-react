@@ -191,7 +191,7 @@ class Terminal extends Component {
     this.setDescriptions();
     this.setShortcuts();
 
-    this.createTab();
+    this.createTab(true);
     this.setState({ prompt: this.props.promptSymbol });
   };
 
@@ -203,9 +203,9 @@ class Terminal extends Component {
   };
 
   // Tab creation
-  createTab = () => {
+  createTab = (force = false) => {
     const { color, backgroundColor, prompt, allowTabs } = this.props;
-    if (allowTabs) {
+    if (force || allowTabs) {
       const { tabs } = this.state;
       const id = uuidv4();
 

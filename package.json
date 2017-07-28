@@ -1,6 +1,6 @@
 {
   "name": "terminal-in-react",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "A component for making a terminal in React",
   "main": "lib/js/index.js",
   "module": "src/index.js",
