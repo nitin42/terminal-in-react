@@ -1,5 +1,10 @@
 # Terminal in React
-![version](https://img.shields.io/badge/terminal--in--react-3.3.3-brightgreen.svg)
+[![Downloads][npm-dm]][package-url]
+[![Downloads][npm-dt]][package-url]
+[![NPM Version][npm-v]][package-url]
+[![Dependencies][deps]][package-url]
+[![Dev Dependencies][dev-deps]][package-url]
+[![License][license]][package-url]
 ![size](https://img.shields.io/badge/size-31.4%20KB-brightgreen.svg)
 ![size](https://img.shields.io/badge/gzip-8.63%20KB-brightgreen.svg)
 
@@ -236,19 +241,50 @@ We have also developed a plugin system for the `<Terminal />` component which he
 ### Instantiating the plugin
 
 ```jsx
-import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'
+import pseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin';
+const FileSystemPlugin = pseudoFileSystem();
 
 <Terminal
   plugins={[
-    new PseudoFileSystem(),
+    FileSystemPlugin,
   ]}
 />
 ```
+
+or if the plugin requires config
+
+```jsx
+import NodeEvalPlugin from 'terminal-in-react-node-eval-plugin';
+import pseudoFileSystemPlugin from 'terminal-in-react-pseudo-file-system-plugin';
+const FileSystemPlugin = pseudoFileSystemPlugin();
+
+...
+<Terminal
+  plugins={[
+    FileSystemPlugin,
+    {
+      class: NodeEvalPlugin,
+      config: {
+        filesystem: FileSystemPlugin.displayName
+      }
+    }
+  ]}
+/>
+...
+```
+
 <p align="center">
   <img src="http://g.recordit.co/4xcIZRKJCD.gif" />
 </p>
 
 Awesome! Right? Let us know if you make something interesting 😃
+
+## Plugin List
+
+ - [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin) : A client-side only filesystem
+ - [terminal-in-react-node-eval-plugin](https://github.com/jcgertig/terminal-in-react-node-eval-plugin) : used with a filesystem to evaluate js code
+ - [terminal-in-react-vi-plugin](https://github.com/jcgertig/terminal-in-react-vi-plugin) : used with a filesystem to edit the contents of files more easily
+
 
 ## More features
 
@@ -367,8 +403,6 @@ Use
 * prop `hideTopBar` to hide the top bar altogether.
 * prop `allowTabs` to allow multiple tabs.
 
-Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates and progress 😄
-
 ## API
 
 **component props**
@@ -380,7 +414,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 | **prompt** | string      |    'green' |
 | **barColor** | string      |    'black' |
 | **description** | object      |    {} |
-| **commands** | object      |    { clear: this.clearScreen(), help: this.showHelp(), show: this.showMsg() } |
+| **commands** | object      |    { clear, help, show, } |
 | **msg** | string      |    - |
 | **watchConsoleLogging** | bool | false |
 | **commandPassThrough** | function | null |
@@ -390,7 +424,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 | **showActions** | bool | true |
 | **hideTopBar** | bool | false |
 | **allowTabs** | bool | true |
-| **actionHandlers** | object | undefined |
+| **actionHandlers** | object | - |
 
 ## Built-in commands
 
@@ -409,7 +443,7 @@ Follow me on Twitter [@NTulswani](https://twitter.com/NTulswani) for new updates
 
 ## You want a X feature
 
-Sure! Check our [todolist](./todo.md) or create an issue and I will look into it.
+Sure! Check our [todolist](./todo.md) or create an issue.
 
 ## Contributing
 
@@ -419,8 +453,25 @@ Sure! Check our [todolist](./todo.md) or create an issue and I will look into it
 
 **Build errors when using with `create-react-app`**<br/>
 
-* Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
+Eject from `create-react-app` and use a custom webpack configuration with [`babili-webpack-plugin`](https://github.com/webpack-contrib/babili-webpack-plugin). Read more about this [here](https://github.com/facebookincubator/create-react-app/issues/984).
 
 **Style issues when maximizing**
 
-* Set the style to `height: 100vh` on parent element.
+Set the style to `height: 100vh` on parent element.
+
+**Interface issues due to plugins**
+
+If you are having any issues with **plugins** or related api, fallback to `3.3.3`. Because plugins are still **WIP** !
+
+[npm-dm]: https://img.shields.io/npm/dm/terminal-in-react.svg
+[npm-dt]: https://img.shields.io/npm/dt/terminal-in-react.svg
+[npm-v]: https://img.shields.io/npm/v/terminal-in-react.svg
+[deps]: https://img.shields.io/david/nitin42/terminal-in-react.svg
+[dev-deps]: https://img.shields.io/david/dev/nitin42/terminal-in-react.svg
+[license]: https://img.shields.io/npm/l/terminal-in-react.svg
+[package-url]: https://npmjs.com/package/terminal-in-react
+
+## New updates
+
+Follow [@NTulswani](https://twitter.com/NTulswani) on Twitter for new updates and progress 😄
+
