@@ -191,7 +191,7 @@ class Terminal extends Component {
     this.setDescriptions();
     this.setShortcuts();
 
-    this.createTab();
+    this.createTab(true);
     this.setState({ prompt: this.props.promptSymbol });
   };
 
@@ -203,9 +203,9 @@ class Terminal extends Component {
   };
 
   // Tab creation
-  createTab = () => {
+  createTab = (force = false) => {
     const { color, backgroundColor, prompt, allowTabs } = this.props;
-    if (allowTabs) {
+    if (force || allowTabs) {
       const { tabs } = this.state;
       const id = uuidv4();
 
@@ -340,6 +340,11 @@ class Terminal extends Component {
   setShortcuts = () => {
     let shortcuts = getShortcuts({}, this.defaultShortcuts);
     shortcuts = getShortcuts(shortcuts, this.props.shortcuts);
+    pluginMap(this.props.plugins, (plugin) => {
+      if (plugin.shortcuts) {
+        shortcuts = getShortcuts(shortcuts, plugin.shortcuts);
+      }
+    });
     this.setState({ shortcuts });
   };
 
@@ -385,6 +390,9 @@ class Terminal extends Component {
           printLine: this.printLine.bind(this, instance),
           removeLine: this.removeLine.bind(this, instance),
           runCommand: this.runCommand.bind(this, instance),
+          setCanScroll: this.setCanScroll.bind(this, instance),
+          setScrollPosition: this.setScrollPosition.bind(this, instance),
+          focusInput: this.focusInput.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
           getData: () => this.getPluginData(PluginClass.displayName),
@@ -484,7 +492,15 @@ class Terminal extends Component {
 
   // Method to check for shortcut and invoking commands
   checkShortcuts = (instance, key, e) => {
-    const shortcuts = Object.keys(this.state.shortcuts);
+    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
+    let cuts = this.state.shortcuts;
+    if (instanceData) {
+      Object.values(instanceData.pluginInstances).forEach((i) => {
+        cuts = getShortcuts(cuts, i.shortcuts);
+      });
+    }
+
+    const shortcuts = Object.keys(cuts);
     if (shortcuts.length > 0) {
       const { keyInputs } = instance.state;
       let modKey = key;
@@ -503,9 +519,9 @@ class Terminal extends Component {
       if (options.length > 0) {
         if (options.length === 1 && options[0][0].length === len) {
           const shortcut = shortcuts[options[0][1]];
-          const action = this.state.shortcuts[shortcut];
+          const action = cuts[shortcut];
           if (typeof action === 'string') {
-            this.runCommand(instance, this.state.shortcuts[shortcut]);
+            this.runCommand(instance, cuts[shortcut]);
           } else if (typeof action === 'function') {
             e.preventDefault();
             e.stopPropagation();
@@ -628,6 +644,27 @@ class Terminal extends Component {
     }
     return null;
   };
+
+  // Set if the current tab can scroll
+  setCanScroll = (instance, force) => {
+    if (typeof force !== 'undefined') {
+      instance.setState({ canScroll: force });
+    }
+  }
+
+  // Set the scroll position of the contents
+  setScrollPosition = (instance, pos) => {
+    if (typeof pos === 'number') {
+      instance.setScrollPosition(pos);
+    }
+  }
+
+  // Set focus to the input
+  focusInput = (instance) => {
+    if (typeof pos === 'number') {
+      instance.focusInput();
+    }
+  }
 
   // Print the summary (input -> output)
   printLine = (instance, inp, std = true) => {
