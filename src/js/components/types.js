@@ -51,16 +51,6 @@ export const TerminalPropTypes = {
   }),
 };
 
-// shortcuts example
-// {
-//   'win,linux': {
-//     'ctrl + l': 'clear'
-//   },
-//   'darwin': {
-//     'cmd + k': 'clear'
-//   }
-// }
-
 export const TerminalContextTypes = {
   barShowing: PropTypes.bool,
   tabsShowing: PropTypes.bool,

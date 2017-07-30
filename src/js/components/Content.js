@@ -36,6 +36,7 @@ class Content extends Component {
     historyCounter: 0,
     input: [],
     keyInputs: [],
+    canScroll: true,
   };
 
   componentWillMount = () => {
@@ -64,6 +65,14 @@ class Content extends Component {
   componentWillUnmount() {
     this.unregister(this.state);
   }
+
+  setScrollPosition = (pos) => {
+    setTimeout(() => {
+      if (this.contentWrapper !== null) {
+        this.contentWrapper.scrollTop = pos;
+      }
+    }, 50);
+  };
 
   focusInput = () => {
     if (this.com !== null) {
@@ -123,9 +132,13 @@ class Content extends Component {
           ...(maximise
             ? { maxWidth: '100%', maxHeight: `calc(100% - ${toSubtract}px)` }
             : {}),
+          ...(this.state.canScroll
+            ? { overflowY: 'auto' }
+            : { overflowY: 'hidden' }),
         }}
         tabIndex="0"
         onKeyUp={this.handleOuterKeypress}
+        ref={ctw => (this.contentWrapper = ctw)}
       >
         <div className="terminal-holder">
           <div className="terminal-content">

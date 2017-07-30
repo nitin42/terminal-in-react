@@ -385,6 +385,9 @@ class Terminal extends Component {
           printLine: this.printLine.bind(this, instance),
           removeLine: this.removeLine.bind(this, instance),
           runCommand: this.runCommand.bind(this, instance),
+          setCanScroll: this.setCanScroll.bind(this, instance),
+          setScrollPosition: this.setScrollPosition.bind(this, instance),
+          focusInput: this.focusInput.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
           getData: () => this.getPluginData(PluginClass.displayName),
@@ -628,6 +631,27 @@ class Terminal extends Component {
     }
     return null;
   };
+
+  // Set if the current tab can scroll
+  setCanScroll = (instance, force) => {
+    if (typeof force !== 'undefined') {
+      instance.setState({ canScroll: force });
+    }
+  }
+
+  // Set the scroll position of the contents
+  setScrollPosition = (instance, pos) => {
+    if (typeof pos === 'number') {
+      instance.setScrollPosition(pos);
+    }
+  }
+
+  // Set focus to the input
+  focusInput = (instance) => {
+    if (typeof pos === 'number') {
+      instance.focusInput();
+    }
+  }
 
   // Print the summary (input -> output)
   printLine = (instance, inp, std = true) => {
