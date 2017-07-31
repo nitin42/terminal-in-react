@@ -42,6 +42,8 @@
 
 * [Troubleshooting](#troubleshooting)
 
+* [Detailed reference](https://github.com/nitin42/terminal-in-react/wiki)
+
 ## Install
 
 ```
