@@ -110,7 +110,7 @@ Ensure that `terminal-in-react/lib/css/index.css` is loaded
 
 ## Working
 
-### Adding commands
+### Adding commands ✍️
 
 To add your own command, use prop `commands` which accepts an object. This objects then maps `command name -> command function`.
 
@@ -120,7 +120,7 @@ Let's take an example. You want to open a website with a command `open-google`
 <Terminal commands={{ 'open-google': () => window.open("https://www.google.com/", "_blank")}} />
 ```
 
-### Adding description of your command
+### Adding description of your command 💁🏼‍♂️
 
 Add a description of your command using prop `description`.
 
@@ -141,7 +141,7 @@ It does so by default.
   <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
 </p>
 
-### Command passthrough
+### Command passthrough 
 
 You can have the terminal pass out the cmd that was input
 
@@ -149,7 +149,7 @@ You can have the terminal pass out the cmd that was input
 <Terminal commandPassThrough={cmd => `-PassedThrough:${cmd}: command not found`} />
 ```
 
-### Async handling of commands
+### Async handling of commands 😎
 you can also handle the result with a callback
 ```jsx
 <Terminal
@@ -175,7 +175,7 @@ you can also handle the result with a callback
 This will hide the option color, show and clear.
 
 
-### Advanced commands
+### Advanced commands 👨‍💻
 
 You can give your commands options and get them back parsed to the method.
 Using this method will also give your command a build in help output.
@@ -296,7 +296,7 @@ Awesome! Right? Let us know if you make something interesting 😃
   <img src="https://i.gyazo.com/3e719f4091cbd72f3e1f99209493e50d.gif" />
 </p>
 
-### Multiline input
+### Multiline input 🤹🏼‍♀️
 
 via `shift + enter`
 
@@ -304,7 +304,7 @@ via `shift + enter`
   <img src="http://g.recordit.co/AznpOohzJL.gif" />
 </p>
 
-### Check history of your commands
+### Check history of your commands 🖱️
 
 using arrow down and up keys
 
@@ -312,7 +312,7 @@ using arrow down and up keys
   <img src="https://i.gyazo.com/6fa55a8fbb961787c51e406e612e0bb8.gif" />
 </p>
 
-### Keyboard shortcuts
+### Keyboard shortcuts ⌨
 You can define keyboard shortcuts. They have to be grouped by os. The three available are
 `win`, `darwin`, and `linux`. You can group multiple os by a `,` for example if the
 shortcut was for all platforms `win,darwin,linux` would be fine as a key
