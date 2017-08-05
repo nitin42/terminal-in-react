@@ -1,4 +1,6 @@
+jslint:
+  enabled: false
 eslint:
-  enabled: true
+  enabled: false
   config_file: .hound.eslintrc
   ignore_file: .eslintignore

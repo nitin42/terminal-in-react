@@ -44,7 +44,7 @@ todo.md
 .idea
 .settings
 .iml
-.to-fix-hound.yml
+.hound.yml
 .gitignore
 .eslintrc
 .eslintignore
