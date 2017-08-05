@@ -261,6 +261,11 @@ class Terminal extends Component {
   setShortcuts = () => {
     let shortcuts = getShortcuts({}, this.defaultShortcuts);
     shortcuts = getShortcuts(shortcuts, this.props.shortcuts);
+    pluginMap(this.props.plugins, (plugin) => {
+      if (plugin.shortcuts) {
+        shortcuts = getShortcuts(shortcuts, plugin.shortcuts);
+      }
+    });
     this.setState({ shortcuts });
   };
 
@@ -408,7 +413,15 @@ class Terminal extends Component {
 
   // Method to check for shortcut and invoking commands
   checkShortcuts = (instance, key, e) => {
-    const shortcuts = Object.keys(this.state.shortcuts);
+    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
+    let cuts = this.state.shortcuts;
+    if (instanceData) {
+      Object.values(instanceData.pluginInstances).forEach((i) => {
+        cuts = getShortcuts(cuts, i.shortcuts);
+      });
+    }
+
+    const shortcuts = Object.keys(cuts);
     if (shortcuts.length > 0) {
       const { keyInputs } = instance.state;
       let modKey = key;
@@ -427,9 +440,9 @@ class Terminal extends Component {
       if (options.length > 0) {
         if (options.length === 1 && options[0][0].length === len) {
           const shortcut = shortcuts[options[0][1]];
-          const action = this.state.shortcuts[shortcut];
+          const action = cuts[shortcut];
           if (typeof action === 'string') {
-            this.runCommand(instance, this.state.shortcuts[shortcut]);
+            this.runCommand(instance, cuts[shortcut]);
           } else if (typeof action === 'function') {
             e.preventDefault();
             e.stopPropagation();
