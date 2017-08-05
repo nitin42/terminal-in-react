@@ -2,5 +2,5 @@ jslint:
   enabled: false
 eslint:
   enabled: false
-  config_file: .hound.eslintrc
+  config_file: .eslintrc
   ignore_file: .eslintignore
