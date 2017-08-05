@@ -1,0 +1,30 @@
+{
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "extends": "airbnb",
+  "rules": {
+    "generator-star-spacing": 1,
+    "babel/new-cap": 1,
+    "object-shorthand": 1,
+    "arrow-parens": 1,
+    "no-await-in-loop": 1,
+
+    "no-param-reassign": 0,
+    "react/jsx-filename-extension": 0,
+    "react/no-array-index-key": 0,
+    "no-restricted-syntax": 0,
+    "jsx-a11y/no-noninteractive-element-interactions": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "react/require-default-props": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "./webpack.config.js"
+      }
+    }
+  }
+}
