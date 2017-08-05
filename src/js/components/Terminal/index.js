@@ -13,7 +13,7 @@ import {
 
 import { os, pluginMap, uuidv4, getShortcuts, modCommands } from './terminal-utils';
 
-import { TerminalBase, TerminalContainerWrapper, TerminalNote } from './styled-elements';
+import { Base, ContainerWrapper, Note } from './styled-elements';
 
 import Bar from '../Bar';
 import Content from '../Content/index';
@@ -188,7 +188,7 @@ class Terminal extends Component {
     const { activeTab, tabs } = this.state;
 
     return (
-      <TerminalContainerWrapper style={{ ...style }}>
+      <ContainerWrapper style={{ ...style }}>
         {!hideTopBar && (
           <Bar showActions={showActions} {...actionHandlers} />
         )}
@@ -201,7 +201,7 @@ class Terminal extends Component {
           />
         )}
         {tabs}
-      </TerminalContainerWrapper>
+      </ContainerWrapper>
     );
   };
 
@@ -210,18 +210,18 @@ class Terminal extends Component {
     const { style, showActions, actionHandlers } = this.props;
 
     return (
-      <TerminalContainerWrapper style={{ ...style }}>
+      <ContainerWrapper style={{ ...style }}>
         <Bar
           showActions={showActions}
           {...actionHandlers}
         />
-      </TerminalContainerWrapper>
+      </ContainerWrapper>
     );
   };
 
   // Show msg (on window close)
   getNote = () => (
-    <TerminalNote>
+    <Note>
       <h1>OOPS! You closed the window.</h1>
       <img
         src="https://camo.githubusercontent.com/95ad3fffa11193f85dedbf14ca67e4c5c07182d0/687474703a2f2f69636f6e732e69636f6e617263686976652e636f6d2f69636f6e732f70616f6d656469612f736d616c6c2d6e2d666c61742f313032342f7465726d696e616c2d69636f6e2e706e67"
@@ -231,7 +231,7 @@ class Terminal extends Component {
         onClick={this.toggleState('show')}
       />
       Click on the icon to reopen.
-    </TerminalNote>
+    </Note>
   );
 
   // Plugin data getter
@@ -710,12 +710,12 @@ class Terminal extends Component {
 
     return (
       <ThemeProvider theme={theme}>
-        <TerminalBase
+        <Base
           className="terminal-base"
           fullscreen={this.state.maximise}
         >
           {this.getAppContent()}
-        </TerminalBase>
+        </Base>
       </ThemeProvider>
     );
   }

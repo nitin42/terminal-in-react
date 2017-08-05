@@ -2,9 +2,9 @@ import React, {Component} from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
 import whatkey, { unprintableKeys } from 'whatkey';
 import {
-  TerminalContainerMain, TerminalContent, TerminalHolder,
-  TerminalInput, TerminalInputArea, TerminalMainInput,
-  TerminalOutputLine, PreTerminalOutputLine, TerminalPrompt,
+  ContainerMain, Content, Holder,
+  Input, InputArea, MainInput,
+  OutputLine, PreOutputLine, Prompt,
 } from './styled-elements';
 
 class Content extends Component {
@@ -113,9 +113,9 @@ class Content extends Component {
 
     const output = this.state.summary.map((content, i) => {
       if (typeof content === 'string' && content.length === 0) {
-        return <TerminalOutputLine key={i}>&nbsp;</TerminalOutputLine>;
+        return <OutputLine key={i}>&nbsp;</OutputLine>;
       }
-      return <PreTerminalOutputLine key={i}>{content}</PreTerminalOutputLine>;
+      return <PreOutputLine key={i}>{content}</PreOutputLine>;
     });
 
     let toSubtract = 30;
@@ -127,7 +127,7 @@ class Content extends Component {
     }
 
     return (
-      <TerminalContainerMain
+      <ContainerMain
         style={{
           ...(maximise
             ? { maxWidth: '100%', maxHeight: `calc(100% - ${toSubtract}px)` }
@@ -140,28 +140,28 @@ class Content extends Component {
         onKeyUp={this.handleOuterKeypress}
         innerRef={ctw => (this.contentWrapper = ctw)}
       >
-        <TerminalHolder>
-          <TerminalContent>
-            <TerminalInputArea>
+        <Holder>
+          <Content>
+            <InputArea>
               {output}
-              <TerminalInput
+              <Input
                 innerRef={elm => (this.inputWrapper = elm)}
               >
-                <TerminalPrompt>
+                <Prompt>
                   {this.state.promptPrefix + symbol}
-                </TerminalPrompt>
-                <TerminalMainInput
+                </Prompt>
+                <MainInput
                   type="text"
                   tabIndex="-1"
                   innerRef={com => (this.com = com)}
                   onKeyPress={this.handleChange}
                   onKeyDown={this.handleKeyPress}
                 />
-              </TerminalInput>
-            </TerminalInputArea>
-          </TerminalContent>
-        </TerminalHolder>
-      </TerminalContainerMain>
+              </Input>
+            </InputArea>
+          </Content>
+        </Holder>
+      </ContainerMain>
     );
   }
 }

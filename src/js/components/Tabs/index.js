@@ -1,6 +1,6 @@
 import React, {Component} from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
-import { TerminalTab, TerminalTabBar, TerminalTabBarEmpty, TerminalTabClose, TerminalTabPlus } from './styled-elements';
+import { Tab, TabBar, TabBarEmpty, TabClose, TabPlus } from './styled-elements';
 
 function last(arr, pre = '') {
   let base = arr.length > 2 ? `${arr[arr.length - 2]}` : '';
@@ -73,7 +73,7 @@ class Tabs extends Component {
     const tabs = this.context.instances.map(({ index, instance }) => {
       const title = (instance && instance.state) ? last(instance.state.summary, instance.state.promptPrefix) : 'bash';
       return (
-        <TerminalTab
+        <Tab
           key={index}
           active={active === index}
           onClick={e => this.handleTabClick(e, index)}
@@ -82,35 +82,35 @@ class Tabs extends Component {
           tabIndex={0}
         >
           {this.context.instances.length > 1 && (
-            <TerminalTabClose
+            <TabClose
               title="Close Tab"
               onMouseDown={e => this.handleRemoveClick(e, index, instance)}
-            >x</TerminalTabClose>
+            >x</TabClose>
           )}
           {title}
-        </TerminalTab>
+        </Tab>
       );
     });
 
     return (
-      <TerminalTabBar
+      <TabBar
         style={{
           ...style,
           ...(this.context.maximise ? { maxWidth: '100%' } : {}),
         }}
       >
         {tabs}
-        <TerminalTabBarEmpty
+        <TabBarEmpty
           onMouseEnter={this.showPlus}
           onMouseLeave={this.removePlus}
         >
-          <TerminalTabPlus
+          <TabPlus
             visible={showingPlus}
             onClick={this.handleBarClick}
           >+
-          </TerminalTabPlus>
-        </TerminalTabBarEmpty>
-      </TerminalTabBar>
+          </TabPlus>
+        </TabBarEmpty>
+      </TabBar>
     );
   }
 }

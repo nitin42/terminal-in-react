@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const TerminalTabBar = styled.div`
+export const TabBar = styled.div`
   height: 30px;
   max-width: 600px;
   transition: all 0.4s ease-out;
@@ -10,14 +10,14 @@ export const TerminalTabBar = styled.div`
 `;
 
 
-export const TerminalTabBarEmpty = styled.div`
+export const TabBarEmpty = styled.div`
   display: inline-block;
   min-width: 25px;
   height: 100%;
   flex: 1;
 `;
 
-export const TerminalTabClose = styled.div`
+export const TabClose = styled.div`
   position: absolute;
   top: 8px;
   height: 13px;
@@ -36,13 +36,13 @@ export const TerminalTabClose = styled.div`
   }
 `;
 
-export const TerminalTab = styled.div`
+export const Tab = styled.div`
   display: inline-block;
   vertical-align: top;
   height: 30px;
   background-color: #333;
   border-bottom: 2px solid #333;
-  border-bottom-color: ${props => props.active ? '#777' : '#333' }
+  border-bottom-color: ${props => props.active ? '#777' : '#333'}
   text-align: center;
   line-height: 30px;
   width: 100px;
@@ -60,7 +60,7 @@ export const TerminalTab = styled.div`
   }
 `;
 
-export const TerminalTabPlus = styled.div`
+export const TabPlus = styled.div`
   display: inline-block;
   color: white;
   border: 1px solid white;
@@ -73,6 +73,6 @@ export const TerminalTabPlus = styled.div`
   text-align: center;
   font-size: 12px;
   cursor: pointer;
-  opacity: ${props => props.visible ? '0.7' : '0' };
+  opacity: ${props => props.visible ? '0.7' : '0'};
   transition: opacity 0.3s;
 `;

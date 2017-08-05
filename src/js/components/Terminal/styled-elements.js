@@ -1,6 +1,6 @@
 import styled, {keyframes} from 'styled-components';
 
-export const TerminalBase = styled.div`
+export const Base = styled.div`
   width: 100%;
   max-width: ${props => props.fullscreen ? '100%' : '600px' };
   height: ${props => props.fullscreen ? '100%' : '630px'};
@@ -14,7 +14,7 @@ const DEFAULT_FONT_STYLE = `
   color: green;
 `;
 
-export const TerminalContainerWrapper = styled.div`
+export const ContainerWrapper = styled.div`
   height: 100%;
   animation: fadeIn 0.18s ease-in;
   color: ${props => props.theme.color};
@@ -35,7 +35,7 @@ const terminalFadeIn = keyframes`
   }
 `;
 
-export const TerminalNote = styled.span`
+export const Note = styled.span`
   display: flex;
   flex-direction: column;
   justify-content: center;
