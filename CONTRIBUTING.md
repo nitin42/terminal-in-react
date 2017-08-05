@@ -24,12 +24,10 @@ npm install
 
 ### Starting development server
 
-To test your changes, there is a [starter](./starter) folder where you will find two files, `index.html` and `App.js`. 
+To test your changes [Storybook](https://storybook.js.org) is used. This is a neat tool to test your component in an isolated state.
 
-Make your changes to `App.js` and start the development server with -
+To start it, simply run `npm run storybook` and head to [http://localhost:6006]().
 
-```
-npm run start
-```
+To add a new use case, just add a new story in the `stories/index.js` file.
 
 That's it! I am excited to see your pull request.
