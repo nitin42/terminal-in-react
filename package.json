@@ -17,9 +17,11 @@
     "react-dom": "^15.6.1",
     "react-object-inspector": "^0.2.1",
     "string-similarity": "^1.2.0",
+    "styled-components": "^2.1.1",
     "whatkey": "^2.0.1"
   },
   "devDependencies": {
+    "@storybook/react": "^3.2.3",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
@@ -34,7 +36,6 @@
     "babel-preset-stage-1": "^6.24.1",
     "babili-webpack-plugin": "^0.1.2",
     "compression-webpack-plugin": "^0.4.0",
-    "css-loader": "^0.28.4",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.2",
     "eslint-import-resolver-webpack": "^0.8.3",
@@ -45,11 +46,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "jest": "^20.0.4",
     "jsdom": "^11.1.0",
-    "node-sass": "^4.5.3",
-    "postcss-loader": "^2.0.6",
     "react-test-renderer": "^15.6.1",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
     "terminal-in-react-pseudo-file-system-plugin": "^1.2.0",
     "webpack": "^3.1.0",
     "webpack-bundle-analyzer": "^2.8.2",
@@ -65,7 +62,9 @@
     "build": "npm run build:lib && npm run build:scss && npm run build:bundle",
     "build:bundle": "NODE_ENV=production webpack --config ./webpack/webpack.config.js",
     "build:lib": "NODE_ENV=production babel src/js --out-dir lib/js --source-maps",
-    "build:scss": "NODE_ENV=production node-sass src/styles --recursive --source-map true --output lib/css"
+    "build:scss": "NODE_ENV=production node-sass src/styles --recursive --source-map true --output lib/css",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "jest": {
     "testEnvironment": "node",

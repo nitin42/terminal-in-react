@@ -1,92 +1,23 @@
 /* eslint-disable no-console, react/sort-comp */
-import React, { Component } from 'react'; // eslint-disable-line
+import React, {Component} from 'react'; // eslint-disable-line
 import stringSimilarity from 'string-similarity';
 import whatkey from 'whatkey';
 import isEqual from 'lodash.isequal';
-import Command from '../args';
-import { handleLogging, getOs } from '../utils';
+import { ThemeProvider } from 'styled-components';
+import { handleLogging } from '../../utils';
 import {
   TerminalPropTypes,
   TerminalContextTypes,
   TerminalDefaultProps,
-} from './types';
-import Bar from './Bar';
-import Content from './Content';
-import Tabs from './Tabs';
+} from '../types';
 
-function pluginMap(plugins, eachHandler) {
-  return plugins.map((plugin) => {
-    if (typeof plugin === 'function') {
-      plugin = {
-        class: plugin,
-        config: undefined,
-      };
-    }
-    return plugin;
-  }).forEach(pluginObj => eachHandler(pluginObj.class, pluginObj.config));
-}
+import { os, pluginMap, uuidv4, getShortcuts, modCommands } from './terminal-utils';
 
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0; // eslint-disable-line no-bitwise
-    const v = c === 'x' ? r : (r & 0x3 | 0x8); // eslint-disable-line
-    return v.toString(16);
-  });
-}
+import { TerminalBase, TerminalContainerWrapper, TerminalNote } from './styled-elements';
 
-const os = getOs();
-
-function getShortcuts(shortcuts, obj) {
-  Object.keys(obj).forEach((key) => {
-    const split = key.toLowerCase().replace(/\s/g, '').split(',');
-    split.forEach((osName) => {
-      if (osName === os) {
-        shortcuts = {
-          ...shortcuts,
-          ...obj[key],
-        };
-      }
-    });
-  });
-  return shortcuts;
-}
-
-function modCommands(commands) {
-  const newCommands = {};
-
-  Object.keys(commands).forEach((name) => {
-    let needsInstance = false;
-    const definition = commands[name];
-    let method = definition;
-    let parse = i => i;
-    if (typeof definition === 'object') {
-      const cmd = new Command();
-      if (typeof definition.options !== 'undefined') {
-        try {
-          cmd.options(definition.options);
-        } catch (e) {
-          throw new Error('options for command wrong format');
-        }
-      }
-      parse = i =>
-        cmd.parse(i, {
-          name,
-          help: true,
-          version: false,
-        });
-      method = definition.method;
-      needsInstance = definition.needsInstance || false;
-    }
-
-    newCommands[name] = {
-      parse,
-      method,
-      needsInstance,
-    };
-  });
-
-  return newCommands;
-}
+import Bar from '../Bar';
+import Content from '../Content/index';
+import Tabs from '../Tabs/index';
 
 class Terminal extends Component {
   static displayName = 'Terminal';
@@ -204,31 +135,27 @@ class Terminal extends Component {
 
   // Tab creation
   createTab = (force = false) => {
-    const { color, backgroundColor, prompt, allowTabs } = this.props;
+    const { allowTabs } = this.props;
     if (force || allowTabs) {
       const { tabs } = this.state;
       const id = uuidv4();
 
-      const inputStyles = { backgroundColor, color };
       const promptStyles = { color: prompt };
-      const backgroundColorStyles = { backgroundColor };
 
       tabs.push((
         <Content
           key={id}
           id={id}
           prompt={promptStyles}
-          inputStyles={inputStyles}
           handleChange={this.handleChange}
           handlerKeyPress={this.handlerKeyPress}
-          backgroundColor={backgroundColorStyles}
           register={(...args) => this.registerInstance(id, ...args)}
         />
       ));
 
       this.setState({ activeTab: id, tabs });
     }
-  }
+  };
 
   // Tab removal
   removeTab = (index) => {
@@ -252,9 +179,7 @@ class Terminal extends Component {
   // Shows the full window (normal window)
   getContent = () => {
     const {
-      color,
       style,
-      barColor,
       showActions,
       hideTopBar,
       allowTabs,
@@ -262,12 +187,10 @@ class Terminal extends Component {
     } = this.props;
     const { activeTab, tabs } = this.state;
 
-    const barColorStyles = { backgroundColor: barColor };
-
     return (
-      <div className="terminal-container-wrapper" style={{ color, ...style }}>
+      <TerminalContainerWrapper style={{ ...style }}>
         {!hideTopBar && (
-          <Bar showActions={showActions} style={barColorStyles} {...actionHandlers} />
+          <Bar showActions={showActions} {...actionHandlers} />
         )}
         {allowTabs && (
           <Tabs
@@ -278,29 +201,27 @@ class Terminal extends Component {
           />
         )}
         {tabs}
-      </div>
+      </TerminalContainerWrapper>
     );
   };
 
   // Show only bar (minimise)
   getBar = () => {
-    const { color, barColor, style, showActions, actionHandlers } = this.props;
-    const barColorStyles = { backgroundColor: barColor };
+    const { style, showActions, actionHandlers } = this.props;
 
     return (
-      <div className="terminal-container-wrapper" style={{ color, ...style }}>
+      <TerminalContainerWrapper style={{ ...style }}>
         <Bar
           showActions={showActions}
-          style={barColorStyles}
           {...actionHandlers}
         />
-      </div>
+      </TerminalContainerWrapper>
     );
   };
 
   // Show msg (on window close)
   getNote = () => (
-    <span className="terminal-note">
+    <TerminalNote>
       <h1>OOPS! You closed the window.</h1>
       <img
         src="https://camo.githubusercontent.com/95ad3fffa11193f85dedbf14ca67e4c5c07182d0/687474703a2f2f69636f6e732e69636f6e617263686976652e636f6d2f69636f6e732f70616f6d656469612f736d616c6c2d6e2d666c61742f313032342f7465726d696e616c2d69636f6e2e706e67"
@@ -310,7 +231,7 @@ class Terminal extends Component {
         onClick={this.toggleState('show')}
       />
       Click on the icon to reopen.
-    </span>
+    </TerminalNote>
   );
 
   // Plugin data getter
@@ -360,9 +281,9 @@ class Terminal extends Component {
   setTrue = name => () => this.setState({ [name]: true });
 
   /**
-  * set the input value with the possible history value
-  * @param {number} next position on the history
-  */
+   * set the input value with the possible history value
+   * @param {number} next position on the history
+   */
   setValueWithHistory = (instance, position, inputRef) => {
     const { history } = instance.state;
     if (history[position]) {
@@ -780,13 +701,22 @@ class Terminal extends Component {
   };
 
   render() {
+    const theme = {
+      color: this.props.color,
+      prompt: this.props.prompt,
+      barColor: this.props.barColor,
+      backgroundColor: this.props.backgroundColor,
+    };
+
     return (
-      <div
-        className="terminal-base"
-        style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}
-      >
-        {this.getAppContent()}
-      </div>
+      <ThemeProvider theme={theme}>
+        <TerminalBase
+          className="terminal-base"
+          fullscreen={this.state.maximise}
+        >
+          {this.getAppContent()}
+        </TerminalBase>
+      </ThemeProvider>
     );
   }
 }

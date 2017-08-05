@@ -1,6 +1,5 @@
 const {
   jsLoader,
-  styleLoader,
   output,
   plugins,
   externals,
@@ -15,7 +14,7 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   cache: true,
   module: {
-    rules: [jsLoader(), styleLoader()],
+    rules: [jsLoader()],
   },
   target: 'web',
   externals: externals(),

@@ -1,6 +1,11 @@
-import React, { Component } from 'react'; // eslint-disable-line
+import React, {Component} from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
 import whatkey, { unprintableKeys } from 'whatkey';
+import {
+  TerminalContainerMain, TerminalContent, TerminalHolder,
+  TerminalInput, TerminalInputArea, TerminalMainInput,
+  TerminalOutputLine, PreTerminalOutputLine, TerminalPrompt,
+} from './styled-elements';
 
 class Content extends Component {
   static displayName = 'Content';
@@ -8,9 +13,6 @@ class Content extends Component {
   static propTypes = {
     id: PropTypes.string,
     oldData: PropTypes.object, // eslint-disable-line
-    backgroundColor: PropTypes.objectOf(PropTypes.string),
-    prompt: PropTypes.objectOf(PropTypes.string),
-    inputStyles: PropTypes.objectOf(PropTypes.string),
     register: PropTypes.func,
     handleChange: PropTypes.func,
     handlerKeyPress: PropTypes.func.isRequired,
@@ -102,7 +104,7 @@ class Content extends Component {
   }
 
   render() {
-    const { prompt, inputStyles, backgroundColor, id } = this.props;
+    const { id } = this.props;
     const { symbol, maximise, activeTab, barShowing, tabsShowing } = this.context;
 
     if (id !== activeTab) {
@@ -111,9 +113,9 @@ class Content extends Component {
 
     const output = this.state.summary.map((content, i) => {
       if (typeof content === 'string' && content.length === 0) {
-        return <div className="terminal-output-line" key={i}>&nbsp;</div>;
+        return <TerminalOutputLine key={i}>&nbsp;</TerminalOutputLine>;
       }
-      return <pre className="terminal-output-line" key={i}>{content}</pre>;
+      return <PreTerminalOutputLine key={i}>{content}</PreTerminalOutputLine>;
     });
 
     let toSubtract = 30;
@@ -125,10 +127,8 @@ class Content extends Component {
     }
 
     return (
-      <div
-        className="terminal-container terminal-container-main"
+      <TerminalContainerMain
         style={{
-          ...backgroundColor,
           ...(maximise
             ? { maxWidth: '100%', maxHeight: `calc(100% - ${toSubtract}px)` }
             : {}),
@@ -138,33 +138,30 @@ class Content extends Component {
         }}
         tabIndex="0"
         onKeyUp={this.handleOuterKeypress}
-        ref={ctw => (this.contentWrapper = ctw)}
+        innerRef={ctw => (this.contentWrapper = ctw)}
       >
-        <div className="terminal-holder">
-          <div className="terminal-content">
-            <div className="terminal-input-area">
+        <TerminalHolder>
+          <TerminalContent>
+            <TerminalInputArea>
               {output}
-              <div
-                className="terminal-input"
-                ref={elm => (this.inputWrapper = elm)}
+              <TerminalInput
+                innerRef={elm => (this.inputWrapper = elm)}
               >
-                <span className="terminal-prompt" style={prompt}>
+                <TerminalPrompt>
                   {this.state.promptPrefix + symbol}
-                </span>
-                <input
-                  className="terminal-main-input"
-                  style={inputStyles}
+                </TerminalPrompt>
+                <TerminalMainInput
                   type="text"
                   tabIndex="-1"
-                  ref={com => (this.com = com)}
+                  innerRef={com => (this.com = com)}
                   onKeyPress={this.handleChange}
                   onKeyDown={this.handleKeyPress}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </TerminalInput>
+            </TerminalInputArea>
+          </TerminalContent>
+        </TerminalHolder>
+      </TerminalContainerMain>
     );
   }
 }
