@@ -58,7 +58,7 @@ export const MainInput = styled.input `
 export const Holder = styled.div`
 `;
 
-export const Content = styled.div`
+export const ContainerContent = styled.div`
   padding: 5px 20px;
   height: 100%;
 `;

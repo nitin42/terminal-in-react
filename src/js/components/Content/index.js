@@ -2,7 +2,7 @@ import React, {Component} from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
 import whatkey, { unprintableKeys } from 'whatkey';
 import {
-  ContainerMain, Content, Holder,
+  ContainerMain, ContainerContent, Holder,
   Input, InputArea, MainInput,
   OutputLine, PreOutputLine, Prompt,
 } from './styled-elements';
@@ -141,7 +141,7 @@ class Content extends Component {
         innerRef={ctw => (this.contentWrapper = ctw)}
       >
         <Holder>
-          <Content>
+          <ContainerContent>
             <InputArea>
               {output}
               <Input
@@ -159,7 +159,7 @@ class Content extends Component {
                 />
               </Input>
             </InputArea>
-          </Content>
+          </ContainerContent>
         </Holder>
       </ContainerMain>
     );
