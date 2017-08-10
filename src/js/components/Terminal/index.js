@@ -140,13 +140,10 @@ class Terminal extends Component {
       const { tabs } = this.state;
       const id = uuidv4();
 
-      const promptStyles = { color: prompt };
-
       tabs.push((
         <Content
           key={id}
           id={id}
-          prompt={promptStyles}
           handleChange={this.handleChange}
           handlerKeyPress={this.handlerKeyPress}
           register={(...args) => this.registerInstance(id, ...args)}

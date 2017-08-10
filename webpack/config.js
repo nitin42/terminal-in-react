@@ -49,7 +49,6 @@ const externals = () => ({
 });
 
 const entry = () => ({
-  'terminal-react.css': './src/styles/index.scss',
   'terminal-react.js': './src/js/index.js',
 });
 

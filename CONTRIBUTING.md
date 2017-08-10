@@ -9,6 +9,9 @@ I'm excited to have you helping out. Thank you so much for your time.
 Considering you've forked and cloned the repo on your system, switch to the directory and install the dependencies.
 
 ```
+npm install g babel-cli
+npm install g webpack-cli
+
 cd terminal-in-react
 npm install
 ```
