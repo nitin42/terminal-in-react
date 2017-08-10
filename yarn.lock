@@ -6509,15 +6509,31 @@ tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-terminal-in-react-pseudo-file-system-plugin@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/terminal-in-react-pseudo-file-system-plugin/-/terminal-in-react-pseudo-file-system-plugin-1.2.0.tgz#53af4373ef1317f3001edaecd63add038a90b5b4"
+terminal-in-react-pseudo-file-system-plugin@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/terminal-in-react-pseudo-file-system-plugin/-/terminal-in-react-pseudo-file-system-plugin-2.0.0.tgz#0dc9aea7f521c6464a03444627e9e6f27da79e61"
   dependencies:
     core-decorators "^0.19.0"
     lang-map "^0.4.0"
     lodash.set "^4.3.2"
     memoizerific "^1.11.2"
     react-syntax-highlighter "^5.6.2"
+    terminal-in-react "^3.4.0"
+
+terminal-in-react@^3.4.0:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/terminal-in-react/-/terminal-in-react-3.4.2.tgz#27891302dea02553a11a3617a93cda4be6408ba4"
+  dependencies:
+    camelcase "^4.1.0"
+    lodash.isequal "^4.5.0"
+    minimist "^1.2.0"
+    platform "^1.3.4"
+    prop-types "^15.5.10"
+    react "^15.6.1"
+    react-dom "^15.6.1"
+    react-object-inspector "^0.2.1"
+    string-similarity "^1.2.0"
+    whatkey "^2.0.1"
 
 test-exclude@^4.1.1:
   version "4.1.1"
