@@ -54,7 +54,7 @@ export const Tab = styled.div`
   cursor: pointer;
   white-space: pre;
   position: relative;
-  
+  text-align: center;
   &:focus {
     outline: none;
   }
