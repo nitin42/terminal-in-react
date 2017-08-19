@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
+// import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
 
 import { storiesOf } from '@storybook/react';
 
@@ -38,7 +38,7 @@ storiesOf('Terminal', module)
   .add('with FileSystem plugin', (<TerminalWrapper>
     <Terminal
       plugins={[
-        new PseudoFileSystem(),
+        // new PseudoFileSystem(),
       ]}
     /></TerminalWrapper>))
 ;
