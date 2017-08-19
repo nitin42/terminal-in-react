@@ -20,8 +20,6 @@
 
 * [Usage](#usage)
 
-* [Styling](#include-the-css)
-
 * [Working](#working)
 
 * [Plugins](#using-plugins-)
@@ -42,6 +40,8 @@
 
 * [Troubleshooting](#troubleshooting)
 
+* [Detailed reference](https://github.com/nitin42/terminal-in-react/wiki)
+
 ## Install
 
 ```
@@ -59,7 +59,6 @@ yarn add terminal-in-react
 ```jsx
 import React, { Component } from 'react';
 import Terminal from 'terminal-in-react';
-import 'terminal-in-react/lib/css/index.css';
 
 class App extends Component {
   showMsg = () => 'Hello World'
@@ -96,9 +95,6 @@ class App extends Component {
   }
 }
 ```
-#### Include the CSS
-
-Ensure that `terminal-in-react/lib/css/index.css` is loaded
 
 > Be careful when copying this example because it uses `window` object (`'open-google': () => window.open("https://www.google.com/", "_blank"),`) which is only available on the client-side and it will give you an error if you're doing server side rendering.
 

@@ -10,13 +10,6 @@ const jsLoader = () => ({
   use: ['babel-loader'],
 });
 
-const styleLoader = () => ({
-  test: /\.scss$/,
-  include: resolve(__dirname, '..', 'src', 'styles'),
-  use: ExtractTextPlugin.extract({
-    use: ['css-loader', 'postcss-loader', 'sass-loader'],
-  }),
-});
 
 const output = () => ({
   filename: '[name]',
@@ -56,7 +49,6 @@ const externals = () => ({
 });
 
 const entry = () => ({
-  'terminal-react.css': './src/styles/index.scss',
   'terminal-react.js': './src/js/index.js',
 });
 
@@ -64,7 +56,7 @@ module.exports = {
   context: resolve(__dirname, '../'),
   jsLoader,
   output,
-  styleLoader,
+  // styleLoader,
   plugins,
   externals,
   entry,
