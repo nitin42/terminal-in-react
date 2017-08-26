@@ -2,24 +2,15 @@
 
 exports[`Terminal Component should render a terminal component 1`] = `
 <div
-  className="terminal-base"
-  style={Object {}}
+  className="terminal-base sc-bdVaJa krmIoX"
 >
   <div
-    className="terminal-container-wrapper"
-    style={
-      Object {
-        "color": "green",
-      }
-    }
+    className="sc-bwzfXH dLBnSZ"
+    style={Object {}}
   >
     <div
-      className="terminal-top-bar adjust-bar"
-      style={
-        Object {
-          "backgroundColor": "black",
-        }
-      }
+      className="sc-bxivhb hdqhPL"
+      style={Object {}}
     >
       <svg
         height="20"
@@ -31,6 +22,11 @@ exports[`Terminal Component should render a terminal component 1`] = `
           fill="red"
           onClick={[Function]}
           r="5"
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
         />
         <circle
           cx="44"
@@ -38,6 +34,11 @@ exports[`Terminal Component should render a terminal component 1`] = `
           fill="orange"
           onClick={[Function]}
           r="5"
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
         />
         <circle
           cx="64"
@@ -45,55 +46,76 @@ exports[`Terminal Component should render a terminal component 1`] = `
           fill="green"
           onClick={[Function]}
           r="5"
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
         />
       </svg>
     </div>
     <div
-      className="terminal-container terminal-container-main"
-      onClick={[Function]}
-      style={
-        Object {
-          "backgroundColor": "yellow",
-        }
-      }
+      className="sc-jTzLTM lfnIny"
+      style={Object {}}
     >
       <div
-        className="terminal-holder"
+        className="sc-cSHVUG jgYAxu"
+        onClick={[Function]}
+        onFocus={[Function]}
+        tabIndex={0}
+        title="bash"
+      >
+        bash
+      </div>
+      <div
+        className="sc-fjdhpX ghCJNo"
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
       >
         <div
-          className="terminal-content"
+          className="sc-kAzzGY hjGnyC"
+          onClick={[Function]}
+        >
+          +
+        </div>
+      </div>
+    </div>
+    <div
+      className="sc-EHOje ezjTKM"
+      onKeyUp={[Function]}
+      style={
+        Object {
+          "overflowY": "auto",
+        }
+      }
+      tabIndex="0"
+    >
+      <div
+        className="sc-gZMcBi cwkXTh"
+      >
+        <div
+          className="sc-gqjmRU gAcuTz"
         >
           <div
-            className="terminal-input-area"
+            className="sc-VigVT bYwkqd"
           >
             <pre
-              className="terminal-output-line"
+              className="sc-gzVnrw iGGAfs"
             >
               Hello World. My name is Nitin Tulswani
             </pre>
             <div
-              className="terminal-input"
+              className="sc-htoDjs iQSzyY"
             >
               <span
-                className="terminal-prompt"
-                style={
-                  Object {
-                    "color": "green",
-                  }
-                }
+                className="sc-dnqmqq dNrvp"
               >
                 &gt;
               </span>
               <input
-                className="terminal-main-input"
+                className="sc-iwsKbI jBOpwP"
                 onKeyDown={[Function]}
                 onKeyPress={[Function]}
-                style={
-                  Object {
-                    "backgroundColor": "yellow",
-                    "color": "green",
-                  }
-                }
                 tabIndex="-1"
                 type="text"
               />
@@ -108,24 +130,15 @@ exports[`Terminal Component should render a terminal component 1`] = `
 
 exports[`Terminal Component should work with plugins 1`] = `
 <div
-  className="terminal-base"
-  style={Object {}}
+  className="terminal-base sc-bdVaJa krmIoX"
 >
   <div
-    className="terminal-container-wrapper"
-    style={
-      Object {
-        "color": "green",
-      }
-    }
+    className="sc-bwzfXH dLBnSZ"
+    style={Object {}}
   >
     <div
-      className="terminal-top-bar adjust-bar"
-      style={
-        Object {
-          "backgroundColor": "black",
-        }
-      }
+      className="sc-bxivhb hdqhPL"
+      style={Object {}}
     >
       <svg
         height="20"
@@ -137,6 +150,11 @@ exports[`Terminal Component should work with plugins 1`] = `
           fill="red"
           onClick={[Function]}
           r="5"
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
         />
         <circle
           cx="44"
@@ -144,6 +162,11 @@ exports[`Terminal Component should work with plugins 1`] = `
           fill="orange"
           onClick={[Function]}
           r="5"
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
         />
         <circle
           cx="64"
@@ -151,55 +174,71 @@ exports[`Terminal Component should work with plugins 1`] = `
           fill="green"
           onClick={[Function]}
           r="5"
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
         />
       </svg>
     </div>
     <div
-      className="terminal-container terminal-container-main"
-      onClick={[Function]}
-      style={
-        Object {
-          "backgroundColor": "black",
-        }
-      }
+      className="sc-jTzLTM lfnIny"
+      style={Object {}}
     >
       <div
-        className="terminal-holder"
+        className="sc-cSHVUG jgYAxu"
+        onClick={[Function]}
+        onFocus={[Function]}
+        tabIndex={0}
+        title="bash"
+      >
+        bash
+      </div>
+      <div
+        className="sc-fjdhpX ghCJNo"
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
       >
         <div
-          className="terminal-content"
+          className="sc-kAzzGY hjGnyC"
+          onClick={[Function]}
+        >
+          +
+        </div>
+      </div>
+    </div>
+    <div
+      className="sc-EHOje dMFuoo"
+      onKeyUp={[Function]}
+      style={
+        Object {
+          "overflowY": "auto",
+        }
+      }
+      tabIndex="0"
+    >
+      <div
+        className="sc-gZMcBi cwkXTh"
+      >
+        <div
+          className="sc-gqjmRU gAcuTz"
         >
           <div
-            className="terminal-input-area"
+            className="sc-VigVT bYwkqd"
           >
             <div
-              className="terminal-output-line"
-            >
-               
-            </div>
-            <div
-              className="terminal-input"
+              className="sc-htoDjs iQSzyY"
             >
               <span
-                className="terminal-prompt"
-                style={
-                  Object {
-                    "color": "green",
-                  }
-                }
+                className="sc-dnqmqq dNrvp"
               >
                 /home/user/ &gt;
               </span>
               <input
-                className="terminal-main-input"
+                className="sc-iwsKbI jLRkOo"
                 onKeyDown={[Function]}
                 onKeyPress={[Function]}
-                style={
-                  Object {
-                    "backgroundColor": "black",
-                    "color": "green",
-                  }
-                }
                 tabIndex="-1"
                 type="text"
               />

@@ -1,7 +1,7 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
-import Terminal from '../src/js/components/Terminal';
+import Terminal from '../src/js/components/Terminal/index';
 
 const Term = (
   <Terminal

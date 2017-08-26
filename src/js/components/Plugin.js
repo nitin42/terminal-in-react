@@ -5,12 +5,14 @@ export default class Plugin {
 
   static commands = {};
   static descriptions = {};
+  static shortcuts = {};
 
   constructor(api, config = {}) {
     this.api = api;
     this.config = config;
     this.commands = {};
     this.descriptions = {};
+    this.shortcuts = {};
 
     this.updateApi = newApi => (this.api = newApi);
     this.getPublicMethods = () => ({});

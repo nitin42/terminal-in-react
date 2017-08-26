@@ -1,5 +1,6 @@
-import React, { Component } from 'react'; // eslint-disable-line
+import React, {Component} from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
+import { Tab, TabBar, TabBarEmpty, TabClose, TabPlus } from './styled-elements';
 
 function last(arr, pre = '') {
   let base = arr.length > 2 ? `${arr[arr.length - 2]}` : '';
@@ -72,46 +73,44 @@ class Tabs extends Component {
     const tabs = this.context.instances.map(({ index, instance }) => {
       const title = (instance && instance.state) ? last(instance.state.summary, instance.state.promptPrefix) : 'bash';
       return (
-        <div
+        <Tab
           key={index}
-          className={`terminal-tab${active === index ? ' terminal-tab-active' : ''}`}
+          active={active === index}
           onClick={e => this.handleTabClick(e, index)}
           onFocus={e => this.handleTabClick(e, index)}
           title={title}
           tabIndex={0}
         >
           {this.context.instances.length > 1 && (
-            <div
-              className="terminal-tab-close"
+            <TabClose
               title="Close Tab"
               onMouseDown={e => this.handleRemoveClick(e, index, instance)}
-            >x</div>
-          ) }
+            >x</TabClose>
+          )}
           {title}
-        </div>
+        </Tab>
       );
     });
 
     return (
-      <div
+      <TabBar
         style={{
           ...style,
           ...(this.context.maximise ? { maxWidth: '100%' } : {}),
         }}
-        className="terminal-tab-bar"
       >
         {tabs}
-        <div
-          className="terminal-tab-bar-empty"
+        <TabBarEmpty
           onMouseEnter={this.showPlus}
           onMouseLeave={this.removePlus}
         >
-          <div
-            className={`terminal-tab-plus${showingPlus ? ' terminal-tab-plus-visible' : ''}`}
+          <TabPlus
+            visible={showingPlus}
             onClick={this.handleBarClick}
-          >+</div>
-        </div>
-      </div>
+          >+
+          </TabPlus>
+        </TabBarEmpty>
+      </TabBar>
     );
   }
 }

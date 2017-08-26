@@ -20,8 +20,6 @@
 
 * [Usage](#usage)
 
-* [Styling](#include-the-css)
-
 * [Working](#working)
 
 * [Plugins](#using-plugins-)
@@ -61,7 +59,6 @@ yarn add terminal-in-react
 ```jsx
 import React, { Component } from 'react';
 import Terminal from 'terminal-in-react';
-import 'terminal-in-react/lib/css/index.css';
 
 class App extends Component {
   showMsg = () => 'Hello World'
@@ -98,9 +95,6 @@ class App extends Component {
   }
 }
 ```
-#### Include the CSS
-
-Ensure that `terminal-in-react/lib/css/index.css` is loaded
 
 > Be careful when copying this example because it uses `window` object (`'open-google': () => window.open("https://www.google.com/", "_blank"),`) which is only available on the client-side and it will give you an error if you're doing server side rendering.
 
@@ -461,10 +455,6 @@ Eject from `create-react-app` and use a custom webpack configuration with [`babi
 
 Set the style to `height: 100vh` on parent element.
 
-**Interface issues due to plugins**
-
-If you are having any issues with **plugins** or related api, fallback to `3.3.3`. Because plugins are still **WIP** !
-
 [npm-dm]: https://img.shields.io/npm/dm/terminal-in-react.svg
 [npm-dt]: https://img.shields.io/npm/dt/terminal-in-react.svg
 [npm-v]: https://img.shields.io/npm/v/terminal-in-react.svg
@@ -472,8 +462,3 @@ If you are having any issues with **plugins** or related api, fallback to `3.3.3
 [dev-deps]: https://img.shields.io/david/dev/nitin42/terminal-in-react.svg
 [license]: https://img.shields.io/npm/l/terminal-in-react.svg
 [package-url]: https://npmjs.com/package/terminal-in-react
-
-## New updates
-
-Follow [@NTulswani](https://twitter.com/NTulswani) on Twitter for new updates and progress 😄
-

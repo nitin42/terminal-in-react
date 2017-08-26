@@ -1,4 +1,4 @@
-import camelcase from 'camelcase';
+import camelcase from 'lodash.camelcase';
 import stringSimilarity from 'string-similarity';
 
 export default {
