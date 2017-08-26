@@ -455,10 +455,6 @@ Eject from `create-react-app` and use a custom webpack configuration with [`babi
 
 Set the style to `height: 100vh` on parent element.
 
-**Interface issues due to plugins**
-
-If you are having any issues with **plugins** or related api, fallback to `3.3.3`. Because plugins are still **WIP** !
-
 [npm-dm]: https://img.shields.io/npm/dm/terminal-in-react.svg
 [npm-dt]: https://img.shields.io/npm/dt/terminal-in-react.svg
 [npm-v]: https://img.shields.io/npm/v/terminal-in-react.svg
@@ -466,8 +462,3 @@ If you are having any issues with **plugins** or related api, fallback to `3.3.3
 [dev-deps]: https://img.shields.io/david/dev/nitin42/terminal-in-react.svg
 [license]: https://img.shields.io/npm/l/terminal-in-react.svg
 [package-url]: https://npmjs.com/package/terminal-in-react
-
-## New updates
-
-Follow [@NTulswani](https://twitter.com/NTulswani) on Twitter for new updates and progress 😄
-

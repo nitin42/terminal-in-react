@@ -38,14 +38,14 @@ const plugins = () => [
 const externals = () => ({
   react: 'react',
   'react-dom': 'react-dom',
-  camelcase: 'camelcase',
+  'lodash.camelcase': 'lodash.camelcase',
   'lodash.isequal': 'lodash.isequal',
   minimist: 'minimist',
   platform: 'platform',
   'prop-types': 'prop-types',
   'react-object-inspector': 'react-object-inspector',
   'string-similarity': 'string-similarity',
-  'whatkey': 'whatkey'
+  whatkey: 'whatkey',
 });
 
 const entry = () => ({

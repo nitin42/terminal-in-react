@@ -1,5 +1,5 @@
 import Command from '../../args/index';
-import {getOs} from '../../utils';
+import { getOs } from '../../utils';
 
 export const os = getOs();
 
@@ -24,17 +24,19 @@ export function uuidv4() {
 }
 
 export function getShortcuts(shortcuts, obj) {
-  Object.keys(obj).forEach((key) => {
-    const split = key.toLowerCase().replace(/\s/g, '').split(',');
-    split.forEach((osName) => {
-      if (osName === os) {
-        shortcuts = {
-          ...shortcuts,
-          ...obj[key],
-        };
-      }
+  if (typeof obj === 'object') {
+    Object.keys(obj).forEach((key) => {
+      const split = key.toLowerCase().replace(/\s/g, '').split(',');
+      split.forEach((osName) => {
+        if (osName === os) {
+          shortcuts = {
+            ...shortcuts,
+            ...obj[key],
+          };
+        }
+      });
     });
-  });
+  }
   return shortcuts;
 }
 

@@ -1,31 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
-import PseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
+import createPseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
 
-import { storiesOf } from '@storybook/react';
+import { storiesOf } from '@storybook/react'; // eslint-disable-line
 
 import Terminal from '../src/js/components/Terminal/index';
+
+const FileSystemPlugin = createPseudoFileSystem('/', 'db');
 
 const TerminalWrapper = styled.div`
   width : 100vw;
   height: 100vh;
 `;
 
+const withWrapper = child => () => (<TerminalWrapper>{child}</TerminalWrapper>);
+
 storiesOf('Terminal', module)
-  .add('basic', () => (<TerminalWrapper>
+  .add('basic', withWrapper(
     <Terminal
       msg="Hi everyone! This is a terminal component for React"
       commands={{ website: () => 'website', intro: () => 'My name is Foo!' }}
       descriptions={{ website: 'My website', intro: 'My introduction' }}
-    /></TerminalWrapper>))
-  .add('maximised', () => (<TerminalWrapper>
+    />,
+  ))
+  .add('maximised', withWrapper(
     <Terminal
       msg="Hi everyone! This is a terminal component for React"
       commands={{ website: () => 'website', intro: () => 'My name is Foo!' }}
       descriptions={{ website: 'My website', intro: 'My introduction' }}
       startState="maximised"
-    /></TerminalWrapper>))
-  .add('with custom colors', () => (<TerminalWrapper>
+    />,
+  ))
+  .add('with custom colors', withWrapper(
     <Terminal
       color="blue"
       backgroundColor="red"
@@ -34,11 +40,13 @@ storiesOf('Terminal', module)
       msg="Hi everyone! This is a terminal component for React"
       commands={{ website: () => 'website', intro: () => 'My name is Foo!' }}
       descriptions={{ website: 'My website', intro: 'My introduction' }}
-    /></TerminalWrapper>))
-  .add('with FileSystem plugin', (<TerminalWrapper>
+    />,
+  ))
+  .add('with FileSystem plugin', withWrapper(
     <Terminal
       plugins={[
-        new PseudoFileSystem(),
+        FileSystemPlugin,
       ]}
-    /></TerminalWrapper>))
+    />,
+  ))
 ;
