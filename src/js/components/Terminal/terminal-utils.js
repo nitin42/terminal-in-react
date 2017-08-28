@@ -48,30 +48,32 @@ export function modCommands(commands) {
     const definition = commands[name];
     let method = definition;
     let parse = i => i;
-    if (typeof definition === 'object') {
-      const cmd = new Command();
-      if (typeof definition.options !== 'undefined') {
-        try {
-          cmd.options(definition.options);
-        } catch (e) {
-          throw new Error('options for command wrong format');
+    if (typeof definition !== 'undefined') {
+      if (typeof definition === 'object') {
+        const cmd = new Command();
+        if (typeof definition.options !== 'undefined') {
+          try {
+            cmd.options(definition.options);
+          } catch (e) {
+            throw new Error('options for command wrong format');
+          }
         }
+        parse = i =>
+          cmd.parse(i, {
+            name,
+            help: true,
+            version: false,
+          });
+        method = definition.method;
+        needsInstance = definition.needsInstance || false;
       }
-      parse = i =>
-        cmd.parse(i, {
-          name,
-          help: true,
-          version: false,
-        });
-      method = definition.method;
-      needsInstance = definition.needsInstance || false;
-    }
 
-    newCommands[name] = {
-      parse,
-      method,
-      needsInstance,
-    };
+      newCommands[name] = {
+        parse,
+        method,
+        needsInstance,
+      };
+    }
   });
 
   return newCommands;
