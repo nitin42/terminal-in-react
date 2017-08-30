@@ -49,6 +49,7 @@ export const TerminalPropTypes = {
     handleMinimise: PropTypes.func,
     handleMaximise: PropTypes.func,
   }),
+  afterChangeHandler: PropTypes.func,
 };
 
 export const TerminalContextTypes = {
@@ -89,4 +90,5 @@ export const TerminalDefaultProps = {
   promptSymbol: '>',
   plugins: [],
   shortcuts: {},
+  afterChangeHandler: null,
 };

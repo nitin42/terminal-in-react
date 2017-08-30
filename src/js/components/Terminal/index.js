@@ -502,6 +502,9 @@ class Terminal extends Component {
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
+    if (this.props.afterChangeHandler !== null) {
+        this.props.afterChangeHandler(e);
+    }
   };
 
   /**
