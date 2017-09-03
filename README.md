@@ -462,3 +462,5 @@ Set the style to `height: 100vh` on parent element.
 [dev-deps]: https://img.shields.io/david/dev/nitin42/terminal-in-react.svg
 [license]: https://img.shields.io/npm/l/terminal-in-react.svg
 [package-url]: https://npmjs.com/package/terminal-in-react
+
+<a href="https://app.codesponsor.io/link/FCRW65HPiwhNtebDx2tTc53E/nitin42/terminal-in-react" rel="nofollow"><img src="https://app.codesponsor.io/embed/FCRW65HPiwhNtebDx2tTc53E/nitin42/terminal-in-react.svg" style="width: 888px; height: 68px;" alt="Sponsor" /></a>
