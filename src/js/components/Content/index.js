@@ -1,5 +1,11 @@
-import React, { Component } from 'react'; // eslint-disable-line
+import React, {Component} from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
+import whatkey, { unprintableKeys } from 'whatkey';
+import {
+  ContainerMain, ContainerContent, Holder,
+  Input, InputArea, MainInput,
+  OutputLine, PreOutputLine, Prompt,
+} from './styled-elements';
 
 class Content extends Component {
   static displayName = 'Content';
@@ -7,9 +13,6 @@ class Content extends Component {
   static propTypes = {
     id: PropTypes.string,
     oldData: PropTypes.object, // eslint-disable-line
-    backgroundColor: PropTypes.objectOf(PropTypes.string),
-    prompt: PropTypes.objectOf(PropTypes.string),
-    inputStyles: PropTypes.objectOf(PropTypes.string),
     register: PropTypes.func,
     handleChange: PropTypes.func,
     handlerKeyPress: PropTypes.func.isRequired,
@@ -35,6 +38,7 @@ class Content extends Component {
     historyCounter: 0,
     input: [],
     keyInputs: [],
+    canScroll: true,
   };
 
   componentWillMount = () => {
@@ -64,6 +68,14 @@ class Content extends Component {
     this.unregister(this.state);
   }
 
+  setScrollPosition = (pos) => {
+    setTimeout(() => {
+      if (this.contentWrapper !== null) {
+        this.contentWrapper.scrollTop = pos;
+      }
+    }, 50);
+  };
+
   focusInput = () => {
     if (this.com !== null) {
       this.com.focus();
@@ -78,8 +90,21 @@ class Content extends Component {
     this.props.handlerKeyPress(this, e, this.com);
   }
 
+  handleOuterKeypress = (e) => {
+    const key = whatkey(e).key;
+    const actionKeys = ['up', 'down', 'left', 'right', 'enter'];
+    if (unprintableKeys.indexOf(key) < 0) {
+      if (document.activeElement !== this.com) {
+        this.com.focus();
+        this.com.value += whatkey(e).char;
+      }
+    } else if (actionKeys.indexOf(key) > -1) {
+      this.com.focus();
+    }
+  }
+
   render() {
-    const { prompt, inputStyles, backgroundColor, id } = this.props;
+    const { id } = this.props;
     const { symbol, maximise, activeTab, barShowing, tabsShowing } = this.context;
 
     if (id !== activeTab) {
@@ -88,9 +113,9 @@ class Content extends Component {
 
     const output = this.state.summary.map((content, i) => {
       if (typeof content === 'string' && content.length === 0) {
-        return <div className="terminal-output-line" key={i}>&nbsp;</div>;
+        return <OutputLine key={i}>&nbsp;</OutputLine>;
       }
-      return <pre className="terminal-output-line" key={i}>{content}</pre>;
+      return <PreOutputLine key={i}>{content}</PreOutputLine>;
     });
 
     let toSubtract = 30;
@@ -102,41 +127,41 @@ class Content extends Component {
     }
 
     return (
-      <div
-        className="terminal-container terminal-container-main"
+      <ContainerMain
         style={{
-          ...backgroundColor,
           ...(maximise
             ? { maxWidth: '100%', maxHeight: `calc(100% - ${toSubtract}px)` }
             : {}),
+          ...(this.state.canScroll
+            ? { overflowY: 'auto' }
+            : { overflowY: 'hidden' }),
         }}
-        onClick={this.focusInput}
+        tabIndex="0"
+        onKeyUp={this.handleOuterKeypress}
+        innerRef={ctw => (this.contentWrapper = ctw)}
       >
-        <div className="terminal-holder">
-          <div className="terminal-content">
-            <div className="terminal-input-area">
+        <Holder>
+          <ContainerContent>
+            <InputArea>
               {output}
-              <div
-                className="terminal-input"
-                ref={elm => (this.inputWrapper = elm)}
+              <Input
+                innerRef={elm => (this.inputWrapper = elm)}
               >
-                <span className="terminal-prompt" style={prompt}>
+                <Prompt>
                   {this.state.promptPrefix + symbol}
-                </span>
-                <input
-                  className="terminal-main-input"
-                  style={inputStyles}
+                </Prompt>
+                <MainInput
                   type="text"
                   tabIndex="-1"
-                  ref={com => (this.com = com)}
+                  innerRef={com => (this.com = com)}
                   onKeyPress={this.handleChange}
                   onKeyDown={this.handleKeyPress}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+              </Input>
+            </InputArea>
+          </ContainerContent>
+        </Holder>
+      </ContainerMain>
     );
   }
 }

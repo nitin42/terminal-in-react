@@ -1,80 +1,23 @@
 /* eslint-disable no-console, react/sort-comp */
-import React, { Component } from 'react'; // eslint-disable-line
+import React, {Component} from 'react'; // eslint-disable-line
 import stringSimilarity from 'string-similarity';
 import whatkey from 'whatkey';
 import isEqual from 'lodash.isequal';
-import Command from '../args';
-import { handleLogging, getOs } from '../utils';
+import { ThemeProvider } from 'styled-components';
+import { handleLogging } from '../../utils';
 import {
   TerminalPropTypes,
   TerminalContextTypes,
   TerminalDefaultProps,
-} from './types';
-import Bar from './Bar';
-import Content from './Content';
-import Tabs from './Tabs';
+} from '../types';
 
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0; // eslint-disable-line no-bitwise
-    const v = c === 'x' ? r : (r & 0x3 | 0x8); // eslint-disable-line
-    return v.toString(16);
-  });
-}
+import { os, pluginMap, uuidv4, getShortcuts, modCommands } from './terminal-utils';
 
-const os = getOs();
+import { Base, ContainerWrapper, Note } from './styled-elements';
 
-function getShortcuts(shortcuts, obj) {
-  Object.keys(obj).forEach((key) => {
-    const split = key.toLowerCase().replace(/\s/g, '').split(',');
-    split.forEach((osName) => {
-      if (osName === os) {
-        shortcuts = {
-          ...shortcuts,
-          ...obj[key],
-        };
-      }
-    });
-  });
-  return shortcuts;
-}
-
-function modCommands(commands) {
-  const newCommands = {};
-
-  Object.keys(commands).forEach((name) => {
-    let needsInstance = false;
-    const definition = commands[name];
-    let method = definition;
-    let parse = i => i;
-    if (typeof definition === 'object') {
-      const cmd = new Command();
-      if (typeof definition.options !== 'undefined') {
-        try {
-          cmd.options(definition.options);
-        } catch (e) {
-          throw new Error('options for command wrong format');
-        }
-      }
-      parse = i =>
-        cmd.parse(i, {
-          name,
-          help: true,
-          version: false,
-        });
-      method = definition.method;
-      needsInstance = definition.needsInstance || false;
-    }
-
-    newCommands[name] = {
-      parse,
-      method,
-      needsInstance,
-    };
-  });
-
-  return newCommands;
-}
+import Bar from '../Bar';
+import Content from '../Content/index';
+import Tabs from '../Tabs/index';
 
 class Terminal extends Component {
   static displayName = 'Terminal';
@@ -117,11 +60,11 @@ class Terminal extends Component {
     };
 
     this.defaultDesciptions = {
-      show: 'show the msg',
+      show: (props.msg && props.msg.length > 0) ? 'show the msg' : false,
       clear: 'clear the screen',
       help: 'list all the commands',
-      echo: 'output the input',
-      'edit-line': 'edit the contents of an output line',
+      echo: false,
+      'edit-line': false,
     };
 
     this.defaultShortcuts = {
@@ -179,7 +122,7 @@ class Terminal extends Component {
     this.setDescriptions();
     this.setShortcuts();
 
-    this.createTab();
+    this.createTab(true);
     this.setState({ prompt: this.props.promptSymbol });
   };
 
@@ -191,32 +134,25 @@ class Terminal extends Component {
   };
 
   // Tab creation
-  createTab = () => {
-    const { color, backgroundColor, prompt, allowTabs } = this.props;
-    if (allowTabs) {
+  createTab = (force = false) => {
+    const { allowTabs } = this.props;
+    if (force || allowTabs) {
       const { tabs } = this.state;
       const id = uuidv4();
-
-      const inputStyles = { backgroundColor, color };
-      const promptStyles = { color: prompt };
-      const backgroundColorStyles = { backgroundColor };
 
       tabs.push((
         <Content
           key={id}
           id={id}
-          prompt={promptStyles}
-          inputStyles={inputStyles}
           handleChange={this.handleChange}
           handlerKeyPress={this.handlerKeyPress}
-          backgroundColor={backgroundColorStyles}
           register={(...args) => this.registerInstance(id, ...args)}
         />
       ));
 
       this.setState({ activeTab: id, tabs });
     }
-  }
+  };
 
   // Tab removal
   removeTab = (index) => {
@@ -240,9 +176,7 @@ class Terminal extends Component {
   // Shows the full window (normal window)
   getContent = () => {
     const {
-      color,
       style,
-      barColor,
       showActions,
       hideTopBar,
       allowTabs,
@@ -250,12 +184,10 @@ class Terminal extends Component {
     } = this.props;
     const { activeTab, tabs } = this.state;
 
-    const barColorStyles = { backgroundColor: barColor };
-
     return (
-      <div className="terminal-container-wrapper" style={{ color, ...style }}>
+      <ContainerWrapper style={{ ...style }}>
         {!hideTopBar && (
-          <Bar showActions={showActions} style={barColorStyles} {...actionHandlers} />
+          <Bar showActions={showActions} {...actionHandlers} />
         )}
         {allowTabs && (
           <Tabs
@@ -266,29 +198,27 @@ class Terminal extends Component {
           />
         )}
         {tabs}
-      </div>
+      </ContainerWrapper>
     );
   };
 
   // Show only bar (minimise)
   getBar = () => {
-    const { color, barColor, style, showActions, actionHandlers } = this.props;
-    const barColorStyles = { backgroundColor: barColor };
+    const { style, showActions, actionHandlers } = this.props;
 
     return (
-      <div className="terminal-container-wrapper" style={{ color, ...style }}>
+      <ContainerWrapper style={{ ...style }}>
         <Bar
           showActions={showActions}
-          style={barColorStyles}
           {...actionHandlers}
         />
-      </div>
+      </ContainerWrapper>
     );
   };
 
   // Show msg (on window close)
   getNote = () => (
-    <span className="terminal-note">
+    <Note>
       <h1>OOPS! You closed the window.</h1>
       <img
         src="https://camo.githubusercontent.com/95ad3fffa11193f85dedbf14ca67e4c5c07182d0/687474703a2f2f69636f6e732e69636f6e617263686976652e636f6d2f69636f6e732f70616f6d656469612f736d616c6c2d6e2d666c61742f313032342f7465726d696e616c2d69636f6e2e706e67"
@@ -298,7 +228,7 @@ class Terminal extends Component {
         onClick={this.toggleState('show')}
       />
       Click on the icon to reopen.
-    </span>
+    </Note>
   );
 
   // Plugin data getter
@@ -313,7 +243,7 @@ class Terminal extends Component {
       ...this.defaultDesciptions,
       ...this.props.descriptions,
     };
-    this.props.plugins.forEach((plugin) => {
+    pluginMap(this.props.plugins, (plugin) => {
       if (plugin.descriptions) {
         descriptions = {
           ...descriptions,
@@ -328,6 +258,11 @@ class Terminal extends Component {
   setShortcuts = () => {
     let shortcuts = getShortcuts({}, this.defaultShortcuts);
     shortcuts = getShortcuts(shortcuts, this.props.shortcuts);
+    pluginMap(this.props.plugins, (plugin) => {
+      if (plugin.shortcuts) {
+        shortcuts = getShortcuts(shortcuts, plugin.shortcuts);
+      }
+    });
     this.setState({ shortcuts });
   };
 
@@ -348,9 +283,9 @@ class Terminal extends Component {
   setTrue = name => () => this.setState({ [name]: true });
 
   /**
-  * set the input value with the possible history value
-  * @param {number} next position on the history
-  */
+   * set the input value with the possible history value
+   * @param {number} next position on the history
+   */
   setValueWithHistory = (instance, position, inputRef) => {
     const { history } = instance.state;
     if (history[position]) {
@@ -367,23 +302,27 @@ class Terminal extends Component {
 
     const old = instances.find(i => i.index === index);
 
-    this.props.plugins.forEach((PluginClass) => {
+    pluginMap(this.props.plugins, (PluginClass, config) => {
       try {
         const api = {
           printLine: this.printLine.bind(this, instance),
+          removeLine: this.removeLine.bind(this, instance),
           runCommand: this.runCommand.bind(this, instance),
+          setCanScroll: this.setCanScroll.bind(this, instance),
+          setScrollPosition: this.setScrollPosition.bind(this, instance),
+          focusInput: this.focusInput.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
           getData: () => this.getPluginData(PluginClass.displayName),
           setData: data => this.setPluginData(PluginClass.displayName, data),
+          os,
         };
 
         let plugin;
         if (old) {
           old.pluginInstances[PluginClass.displayName].updateApi(api);
         } else {
-          plugin = new PluginClass(api);
-
+          plugin = new PluginClass(api, config);
           pluginMethods[PluginClass.displayName] = {
             ...plugin.getPublicMethods(),
             _getName: () => PluginClass.displayName,
@@ -431,7 +370,7 @@ class Terminal extends Component {
       ...this.props.commands,
     };
 
-    this.props.plugins.forEach((plugin) => {
+    pluginMap(this.props.plugins, (plugin) => {
       if (plugin.commands) {
         commands = {
           ...commands,
@@ -471,7 +410,15 @@ class Terminal extends Component {
 
   // Method to check for shortcut and invoking commands
   checkShortcuts = (instance, key, e) => {
-    const shortcuts = Object.keys(this.state.shortcuts);
+    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
+    let cuts = this.state.shortcuts;
+    if (instanceData) {
+      Object.values(instanceData.pluginInstances).forEach((i) => {
+        cuts = getShortcuts(cuts, i.shortcuts);
+      });
+    }
+
+    const shortcuts = Object.keys(cuts);
     if (shortcuts.length > 0) {
       const { keyInputs } = instance.state;
       let modKey = key;
@@ -490,9 +437,9 @@ class Terminal extends Component {
       if (options.length > 0) {
         if (options.length === 1 && options[0][0].length === len) {
           const shortcut = shortcuts[options[0][1]];
-          const action = this.state.shortcuts[shortcut];
+          const action = cuts[shortcut];
           if (typeof action === 'string') {
-            this.runCommand(instance, this.state.shortcuts[shortcut]);
+            this.runCommand(instance, cuts[shortcut]);
           } else if (typeof action === 'function') {
             e.preventDefault();
             e.stopPropagation();
@@ -510,8 +457,8 @@ class Terminal extends Component {
   editLine = (args, printLine, runCommand, instance) => {
     const { summary } = instance.state;
     let index = args.line;
-    if (index === -1) {
-      index = summary.length === 0 ? 0 : summary.length - 1;
+    if (index < 0) {
+      index = summary.length === 0 ? 0 : summary.length - index;
     }
     summary[index] = args._.join(' ');
     instance.setState({ summary });
@@ -528,10 +475,8 @@ class Terminal extends Component {
         );
       }
 
-      const res = this.runCommand(
-        instance,
-        `${input.join('\n')}${input.length > 0 ? '\n' : ''}${e.target.value}`,
-      );
+      input.push(e.target.value);
+      const res = this.runCommand(instance, `${input.join('\n')}`);
 
       if (typeof res !== 'undefined') {
         this.printLine.bind(this, instance)(res);
@@ -550,7 +495,7 @@ class Terminal extends Component {
         false,
       );
       const newHistory = [...history, e.target.value];
-      this.setState({
+      instance.setState({
         input: [...input, e.target.value],
         history: newHistory,
         historyCounter: newHistory.length,
@@ -588,9 +533,8 @@ class Terminal extends Component {
 
   // Plugins
   loadPlugins = () => {
-    // TODO intance plugins
     const pluginData = {};
-    this.props.plugins.forEach((plugin) => {
+    pluginMap(this.props.plugins, (plugin) => {
       try {
         pluginData[plugin.displayName] = plugin.defaultData;
       } catch (e) {
@@ -608,8 +552,9 @@ class Terminal extends Component {
         if (instanceData.pluginMethods[name][method]) {
           return instanceData.pluginMethods[name][method];
         }
+        console.log(instanceData.pluginMethods[name]);
         throw new Error(
-          `No method with name ${name} has been registered for plugin ${name}`,
+          `No method with name ${method} has been registered for plugin ${name}`,
         );
       } else {
         throw new Error(`No plugin with name ${name} has been registered`);
@@ -617,6 +562,27 @@ class Terminal extends Component {
     }
     return null;
   };
+
+  // Set if the current tab can scroll
+  setCanScroll = (instance, force) => {
+    if (typeof force !== 'undefined') {
+      instance.setState({ canScroll: force });
+    }
+  }
+
+  // Set the scroll position of the contents
+  setScrollPosition = (instance, pos) => {
+    if (typeof pos === 'number') {
+      instance.setScrollPosition(pos);
+    }
+  }
+
+  // Set focus to the input
+  focusInput = (instance) => {
+    if (typeof pos === 'number') {
+      instance.focusInput();
+    }
+  }
 
   // Print the summary (input -> output)
   printLine = (instance, inp, std = true) => {
@@ -641,6 +607,13 @@ class Terminal extends Component {
       instance.setState({ summary });
     }
   };
+
+  // Remove a line from the summary
+  removeLine = (instance, lineNumber = -1) => {
+    const summary = instance.state.summary;
+    summary.splice(lineNumber, 1);
+    instance.setState({ summary });
+  }
 
   // Execute the commands
   runCommand = (instance, inputText) => {
@@ -738,13 +711,22 @@ class Terminal extends Component {
   };
 
   render() {
+    const theme = {
+      color: this.props.color,
+      prompt: this.props.prompt,
+      barColor: this.props.barColor,
+      backgroundColor: this.props.backgroundColor,
+    };
+
     return (
-      <div
-        className="terminal-base"
-        style={this.state.maximise ? { maxWidth: '100%', height: '100%' } : {}}
-      >
-        {this.getAppContent()}
-      </div>
+      <ThemeProvider theme={theme}>
+        <Base
+          className="terminal-base"
+          fullscreen={this.state.maximise}
+        >
+          {this.getAppContent()}
+        </Base>
+      </ThemeProvider>
     );
   }
 }

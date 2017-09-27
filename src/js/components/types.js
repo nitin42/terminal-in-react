@@ -36,7 +36,13 @@ export const TerminalPropTypes = {
     PropTypes.bool,
   ]),
   promptSymbol: PropTypes.string,
-  plugins: PropTypes.arrayOf(PropTypes.func),
+  plugins: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      class: PropTypes.func,
+      config: PropTypes.object,
+    }),
+  ])),
   shortcuts: PropTypes.objectOf(PropTypes.objectOf(PropTypes.string)),
   actionHandlers: PropTypes.shape({
     handleClose: PropTypes.func,
@@ -44,16 +50,6 @@ export const TerminalPropTypes = {
     handleMaximise: PropTypes.func,
   }),
 };
-
-// shortcuts example
-// {
-//   'win,linux': {
-//     'ctrl + l': 'clear'
-//   },
-//   'darwin': {
-//     'cmd + k': 'clear'
-//   }
-// }
 
 export const TerminalContextTypes = {
   barShowing: PropTypes.bool,

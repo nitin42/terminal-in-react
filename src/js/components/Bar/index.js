@@ -1,5 +1,6 @@
-import React, { Component } from 'react'; // eslint-disable-line
+import React, {Component} from 'react'; // eslint-disable-line
 import PropTypes from 'prop-types';
+import { TerminalTopBar } from './styled-elements';
 
 class Bar extends Component {
   static displayName = 'Bar';
@@ -54,21 +55,28 @@ class Bar extends Component {
   render() {
     const { style, showActions } = this.props;
     return (
-      <div
+      <TerminalTopBar
         style={{
           ...style,
           ...(this.context.maximise ? { maxWidth: '100%' } : {}),
         }}
-        className="terminal-top-bar"
       >
-        { showActions && (
+        {showActions && (
           <svg height="20" width="100">
-            <circle cx="24" cy="14" r="5" fill="red" onClick={this.handleClose} />
+            <circle
+              cx="24"
+              cy="14"
+              r="5"
+              fill="red"
+              style={{ cursor: 'pointer' }}
+              onClick={this.handleClose}
+            />
             <circle
               cx="44"
               cy="14"
               r="5"
               fill="orange"
+              style={{ cursor: 'pointer' }}
               onClick={this.handleMinimise}
             />
             <circle
@@ -76,11 +84,12 @@ class Bar extends Component {
               cy="14"
               r="5"
               fill="green"
+              style={{ cursor: 'pointer' }}
               onClick={this.handleMaximise}
             />
           </svg>
-        ) }
-      </div>
+        )}
+      </TerminalTopBar>
     );
   }
 }

@@ -5,16 +5,17 @@ export default class Plugin {
 
   static commands = {};
   static descriptions = {};
+  static shortcuts = {};
 
-  constructor(api) {
+  constructor(api, config = {}) {
     this.api = api;
+    this.config = config;
     this.commands = {};
     this.descriptions = {};
+    this.shortcuts = {};
+
+    this.updateApi = newApi => (this.api = newApi);
+    this.getPublicMethods = () => ({});
+    this.readStdOut = () => true;
   }
-
-  updateApi = api => (this.api = api);
-
-  getPublicMethods = () => ({});
-
-  readStdOut = () => true;
 }
