@@ -53,6 +53,8 @@ or if you use `yarn`
 yarn add terminal-in-react
 ```
 
+This package also depends on `react` so make sure you've already installed it.
+
 ## Usage
 
 
