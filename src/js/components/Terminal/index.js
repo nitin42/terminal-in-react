@@ -18,6 +18,30 @@ import Bar from '../Bar';
 import Content from '../Content/index';
 import Tabs from '../Tabs/index';
 
+function putCursorAtEnd(el) {
+  // Only focus if input isn't already
+  if (document.activeElement !== el) {
+    el.focus();
+  }
+
+  // If this function exists... (IE 9+)
+  if (el.setSelectionRange) {
+    // Double the length because Opera is inconsistent about whether a carriage
+    // return is one character or two.
+    const len = el.value.length * 2;
+
+    // Timeout seems to be required for Blink
+    setTimeout(() => {
+      el.setSelectionRange(len, len);
+    }, 1);
+  } else {
+    // As a fallback, replace the contents with itself
+    // Doesn't work in Chrome, but Chrome supports setSelectionRange
+    el.value = el.value;
+  }
+}
+
+
 class Terminal extends Component {
   static displayName = 'Terminal';
 
@@ -299,6 +323,7 @@ class Terminal extends Component {
     if (history[position]) {
       instance.setState({ historyCounter: position });
       inputRef.value = history[position];
+      putCursorAtEnd(inputRef);
     }
   };
 
