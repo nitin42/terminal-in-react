@@ -49,6 +49,7 @@ export const TerminalPropTypes = {
     handleMinimise: PropTypes.func,
     handleMaximise: PropTypes.func,
   }),
+  afterChange: PropTypes.func,
 };
 
 export const TerminalContextTypes = {
