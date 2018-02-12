@@ -1,9 +1,10 @@
-import {injectGlobal} from 'styled-components';
+import { injectGlobal } from 'styled-components';
 import Terminal from './components/Terminal';
 import PluginBase from './components/Plugin';
 
+// eslint-disable-next-line
 injectGlobal`
-  /* vietnamese */
+/* vietnamese */
 @font-face {
   font-family: 'Inconsolata';
   font-style: normal;

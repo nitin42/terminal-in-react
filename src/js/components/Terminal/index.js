@@ -1,5 +1,5 @@
 /* eslint-disable no-console, react/sort-comp */
-import React, {Component} from 'react'; // eslint-disable-line
+import React, { Component } from 'react';
 import stringSimilarity from 'string-similarity';
 import whatkey from 'whatkey';
 import isEqual from 'lodash.isequal';
@@ -225,6 +225,7 @@ class Terminal extends Component {
         width="200"
         height="200"
         alt="note"
+        onKeyPress={this.toggleState('show')}
         onClick={this.toggleState('show')}
       />
       Click on the icon to reopen.
@@ -235,7 +236,7 @@ class Terminal extends Component {
   getPluginData = name => this.pluginData[name];
 
   // Plugin data setter
-  setPluginData = (name, data) => (this.pluginData[name] = data);
+  setPluginData = (name, data) => { this.pluginData[name] = data; };
 
   // Set descriptions of the commands
   setDescriptions = () => {
@@ -388,9 +389,7 @@ class Terminal extends Component {
    */
   autocompleteValue = (inputRef) => {
     const { descriptions } = this.state;
-    const keysToCheck = Object.keys(descriptions).filter(
-      key => descriptions[key] !== false,
-    );
+    const keysToCheck = Object.keys(descriptions).filter(key => descriptions[key] !== false);
     const { bestMatch } = stringSimilarity.findBestMatch(
       inputRef.value,
       keysToCheck,
@@ -503,7 +502,7 @@ class Terminal extends Component {
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
     if (typeof this.props.afterChange === 'function') {
-        this.props.afterChange(e);
+      this.props.afterChange(e);
     }
   };
 
@@ -513,7 +512,7 @@ class Terminal extends Component {
    * @param {event} event of input
    */
   handlerKeyPress = (instance, e, inputRef) => {
-    const key = whatkey(e).key;
+    const { key } = whatkey(e);
     const { historyCounter, keyInputs } = instance.state;
     if (keyInputs.length === 0) {
       switch (key) {
@@ -556,9 +555,7 @@ class Terminal extends Component {
           return instanceData.pluginMethods[name][method];
         }
         console.log(instanceData.pluginMethods[name]);
-        throw new Error(
-          `No method with name ${method} has been registered for plugin ${name}`,
-        );
+        throw new Error(`No method with name ${method} has been registered for plugin ${name}`);
       } else {
         throw new Error(`No plugin with name ${name} has been registered`);
       }
@@ -605,7 +602,7 @@ class Terminal extends Component {
     }
 
     if (print !== false) {
-      const summary = instance.state.summary;
+      const { summary } = instance.state;
       summary.push(inp);
       instance.setState({ summary });
     }
@@ -613,7 +610,7 @@ class Terminal extends Component {
 
   // Remove a line from the summary
   removeLine = (instance, lineNumber = -1) => {
-    const summary = instance.state.summary;
+    const { summary } = instance.state;
     summary.splice(lineNumber, 1);
     instance.setState({ summary });
   }

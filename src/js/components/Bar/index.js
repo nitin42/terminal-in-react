@@ -1,4 +1,4 @@
-import React, {Component} from 'react'; // eslint-disable-line
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TerminalTopBar } from './styled-elements';
 

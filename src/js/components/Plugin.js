@@ -14,7 +14,7 @@ export default class Plugin {
     this.descriptions = {};
     this.shortcuts = {};
 
-    this.updateApi = newApi => (this.api = newApi);
+    this.updateApi = (newApi) => { this.api = newApi; };
     this.getPublicMethods = () => ({});
     this.readStdOut = () => true;
   }

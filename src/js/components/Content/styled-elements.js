@@ -22,7 +22,7 @@ export const ContainerMain = Container.extend`
 const outputLineStyle = `
   font-family: 'Inconsolata', monospace;
   font-size: 0.9em;
-  color: green; 
+  color: green;
   margin-top: 10px;
   margin-bottom: 10px;
   white-space: pre-wrap;
@@ -41,7 +41,7 @@ export const Prompt = styled.span`
   color: ${props => props.theme.prompt};
 `;
 
-export const MainInput = styled.input `
+export const MainInput = styled.input`
   font: inherit;
   font-size: 0.9em;
   &, &:focus{
@@ -67,4 +67,3 @@ export const InputArea = styled.div`
   height: 100%;
   padding: 3px;
 `;
-

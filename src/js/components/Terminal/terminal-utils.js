@@ -64,7 +64,7 @@ export function modCommands(commands) {
             help: true,
             version: false,
           });
-        method = definition.method;
+        method = definition.method; // eslint-disable-line
         needsInstance = definition.needsInstance || false;
       }
 

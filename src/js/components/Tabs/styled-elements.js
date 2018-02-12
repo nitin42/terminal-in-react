@@ -42,7 +42,7 @@ export const Tab = styled.div`
   height: 30px;
   background-color: #333;
   border-bottom: 2px solid #333;
-  border-bottom-color: ${props => props.active ? '#777' : '#333'}
+  border-bottom-color: ${props => (props.active ? '#777' : '#333')}
   text-align: center;
   line-height: 30px;
   width: 100px;
@@ -73,6 +73,6 @@ export const TabPlus = styled.div`
   text-align: center;
   font-size: 12px;
   cursor: pointer;
-  opacity: ${props => props.visible ? '0.7' : '0'};
+  opacity: ${props => (props.visible ? '0.7' : '0')};
   transition: opacity 0.3s;
 `;

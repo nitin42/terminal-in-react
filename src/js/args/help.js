@@ -1,5 +1,5 @@
 export default function () {
-  const name = this.config.name;
+  const { name } = this.config;
   const firstBig = word => word.charAt(0).toUpperCase() + word.substr(1);
 
   const parts = [];
@@ -55,7 +55,7 @@ export default function () {
     output = 'No options available';
   }
 
-  const usageFilter = this.config.usageFilter;
+  const { usageFilter } = this.config;
 
   // If filter is available, pass usage information through
   if (typeof usageFilter === 'function') {

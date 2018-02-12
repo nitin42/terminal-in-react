@@ -158,7 +158,7 @@ export default {
   },
 
   generateExamples() {
-    const examples = this.details.examples;
+    const { examples } = this.details;
     const parts = [];
 
     for (const item in examples) {
@@ -166,9 +166,7 @@ export default {
         continue; // eslint-disable-line
       }
       const usage = this.printSubColor(`$ ${examples[item].usage}`);
-      const description = this.printMainColor(
-        `- ${examples[item].description}`,
-      );
+      const description = this.printMainColor(`- ${examples[item].description}`);
       parts.push(`  ${description}\n\n    ${usage}\n\n`);
     }
 
@@ -201,7 +199,7 @@ export default {
         continue; // eslint-disable-line
       }
 
-      let usage = items[item].usage;
+      let { usage } = items[item];
       let initial = items[item].defaultValue;
 
       // If usage is an array, show its contents
@@ -231,9 +229,8 @@ export default {
     const longest = items.slice().sort((a, b) => b.usage.length - a.usage.length)[0].usage.length;
 
     for (const item of items) {
-      let usage = item.usage;
-      let description = item.description;
-      const defaultValue = item.defaultValue;
+      let { usage, description } = item;
+      const { defaultValue } = item;
       const difference = longest - usage.length;
 
       // Compensate the difference to longest property with spaces
@@ -247,8 +244,7 @@ export default {
           description += ` (defaults to ${JSON.stringify(defaultValue)})`;
         }
       }
-      parts.push(
-        `  ${this.printMainColor(usage)}  ${this.printSubColor(description)}`);
+      parts.push(`  ${this.printMainColor(usage)}  ${this.printSubColor(description)}`);
     }
 
     return parts;
@@ -277,7 +273,7 @@ export default {
 
     // Check if a child matches the requested name
     for (const child of children) {
-      const usage = child.usage;
+      const { usage } = child;
       const type = usage.constructor;
 
       if (type === Array && usage.indexOf(name) > -1) {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'; // eslint-disable-line
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Tab, TabBar, TabBarEmpty, TabClose, TabPlus } from './styled-elements';
 
@@ -32,7 +32,6 @@ class Tabs extends Component {
 
   state = {
     showingPlus: false,
-    mouseOver: false,
   };
 
   handleBarClick = (e) => {
@@ -85,7 +84,9 @@ class Tabs extends Component {
             <TabClose
               title="Close Tab"
               onMouseDown={e => this.handleRemoveClick(e, index, instance)}
-            >x</TabClose>
+            >
+              x
+            </TabClose>
           )}
           {title}
         </Tab>

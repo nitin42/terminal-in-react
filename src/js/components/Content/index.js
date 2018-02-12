@@ -1,4 +1,4 @@
-import React, {Component} from 'react'; // eslint-disable-line
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import whatkey, { unprintableKeys } from 'whatkey';
 import {
@@ -91,7 +91,7 @@ class Content extends Component {
   }
 
   handleOuterKeypress = (e) => {
-    const key = whatkey(e).key;
+    const { key } = whatkey(e);
     const actionKeys = ['up', 'down', 'left', 'right', 'enter'];
     if (unprintableKeys.indexOf(key) < 0) {
       if (document.activeElement !== this.com) {
@@ -105,7 +105,9 @@ class Content extends Component {
 
   render() {
     const { id } = this.props;
-    const { symbol, maximise, activeTab, barShowing, tabsShowing } = this.context;
+    const {
+      symbol, maximise, activeTab, barShowing, tabsShowing,
+    } = this.context;
 
     if (id !== activeTab) {
       return null;
@@ -138,14 +140,14 @@ class Content extends Component {
         }}
         tabIndex="0"
         onKeyUp={this.handleOuterKeypress}
-        innerRef={ctw => (this.contentWrapper = ctw)}
+        innerRef={(ctw) => { this.contentWrapper = ctw; }}
       >
         <Holder>
           <ContainerContent>
             <InputArea>
               {output}
               <Input
-                innerRef={elm => (this.inputWrapper = elm)}
+                innerRef={(elm) => { this.inputWrapper = elm; }}
               >
                 <Prompt>
                   {this.state.promptPrefix + symbol}
@@ -153,7 +155,7 @@ class Content extends Component {
                 <MainInput
                   type="text"
                   tabIndex="-1"
-                  innerRef={com => (this.com = com)}
+                  innerRef={(com) => { this.com = com; }}
                   onKeyPress={this.handleChange}
                   onKeyDown={this.handleKeyPress}
                 />
