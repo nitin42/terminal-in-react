@@ -50,6 +50,7 @@ export const TerminalPropTypes = {
     handleMaximise: PropTypes.func,
   }),
   afterChange: PropTypes.func,
+  commandWasRun: PropTypes.func,
 };
 
 export const TerminalContextTypes = {

@@ -657,6 +657,13 @@ class Terminal extends Component {
         );
       }
     }
+    if (typeof this.props.commandWasRun === 'function') {
+      this.props.commandWasRun(
+        inputArray,
+        this.printLine.bind(this, instance),
+        this.runCommand.bind(this, instance),
+      );
+    }
     return res;
   };
 
