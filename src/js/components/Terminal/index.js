@@ -667,6 +667,14 @@ class Terminal extends Component {
     return res;
   };
 
+  // Run a command on the active instance
+  runCommandOnActive = (inputText) => {
+    const data = this.state.instances.find(i => i.index === this.state.activeTab);
+    if (data && data.instance !== null) {
+      this.runCommand(data.instance, inputText);
+    }
+  }
+
   // Print to active instance
   printToActive = (...args) => {
     const data = this.state.instances.find(i => i.index === this.state.activeTab);
