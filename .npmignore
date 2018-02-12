@@ -36,6 +36,9 @@ webpack
 __mocks__
 __tests__
 examples
+.storybook
+stories
+package-lock.json
 
 CONTRIBUTING.md
 todo.md

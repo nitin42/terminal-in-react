@@ -43,3 +43,4 @@ dist/
 nbproject
 .idea
 .node_history
+package-lock.json
