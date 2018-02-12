@@ -6,7 +6,8 @@ export const Base = styled.div`
   height: ${props => (props.fullscreen ? '100%' : '630px')};
   min-height: 630px;
   max-height: 100vh;
-  text-align: initial;`;
+  text-align: initial;
+`;
 
 const DEFAULT_FONT_STYLE = `
   font-family: 'Inconsolata', monospace;

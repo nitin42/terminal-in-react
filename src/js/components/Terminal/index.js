@@ -12,7 +12,6 @@ import {
 } from '../types';
 
 import { os, pluginMap, uuidv4, getShortcuts, modCommands } from './terminal-utils';
-
 import { Base, ContainerWrapper, Note } from './styled-elements';
 
 import Bar from '../Bar';
@@ -176,6 +175,7 @@ class Terminal extends Component {
   // Shows the full window (normal window)
   getContent = () => {
     const {
+      color,
       style,
       showActions,
       hideTopBar,
@@ -183,9 +183,16 @@ class Terminal extends Component {
       actionHandlers,
     } = this.props;
     const { activeTab, tabs } = this.state;
-
+    const baseStyle = {
+      height: '100%',
+      color: color || 'green',
+      animation: 'fadeIn 0.18s ease-in',
+      fontFamily: "'Inconsolata', monospace",
+      fontSize: '0.9em',
+    };
+    // This should be a syled component but breaks if it is...
     return (
-      <ContainerWrapper style={{ ...style }}>
+      <div style={{ ...baseStyle, ...style }}>
         {!hideTopBar && (
           <Bar showActions={showActions} {...actionHandlers} />
         )}
@@ -198,7 +205,7 @@ class Terminal extends Component {
           />
         )}
         {tabs}
-      </ContainerWrapper>
+      </div>
     );
   };
 
