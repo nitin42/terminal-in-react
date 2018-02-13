@@ -137,7 +137,7 @@ It does so by default.
   <img src="http://g.recordit.co/a6D6PCtTcL.gif"/>
 </p>
 
-### Command passthrough 
+### Command passthrough
 
 You can have the terminal pass out the cmd that was input
 
