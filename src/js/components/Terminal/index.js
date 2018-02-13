@@ -103,6 +103,7 @@ class Terminal extends Component {
     };
 
     this.state = {
+      tabbed: false,
       prompt: '>',
       commands: {},
       descriptions: {},
@@ -422,16 +423,21 @@ class Terminal extends Component {
   autocompleteValue = (inputRef) => {
     const { descriptions } = this.state;
     const keysToCheck = Object.keys(descriptions).filter(key => descriptions[key] !== false);
-    const { bestMatch } = stringSimilarity.findBestMatch(
-      inputRef.value,
-      keysToCheck,
-    );
-
-    if (bestMatch.rating >= 0.5) {
-      return bestMatch.target;
+    let ratings = [];
+    if (inputRef.value.length > 1) {
+      ratings = stringSimilarity.findBestMatch( // eslint-disable-line
+        inputRef.value,
+        keysToCheck,
+      ).ratings;
+    } else {
+      ratings = keysToCheck.reduce((full, item) => {
+        if (item.indexOf(inputRef.value) === 0) {
+          full.push({ target: item, rating: 1 });
+        }
+        return full;
+      }, []);
     }
-
-    return inputRef.value;
+    return ratings.filter(item => item.rating > 0);
   };
 
   // Refresh or clear the screen
@@ -546,19 +552,60 @@ class Terminal extends Component {
   handlerKeyPress = (instance, e, inputRef) => {
     const { key } = whatkey(e);
     const { historyCounter, keyInputs } = instance.state;
-    if (keyInputs.length === 0) {
+    if (keyInputs.length === 0 || keyInputs.length === 0) {
       switch (key) {
         case 'up':
           this.setValueWithHistory(instance, historyCounter - 1, inputRef);
+          if (this.state.tabbed) {
+            this.setState({ tabbed: false });
+          }
           break;
         case 'down':
           this.setValueWithHistory(instance, historyCounter + 1, inputRef);
+          if (this.state.tabbed) {
+            this.setState({ tabbed: false });
+          }
           break;
         case 'tab':
-          inputRef.value = this.autocompleteValue(inputRef);
           e.preventDefault();
+          if (inputRef.value !== '' && this.state.tabbed === true) {
+            const contents = this.autocompleteValue(inputRef);
+            this.printLine(instance, `${instance.state.promptPrefix}${this.state.prompt} ${inputRef.value}`, false);
+            this.printLine(
+              instance,
+              (
+                <span>
+                  {contents.filter(item => typeof item !== 'undefined').map((item) => {
+                  const styles = {
+                    marginRight: 5,
+                    width: 'calc(33% - 5px)',
+                    display: 'inline-block',
+                  };
+                  if (contents.length > 3) {
+                    styles.marginBottom = 5;
+                  }
+                  return (
+                    <span
+                      style={styles}
+                      key={`${item.target}-${item.rating}`}
+                    >
+                      {item.target}
+                    </span>
+                  );
+                })}
+                </span>
+              ),
+              false,
+            );
+            this.setState({ tabbed: false });
+          } else {
+            this.setState({ tabbed: true });
+          }
           break;
         default:
+          if (this.state.tabbed) {
+            this.setState({ tabbed: false });
+          }
           break;
       }
     }
