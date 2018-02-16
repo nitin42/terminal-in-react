@@ -809,6 +809,7 @@ class Terminal extends Component {
       color: this.props.color,
       prompt: this.props.prompt,
       barColor: this.props.barColor,
+      outputColor: this.props.outputColor,
       backgroundColor: this.props.backgroundColor,
     };
 

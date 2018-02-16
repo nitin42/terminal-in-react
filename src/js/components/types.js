@@ -27,6 +27,7 @@ export const TerminalPropTypes = {
   style: PropTypes.object, // eslint-disable-line
   prompt: PropTypes.string,
   barColor: PropTypes.string,
+  outputColor: PropTypes.string,
   backgroundColor: PropTypes.string,
   commands: commandsPropType,
   descriptions: descriptionsPropType,

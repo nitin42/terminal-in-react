@@ -19,16 +19,22 @@ export const ContainerMain = Container.extend`
   }
 `;
 
-const outputLineStyle = `
+export const OutputLine = styled.div`
   font-family: 'Inconsolata', monospace;
   font-size: 0.9em;
-  color: ${props => props.theme.color};
+  color: ${props => (props.theme.outputColor || props.theme.color)};
   margin-top: 10px;
   margin-bottom: 10px;
   white-space: pre-wrap;
 `;
-export const OutputLine = styled.div`${outputLineStyle}`;
-export const PreOutputLine = styled.pre`${outputLineStyle}`;
+export const PreOutputLine = styled.pre`
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.9em;
+  color: ${props => (props.theme.outputColor || props.theme.color)};
+  margin-top: 10px;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+`;
 
 export const Input = styled.div`
   display: flex;

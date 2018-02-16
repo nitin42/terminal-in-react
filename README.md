@@ -394,6 +394,7 @@ Any method not passed in will use the default.
 Use
 
 * prop `color` to change the color of the text.
+* prop `outputColor` to change the color of the output text defaults to color prop.
 * prop `backgroundColor` to change the background.
 * prop `barColor` to change the color of bar.
 * prop `prompt` to change the prompt (`>`) color.

@@ -30,6 +30,7 @@ storiesOf('Terminal', module)
   />))
   .add('with custom colors', withWrapper(<Terminal
     color="blue"
+    outputColor="orange"
     backgroundColor="red"
     barColor="pink"
     prompt="white"
