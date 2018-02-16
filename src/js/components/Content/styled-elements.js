@@ -22,7 +22,7 @@ export const ContainerMain = Container.extend`
 const outputLineStyle = `
   font-family: 'Inconsolata', monospace;
   font-size: 0.9em;
-  color: green;
+  color: ${props => props.theme.color};
   margin-top: 10px;
   margin-bottom: 10px;
   white-space: pre-wrap;
