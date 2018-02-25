@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import createPseudoFileSystem from 'terminal-in-react-pseudo-file-system-plugin'; // eslint-disable-line
 // import ViPlugin from 'terminal-in-react-vi-plugin'; // eslint-disable-line
+import NodePlugin from 'terminal-in-react-node-eval-plugin'; // eslint-disable-line
 
 import { storiesOf } from '@storybook/react'; // eslint-disable-line
 
@@ -39,7 +40,14 @@ storiesOf('Terminal', module)
     descriptions={{ website: 'My website', intro: 'My introduction' }}
   />))
   .add('with FileSystem plugin', withWrapper(<Terminal
+    watchConsoleLogging
     plugins={[
       FileSystemPlugin,
+      {
+        class: NodePlugin,
+        config: {
+          filesystem: FileSystemPlugin.displayName,
+        },
+      },
     ]}
   />));

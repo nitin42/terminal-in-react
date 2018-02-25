@@ -232,7 +232,9 @@ Let's take an another example -
   <img src="https://i.gyazo.com/ef2427464989b1ce14bc44bb4fc94689.gif" />
 </p>
 
-## Using plugins 🔥 [WIP]
+## Using plugins 🔥
+
+[Plugin Documentation](PLUGINS.md).
 
 We have also developed a plugin system for the `<Terminal />` component which helps you develop custom plugins. Here is one example of plugin which creates a fake file system called [terminal-in-react-pseudo-file-system-plugin](https://github.com/jcgertig/terminal-in-react-pseudo-file-system-plugin).
 
@@ -409,6 +411,7 @@ Use
 | Props        | Type           | Default  |
 | ------------- |:-------------:| -----:|
 | **color**      | string | 'green' |
+| **outputColor** | string | props.color |
 | **backgroundColor**      | string      |   'black' |
 | **prompt** | string      |    'green' |
 | **barColor** | string      |    'black' |
@@ -437,7 +440,7 @@ Use
 
 * Embed it as a toy on your website
 * For showcasing
-* Explain any of your project using this terminal component
+* Explain any of your projects using this terminal component
 * or just play with it
 
 ## You want a X feature

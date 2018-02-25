@@ -18,6 +18,24 @@ import Bar from '../Bar';
 import Content from '../Content/index';
 import Tabs from '../Tabs/index';
 
+function compLogic(comp) {
+  switch (comp) {
+    case '>':
+      return (a, b) => parseInt(a, 10) > parseInt(b, 10);
+    case '<':
+      return (a, b) => parseInt(a, 10) < parseInt(b, 10);
+    case '>=':
+      return (a, b) => parseInt(a, 10) >= parseInt(b, 10);
+    case '<=':
+      return (a, b) => parseInt(a, 10) <= parseInt(b, 10);
+    case '!=':
+      return (a, b) => a !== b;
+    case '=':
+    default:
+      return (a, b) => a === b;
+  }
+}
+
 function putCursorAtEnd(el) {
   // Only focus if input isn't already
   if (document.activeElement !== el) {
@@ -41,9 +59,10 @@ function putCursorAtEnd(el) {
   }
 }
 
-
 class Terminal extends Component {
   static displayName = 'Terminal';
+
+  static version = '4.3.0';
 
   static propTypes = TerminalPropTypes;
 
@@ -104,7 +123,6 @@ class Terminal extends Component {
 
     this.state = {
       tabbed: false,
-      prompt: '>',
       commands: {},
       descriptions: {},
       show: props.startState !== 'closed',
@@ -120,7 +138,6 @@ class Terminal extends Component {
   getChildContext() {
     return {
       instances: this.state.instances,
-      symbol: this.state.prompt,
       show: this.state.show,
       minimise: this.state.minimise,
       maximise: this.state.maximise,
@@ -147,7 +164,6 @@ class Terminal extends Component {
     this.setShortcuts();
 
     this.createTab(true);
-    this.setState({ prompt: this.props.promptSymbol });
   };
 
   // Load everything!
@@ -159,7 +175,7 @@ class Terminal extends Component {
 
   // Tab creation
   createTab = (force = false) => {
-    const { allowTabs } = this.props;
+    const { allowTabs, promptSymbol } = this.props;
     if (force || allowTabs) {
       const { tabs } = this.state;
       const id = uuidv4();
@@ -168,6 +184,7 @@ class Terminal extends Component {
         <Content
           key={id}
           id={id}
+          prompt={promptSymbol}
           handleChange={this.handleChange}
           handlerKeyPress={this.handlerKeyPress}
           register={(...args) => this.registerInstance(id, ...args)}
@@ -301,7 +318,16 @@ class Terminal extends Component {
 
   // Setter to change the prefix of the input prompt
   setPromptPrefix = (instance, promptPrefix) => {
-    instance.setState({ promptPrefix });
+    if (instance.state.controller === null) {
+      instance.setState({ promptPrefix });
+    }
+  };
+
+  // Setter to change the symbol of the input prompt
+  setPromptSymbol = (instance, prompt) => {
+    if (instance.state.controller === null) {
+      instance.setState({ prompt });
+    }
   };
 
   // Set the currently active tab
@@ -328,6 +354,28 @@ class Terminal extends Component {
     }
   };
 
+  // Method to check if version meets criteria
+  checkVersion = (comp, ver) => {
+    if (ver === '*') {
+      return true;
+    }
+    if (!(/^(\d|\.)+$/.test(ver))) {
+      throw new Error('Version can only have numbers and periods');
+    } else {
+      let clean = ver.toLowerCase().replace(/x/g, '0');
+      if (clean[clean.length - 1] === '.') {
+        clean += '0';
+      }
+      const split = clean.split('.');
+      while (split.length < 3) {
+        split.push('0');
+      }
+      const realSplit = Terminal.version.split('.');
+      const checkBools = split.map((val, index) => compLogic(comp)(realSplit[index], val));
+      return checkBools.indexOf(false) < 0;
+    }
+  };
+
   // Used to keep track of all instances
   registerInstance = (index, instance) => {
     const { instances } = this.state;
@@ -346,9 +394,14 @@ class Terminal extends Component {
           setScrollPosition: this.setScrollPosition.bind(this, instance),
           focusInput: this.focusInput.bind(this, instance),
           setPromptPrefix: this.setPromptPrefix.bind(this, instance),
+          setPromptSymbol: this.setPromptSymbol.bind(this, instance),
           getPluginMethod: this.getPluginMethod.bind(this, instance),
+          takeControl: this.pluginTakeControl.bind(this, instance),
+          releaseControl: this.pluginReleaseControl.bind(this, instance),
           getData: () => this.getPluginData(PluginClass.displayName),
           setData: data => this.setPluginData(PluginClass.displayName, data),
+          checkVersion: this.checkVersion.bind(this),
+          version: Terminal.version,
           os,
         };
 
@@ -393,6 +446,24 @@ class Terminal extends Component {
       });
     };
   }
+
+  // allows a plugin to take full control over instance
+  pluginTakeControl = (instance, controller, newPrompt, newPromptPrefix) => {
+    const { promptPrefix, prompt } = instance.state;
+    instance.setState({
+      controller,
+      prompt: typeof newPrompt === 'undefined' ? prompt : newPrompt,
+      promptPrefix: typeof newPromptPrefix === 'undefined' ? promptPrefix : newPromptPrefix,
+      oldPrefix: promptPrefix,
+      oldPrompt: prompt,
+    });
+  };
+
+  // allows a plugin to release full control over instance
+  pluginReleaseControl = (instance) => {
+    const { oldPrefix, oldPrompt } = instance.state;
+    instance.setState({ controller: null, promptPrefix: oldPrefix, prompt: oldPrompt });
+  };
 
   // Toggle a state boolean
   toggleState = name => () => this.setState({ [name]: !this.state[name] });
@@ -447,12 +518,20 @@ class Terminal extends Component {
 
   // Method to check for shortcut and invoking commands
   checkShortcuts = (instance, key, e) => {
-    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
-    let cuts = this.state.shortcuts;
-    if (instanceData) {
-      Object.values(instanceData.pluginInstances).forEach((i) => {
-        cuts = getShortcuts(cuts, i.shortcuts);
-      });
+    const { controller } = instance.state;
+    let cuts = {};
+    if (controller !== null) {
+      if (controller.shortcuts) {
+        cuts = getShortcuts(cuts, controller.shortcuts);
+      }
+    } else {
+      const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
+      cuts = this.state.shortcuts;
+      if (instanceData) {
+        Object.values(instanceData.pluginInstances).forEach((i) => {
+          cuts = getShortcuts(cuts, i.shortcuts);
+        });
+      }
     }
 
     const shortcuts = Object.keys(cuts);
@@ -503,11 +582,14 @@ class Terminal extends Component {
 
   // Listen for user input
   handleChange = (instance, e) => {
-    const { input, promptPrefix, history } = instance.state;
+    const {
+      input, promptPrefix, prompt, history, controller,
+    } = instance.state;
+    const saveToHistory = controller !== null ? (controller.history || false) : true;
     if (e.key === 'Enter' && !e.shiftKey) {
       if (typeof e.dontShowCommand === 'undefined') {
         this.printLine.bind(this, instance)(
-          `${promptPrefix}${this.state.prompt} ${e.target.value}`,
+          `${promptPrefix}${prompt} ${e.target.value}`,
           false,
         );
       }
@@ -520,22 +602,28 @@ class Terminal extends Component {
       }
 
       const newHistory = [...history, e.target.value];
-      instance.setState({
-        input: [],
+      const historyProps = saveToHistory ? {
         history: newHistory,
         historyCounter: newHistory.length,
+      } : {};
+      instance.setState({
+        input: [],
+        ...historyProps,
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     } else if (e.key === 'Enter' && e.shiftKey) {
       this.printLine.bind(this, instance)(
-        `${promptPrefix}${this.state.prompt} ${e.target.value}`,
+        `${promptPrefix}${prompt} ${e.target.value}`,
         false,
       );
       const newHistory = [...history, e.target.value];
-      instance.setState({
-        input: [...input, e.target.value],
+      const historyProps = saveToHistory ? {
         history: newHistory,
         historyCounter: newHistory.length,
+      } : {};
+      instance.setState({
+        input: [...input, e.target.value],
+        ...historyProps,
       });
       e.target.value = ''; // eslint-disable-line no-param-reassign
     }
@@ -551,62 +639,68 @@ class Terminal extends Component {
    */
   handlerKeyPress = (instance, e, inputRef) => {
     const { key } = whatkey(e);
-    const { historyCounter, keyInputs } = instance.state;
+    const { historyCounter, keyInputs, controller } = instance.state;
     if (keyInputs.length === 0 || keyInputs.length === 0) {
-      switch (key) {
-        case 'up':
-          this.setValueWithHistory(instance, historyCounter - 1, inputRef);
-          if (this.state.tabbed) {
-            this.setState({ tabbed: false });
-          }
-          break;
-        case 'down':
-          this.setValueWithHistory(instance, historyCounter + 1, inputRef);
-          if (this.state.tabbed) {
-            this.setState({ tabbed: false });
-          }
-          break;
-        case 'tab':
-          e.preventDefault();
-          if (inputRef.value !== '' && this.state.tabbed === true) {
-            const contents = this.autocompleteValue(inputRef);
-            this.printLine(instance, `${instance.state.promptPrefix}${this.state.prompt} ${inputRef.value}`, false);
-            this.printLine(
-              instance,
-              (
-                <span>
-                  {contents.filter(item => typeof item !== 'undefined').map((item) => {
-                  const styles = {
-                    marginRight: 5,
-                    width: 'calc(33% - 5px)',
-                    display: 'inline-block',
-                  };
-                  if (contents.length > 3) {
-                    styles.marginBottom = 5;
-                  }
-                  return (
-                    <span
-                      style={styles}
-                      key={`${item.target}-${item.rating}`}
-                    >
-                      {item.target}
-                    </span>
-                  );
-                })}
-                </span>
-              ),
-              false,
-            );
-            this.setState({ tabbed: false });
-          } else {
-            this.setState({ tabbed: true });
-          }
-          break;
-        default:
-          if (this.state.tabbed) {
-            this.setState({ tabbed: false });
-          }
-          break;
+      if (controller !== null) {
+        if (controller.onKeyPress) {
+          controller.onKeyPress(key);
+        }
+      } else {
+        switch (key) {
+          case 'up':
+            this.setValueWithHistory(instance, historyCounter - 1, inputRef);
+            if (this.state.tabbed) {
+              this.setState({ tabbed: false });
+            }
+            break;
+          case 'down':
+            this.setValueWithHistory(instance, historyCounter + 1, inputRef);
+            if (this.state.tabbed) {
+              this.setState({ tabbed: false });
+            }
+            break;
+          case 'tab':
+            e.preventDefault();
+            if (inputRef.value !== '' && this.state.tabbed === true) {
+              const contents = this.autocompleteValue(inputRef);
+              this.printLine(instance, `${instance.state.promptPrefix}${instance.state.prompt} ${inputRef.value}`, false);
+              this.printLine(
+                instance,
+                (
+                  <span>
+                    {contents.filter(item => typeof item !== 'undefined').map((item) => {
+                    const styles = {
+                      marginRight: 5,
+                      width: 'calc(33% - 5px)',
+                      display: 'inline-block',
+                    };
+                    if (contents.length > 3) {
+                      styles.marginBottom = 5;
+                    }
+                    return (
+                      <span
+                        style={styles}
+                        key={`${item.target}-${item.rating}`}
+                      >
+                        {item.target}
+                      </span>
+                    );
+                  })}
+                  </span>
+                ),
+                false,
+              );
+              this.setState({ tabbed: false });
+            } else {
+              this.setState({ tabbed: true });
+            }
+            break;
+          default:
+            if (this.state.tabbed) {
+              this.setState({ tabbed: false });
+            }
+            break;
+        }
       }
     }
     this.checkShortcuts(instance, key, e);
@@ -633,7 +727,6 @@ class Terminal extends Component {
         if (instanceData.pluginMethods[name][method]) {
           return instanceData.pluginMethods[name][method];
         }
-        console.log(instanceData.pluginMethods[name]);
         throw new Error(`No method with name ${method} has been registered for plugin ${name}`);
       } else {
         throw new Error(`No plugin with name ${name} has been registered`);
@@ -695,20 +788,31 @@ class Terminal extends Component {
   }
 
   // Execute the commands
-  runCommand = (instance, inputText) => {
+  runCommand = (instance, inputText, force = false) => {
     const inputArray = inputText.split(' ');
     const input = inputArray[0];
     const args = inputArray; // Undefined for function call
-    const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
-    let commands = { ...this.state.commands };
-    if (instanceData) {
-      Object.values(instanceData.pluginInstances).forEach((i) => {
-        commands = {
-          ...commands,
-          ...modCommands(i.commands),
-        };
-      });
+    const { controller } = instance.state;
+    let commands = {};
+    if (!force && controller !== null) {
+      if (controller.runCommand) {
+        return controller.runCommand(inputText);
+      } else if (controller.commands) {
+        commands = { ...modCommands(controller.commands) };
+      }
+    } else {
+      const instanceData = this.state.instances.find(i => isEqual(i.instance, instance));
+      commands = { ...this.state.commands };
+      if (instanceData) {
+        Object.values(instanceData.pluginInstances).forEach((i) => {
+          commands = {
+            ...commands,
+            ...modCommands(i.commands),
+          };
+        });
+      }
     }
+
     const command = commands[input];
     let res;
 
@@ -747,17 +851,17 @@ class Terminal extends Component {
   };
 
   // Run a command on the active instance
-  runCommandOnActive = (inputText) => {
+  runCommandOnActive = (inputText, force = false) => {
     const data = this.state.instances.find(i => i.index === this.state.activeTab);
     if (data && data.instance !== null) {
-      this.runCommand(data.instance, inputText);
+      this.runCommand(data.instance, inputText, force);
     }
   }
 
   // Print to active instance
   printToActive = (...args) => {
     const data = this.state.instances.find(i => i.index === this.state.activeTab);
-    if (data && data.instance !== null) {
+    if (data && data.instance !== null && data.instance.state.controller === null) {
       this.printLine(data.instance, ...args);
     }
   }
@@ -766,8 +870,6 @@ class Terminal extends Component {
   watchConsoleLogging = () => {
     handleLogging('log', this.printToActive);
     handleLogging('info', this.printToActive);
-    // handleLogging('warn', this.printToActive);
-    // handleLogging('error', this.printToActive);
   };
 
   // List all the commands (state + user defined)

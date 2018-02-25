@@ -13,17 +13,18 @@ class Content extends Component {
   static propTypes = {
     id: PropTypes.string,
     oldData: PropTypes.object, // eslint-disable-line
+    prompt: PropTypes.string,
     register: PropTypes.func,
     handleChange: PropTypes.func,
     handlerKeyPress: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
+    prompt: '>',
     oldData: {},
   };
 
   static contextTypes = {
-    symbol: PropTypes.string,
     maximise: PropTypes.bool,
     instances: PropTypes.array,
     activeTab: PropTypes.string,
@@ -34,18 +35,22 @@ class Content extends Component {
   state = {
     summary: [],
     promptPrefix: '',
+    prompt: '>',
     history: [],
     historyCounter: 0,
     input: [],
     keyInputs: [],
     canScroll: true,
+    controller: null,
   };
 
   componentWillMount = () => {
     const data = this.context.instances.find(i => i.index === this.props.id);
+    let state = { prompt: this.props.prompt };
     if (data) {
-      this.setState(data.oldData);
+      state = { ...state, ...data.oldData };
     }
+    this.setState(state);
   };
 
   componentDidMount = () => {
@@ -106,7 +111,7 @@ class Content extends Component {
   render() {
     const { id } = this.props;
     const {
-      symbol, maximise, activeTab, barShowing, tabsShowing,
+      maximise, activeTab, barShowing, tabsShowing,
     } = this.context;
 
     if (id !== activeTab) {
@@ -117,7 +122,17 @@ class Content extends Component {
       if (typeof content === 'string' && content.length === 0) {
         return <OutputLine key={i}>&nbsp;</OutputLine>;
       }
-      return <PreOutputLine key={i}>{content}</PreOutputLine>;
+      return (
+        <PreOutputLine key={i}>
+          {
+            Array.isArray(content) ?
+            content.map((cont, key) => (
+              <span style={{ marginRight: 5 }} key={`inner-${key}`}>{cont}</span>
+            )) :
+            content
+          }
+        </PreOutputLine>
+      );
     });
 
     let toSubtract = 30;
@@ -150,7 +165,7 @@ class Content extends Component {
                 innerRef={(elm) => { this.inputWrapper = elm; }}
               >
                 <Prompt>
-                  {this.state.promptPrefix + symbol}
+                  {this.state.promptPrefix + this.state.prompt}
                 </Prompt>
                 <MainInput
                   type="text"
