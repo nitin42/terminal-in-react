@@ -425,6 +425,8 @@ Use
 | **description** | object      |    {} |
 | **commands** | object      |    { clear, help, show, } |
 | **msg** | string      |    - |
+| **closedTitle** | string      |    OOPS! You closed the window. |
+| **closedMessage** | string      |    Click on the icon to reopen. |
 | **watchConsoleLogging** | bool | false |
 | **commandPassThrough** | function | null |
 | **promptSymbol** | string | > |
