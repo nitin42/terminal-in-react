@@ -23,6 +23,8 @@ export const TerminalPropTypes = {
   hideTopBar: PropTypes.bool,
   allowTabs: PropTypes.bool,
   msg: PropTypes.string,
+  openTitle: PropTypes.string,
+  openMessage: PropTypes.string,
   color: PropTypes.string,
   style: PropTypes.object, // eslint-disable-line
   prompt: PropTypes.string,
@@ -79,6 +81,8 @@ export const TerminalDefaultProps = {
   allowTabs: true,
   showActions: true,
   msg: '',
+  openTitle: 'OOPS! You closed the window.',
+  openMessage: 'Click on the icon to reopen.',
   color: 'green',
   style: {},
   prompt: 'green',
