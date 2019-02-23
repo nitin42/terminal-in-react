@@ -2,11 +2,18 @@
 
 exports[`Terminal Component should render a terminal component 1`] = `
 <div
-  className="terminal-base sc-bdVaJa krmIoX"
+  className="terminal-base sc-bdVaJa blCJWW"
 >
   <div
-    className="sc-bwzfXH dLBnSZ"
-    style={Object {}}
+    style={
+      Object {
+        "animation": "fadeIn 0.18s ease-in",
+        "color": "green",
+        "fontFamily": "'Inconsolata', monospace",
+        "fontSize": "0.9em",
+        "height": "100%",
+      }
+    }
   >
     <div
       className="sc-bxivhb hdqhPL"
@@ -59,7 +66,7 @@ exports[`Terminal Component should render a terminal component 1`] = `
       style={Object {}}
     >
       <div
-        className="sc-cSHVUG jgYAxu"
+        className="sc-cSHVUG iWWnLG"
         onClick={[Function]}
         onFocus={[Function]}
         tabIndex={0}
@@ -100,7 +107,7 @@ exports[`Terminal Component should render a terminal component 1`] = `
             className="sc-VigVT bYwkqd"
           >
             <pre
-              className="sc-gzVnrw iGGAfs"
+              className="sc-gzVnrw duUAwb"
             >
               Hello World. My name is Nitin Tulswani
             </pre>
@@ -130,11 +137,18 @@ exports[`Terminal Component should render a terminal component 1`] = `
 
 exports[`Terminal Component should work with plugins 1`] = `
 <div
-  className="terminal-base sc-bdVaJa krmIoX"
+  className="terminal-base sc-bdVaJa blCJWW"
 >
   <div
-    className="sc-bwzfXH dLBnSZ"
-    style={Object {}}
+    style={
+      Object {
+        "animation": "fadeIn 0.18s ease-in",
+        "color": "green",
+        "fontFamily": "'Inconsolata', monospace",
+        "fontSize": "0.9em",
+        "height": "100%",
+      }
+    }
   >
     <div
       className="sc-bxivhb hdqhPL"
@@ -187,7 +201,7 @@ exports[`Terminal Component should work with plugins 1`] = `
       style={Object {}}
     >
       <div
-        className="sc-cSHVUG jgYAxu"
+        className="sc-cSHVUG iWWnLG"
         onClick={[Function]}
         onFocus={[Function]}
         tabIndex={0}
@@ -233,7 +247,7 @@ exports[`Terminal Component should work with plugins 1`] = `
               <span
                 className="sc-dnqmqq dNrvp"
               >
-                /home/user/ &gt;
+                &gt;
               </span>
               <input
                 className="sc-iwsKbI jLRkOo"
