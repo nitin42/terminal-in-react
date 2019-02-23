@@ -268,7 +268,9 @@ class Terminal extends Component {
   // Show msg (on window close)
   getNote = () => (
     <Note>
-      <h1>OOPS! You closed the window.</h1>
+      <h1>
+        {this.props.closedTitle}
+      </h1>
       <img
         src="https://camo.githubusercontent.com/95ad3fffa11193f85dedbf14ca67e4c5c07182d0/687474703a2f2f69636f6e732e69636f6e617263686976652e636f6d2f69636f6e732f70616f6d656469612f736d616c6c2d6e2d666c61742f313032342f7465726d696e616c2d69636f6e2e706e67"
         width="200"
@@ -277,7 +279,7 @@ class Terminal extends Component {
         onKeyPress={this.toggleState('show')}
         onClick={this.toggleState('show')}
       />
-      Click on the icon to reopen.
+      {this.props.closedMessage}
     </Note>
   );
 

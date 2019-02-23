@@ -158,6 +158,13 @@ you can also handle the result with a callback
 
 ### Minimise, maximise and close the window
 
+```jsx
+<Terminal
+  closedTitle='OOPS! You closed the window.'
+  closedMessage='Click on the icon to reopen.'
+/>
+```
+
 <p align="center">
   <img src="https://camo.githubusercontent.com/3748e38abc72cb7860ba8f2272c0329ded5bfe23/687474703a2f2f672e7265636f726469742e636f2f5a5965554b6d62414e512e676966" />
 </p>
@@ -418,6 +425,8 @@ Use
 | **description** | object      |    {} |
 | **commands** | object      |    { clear, help, show, } |
 | **msg** | string      |    - |
+| **closedTitle** | string      |    OOPS! You closed the window. |
+| **closedMessage** | string      |    Click on the icon to reopen. |
 | **watchConsoleLogging** | bool | false |
 | **commandPassThrough** | function | null |
 | **promptSymbol** | string | > |
