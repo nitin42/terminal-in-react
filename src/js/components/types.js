@@ -90,7 +90,7 @@ export const TerminalDefaultProps = {
   backgroundColor: 'black',
   commands: {},
   descriptions: {},
-  watchConsoleLogging: true,
+  watchConsoleLogging: false,
   commandPassThrough: false,
   promptSymbol: '>',
   plugins: [],
