@@ -9,7 +9,7 @@ declare module 'terminal-in-react' {
         backgroundColor?: string;
         prompt?: string;
         barColor?: string;
-        description?: {};
+        descriptions?: {};
         commands?: {};
         msg?: string;
         watchConsoleLogging?: boolean;

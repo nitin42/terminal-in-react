@@ -173,6 +173,13 @@ class Terminal extends Component {
     }
   };
 
+  // Update the PromptSymbol
+  componentWillReceiveProps = (nextProps) =>{
+    if(nextProps.promptSymbol !== this.props.promptSymbol){
+      this.setPromptSymbol(this.state.instances[0].instance, nextProps.promptSymbol);
+    }
+  }
+
   // Tab creation
   createTab = (force = false) => {
     const { allowTabs, promptSymbol } = this.props;
