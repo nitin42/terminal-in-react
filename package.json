@@ -48,6 +48,7 @@
     "jest": "22.2.2",
     "jsdom": "^11.1.0",
     "react-test-renderer": "16.2.0",
+    "terminal-in-react-node-eval-plugin": "^2.0.0",
     "terminal-in-react-pseudo-file-system-plugin": "3.0.0",
     "webpack": "^3.1.0",
     "webpack-bundle-analyzer": "^2.8.2",
