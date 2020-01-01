@@ -575,8 +575,10 @@ class Terminal extends Component {
   editLine = (args, printLine, runCommand, instance) => {
     const { summary } = instance.state;
     let index = args.line;
+
     if (index < 0) {
-      index = summary.length === 0 ? 0 : summary.length - index;
+      // when args.line is not provided, edit last line
+      index = summary.length === 0 ? 0 : summary.length - 1;
     }
     summary[index] = args._.join(' ');
     instance.setState({ summary });
