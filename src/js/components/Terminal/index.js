@@ -101,7 +101,7 @@ class Terminal extends Component {
       },
     };
 
-    this.defaultDesciptions = {
+    this.defaultDescriptions = {
       show: (props.msg && props.msg.length > 0) ? 'show the msg' : false,
       clear: 'clear the screen',
       help: 'list all the commands',
@@ -292,7 +292,7 @@ class Terminal extends Component {
   // Set descriptions of the commands
   setDescriptions = () => {
     let descriptions = {
-      ...this.defaultDesciptions,
+      ...this.defaultDescriptions,
       ...this.props.descriptions,
     };
     pluginMap(this.props.plugins, (plugin) => {
