@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import whatkey, { unprintableKeys } from 'whatkey';
 import {
-  ContainerMain, ContainerContent, Holder, Input, InputArea, MainInput, OutputLine, PreOutputLine, Prompt } from './styled-elements';
+  ContainerMain, ContainerContent, Holder,
+  Input, InputArea, MainInput,
+  OutputLine, PreOutputLine, Prompt,
+} from './styled-elements';
 
 class Content extends Component {
   static displayName = 'Content';
@@ -16,6 +19,11 @@ class Content extends Component {
     handlerKeyPress: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    prompt: '>',
+    oldData: {},
+  };
+
   static contextTypes = {
     maximise: PropTypes.bool,
     instances: PropTypes.array,
@@ -23,12 +31,6 @@ class Content extends Component {
     barShowing: PropTypes.bool,
     tabsShowing: PropTypes.bool,
   };
-
-  static defaultProps = {
-    prompt: '>',
-    oldData: {},
-  };
-
 
   state = {
     summary: [],
@@ -59,18 +61,14 @@ class Content extends Component {
     const data = this.context.instances.find(i => i.index === this.props.id);
     this.unregister = this.props.register(this);
     if (!data || Object.keys(data.oldData).length === 0) {
-      this.handleChange({
-        target: { value: 'show' },
-        key: 'Enter',
-        dontShowCommand: true,
-      });
+      this.handleChange({ target: { value: 'show' }, key: 'Enter', dontShowCommand: true });
     }
   };
 
   // Adjust scrolling
   componentDidUpdate = () => {
-    if (this.inputWrapper !== null && !!this.shouldScroll) {
-      this.inputWrapper.scrollIntoView(true);
+    if (this.inputWrapper !== null) {
+      this.inputWrapper.scrollIntoView(false);
     }
   };
 
@@ -94,11 +92,11 @@ class Content extends Component {
 
   handleChange = (e) => {
     this.props.handleChange(this, e);
-  };
+  }
 
   handleKeyPress = (e) => {
     this.props.handlerKeyPress(this, e, this.com);
-  };
+  }
 
   handleOuterKeypress = (e) => {
     const { key } = whatkey(e);
@@ -111,7 +109,7 @@ class Content extends Component {
     } else if (actionKeys.indexOf(key) > -1) {
       this.com.focus();
     }
-  };
+  }
 
   render() {
     const { id } = this.props;
@@ -129,13 +127,13 @@ class Content extends Component {
       }
       return (
         <PreOutputLine key={i}>
-          {Array.isArray(content)
-            ? content.map((cont, key) => (
-              <span style={{ marginRight: 5 }} key={`inner-${key}`}>
-                {cont}
-              </span>
-              ))
-            : content}
+          {
+            Array.isArray(content) ?
+            content.map((cont, key) => (
+              <span style={{ marginRight: 5 }} key={`inner-${key}`}>{cont}</span>
+            )) :
+            content
+          }
         </PreOutputLine>
       );
     });
@@ -160,19 +158,7 @@ class Content extends Component {
         }}
         tabIndex="0"
         onKeyUp={this.handleOuterKeypress}
-        innerRef={(ctw) => {
-          this.contentWrapper = ctw;
-        }}
-        onScroll={(e) => {
-          if (
-            e.target.scrollTop ===
-            e.target.scrollHeight - e.target.clientHeight
-          ) {
-            this.shouldScroll = true;
-          } else {
-            this.shouldScroll = false;
-          }
-        }}
+        innerRef={(ctw) => { this.contentWrapper = ctw; }}
       >
         <Holder>
           <ContainerContent>
@@ -186,13 +172,13 @@ class Content extends Component {
                   this.inputWrapper = elm;
                 }}
               >
-                <Prompt>{this.state.promptPrefix + this.state.prompt}</Prompt>
+                <Prompt>
+                  {this.state.promptPrefix + this.state.prompt}
+                </Prompt>
                 <MainInput
                   type="text"
                   tabIndex="-1"
-                  innerRef={(com) => {
-                    this.com = com;
-                  }}
+                  innerRef={(com) => { this.com = com; }}
                   onKeyPress={this.handleChange}
                   onKeyDown={this.handleKeyPress}
                 />
