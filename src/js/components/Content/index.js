@@ -67,8 +67,8 @@ class Content extends Component {
 
   // Adjust scrolling
   componentDidUpdate = () => {
-    if (this.inputWrapper !== null) {
-      this.inputWrapper.scrollIntoView(false);
+    if (this.inputWrapper !== null && !!this.shouldScroll) {
+      this.inputWrapper.scrollIntoView(true);
     }
   };
 
@@ -159,6 +159,16 @@ class Content extends Component {
         tabIndex="0"
         onKeyUp={this.handleOuterKeypress}
         innerRef={(ctw) => { this.contentWrapper = ctw; }}
+        onScroll={(e) => {
+          if (
+            e.target.scrollTop ===
+            e.target.scrollHeight - e.target.clientHeight
+          ) {
+            this.shouldScroll = true;
+          } else {
+            this.shouldScroll = false;
+          }
+        }}
       >
         <Holder>
           <ContainerContent>
