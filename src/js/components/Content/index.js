@@ -2,20 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import whatkey, { unprintableKeys } from 'whatkey';
 import {
-  ContainerMain,
-  ContainerContent,
-  Holder,
-  Input,
-  InputArea,
-  MainInput,
-  OutputLine,
-  PreOutputLine,
-  Prompt,
-} from './styled-elements';
+  ContainerMain, ContainerContent, Holder, Input, InputArea, MainInput, OutputLine, PreOutputLine, Prompt } from './styled-elements';
 
 class Content extends Component {
-  shouldScroll = true;
-
   static displayName = 'Content';
 
   static propTypes = {
@@ -27,11 +16,6 @@ class Content extends Component {
     handlerKeyPress: PropTypes.func.isRequired,
   };
 
-  static defaultProps = {
-    prompt: '>',
-    oldData: {},
-  };
-
   static contextTypes = {
     maximise: PropTypes.bool,
     instances: PropTypes.array,
@@ -39,6 +23,12 @@ class Content extends Component {
     barShowing: PropTypes.bool,
     tabsShowing: PropTypes.bool,
   };
+
+  static defaultProps = {
+    prompt: '>',
+    oldData: {},
+  };
+
 
   state = {
     summary: [],
@@ -51,6 +41,9 @@ class Content extends Component {
     canScroll: true,
     controller: null,
   };
+
+  // eslint-disable-next-line react/sort-comp
+  shouldScroll = true;
 
   componentWillMount = () => {
     const data = this.context.instances.find(i => i.index === this.props.id);
