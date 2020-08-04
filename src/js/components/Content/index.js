@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import whatkey, { unprintableKeys } from "whatkey";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import whatkey, { unprintableKeys } from 'whatkey';
 import {
   ContainerMain,
   ContainerContent,
@@ -11,12 +11,12 @@ import {
   OutputLine,
   PreOutputLine,
   Prompt,
-} from "./styled-elements";
+} from './styled-elements';
 
 class Content extends Component {
   shouldScroll = true;
 
-  static displayName = "Content";
+  static displayName = 'Content';
 
   static propTypes = {
     id: PropTypes.string,
@@ -28,7 +28,7 @@ class Content extends Component {
   };
 
   static defaultProps = {
-    prompt: ">",
+    prompt: '>',
     oldData: {},
   };
 
@@ -42,8 +42,8 @@ class Content extends Component {
 
   state = {
     summary: [],
-    promptPrefix: "",
-    prompt: ">",
+    promptPrefix: '',
+    prompt: '>',
     history: [],
     historyCounter: 0,
     input: [],
@@ -53,7 +53,7 @@ class Content extends Component {
   };
 
   componentWillMount = () => {
-    const data = this.context.instances.find((i) => i.index === this.props.id);
+    const data = this.context.instances.find(i => i.index === this.props.id);
     let state = { prompt: this.props.prompt };
     if (data) {
       state = { ...state, ...data.oldData };
@@ -63,12 +63,12 @@ class Content extends Component {
 
   componentDidMount = () => {
     this.focusInput();
-    const data = this.context.instances.find((i) => i.index === this.props.id);
+    const data = this.context.instances.find(i => i.index === this.props.id);
     this.unregister = this.props.register(this);
     if (!data || Object.keys(data.oldData).length === 0) {
       this.handleChange({
-        target: { value: "show" },
-        key: "Enter",
+        target: { value: 'show' },
+        key: 'Enter',
         dontShowCommand: true,
       });
     }
@@ -109,7 +109,7 @@ class Content extends Component {
 
   handleOuterKeypress = (e) => {
     const { key } = whatkey(e);
-    const actionKeys = ["up", "down", "left", "right", "enter"];
+    const actionKeys = ['up', 'down', 'left', 'right', 'enter'];
     if (unprintableKeys.indexOf(key) < 0) {
       if (document.activeElement !== this.com) {
         this.com.focus();
@@ -122,23 +122,25 @@ class Content extends Component {
 
   render() {
     const { id } = this.props;
-    const { maximise, activeTab, barShowing, tabsShowing } = this.context;
+    const {
+      maximise, activeTab, barShowing, tabsShowing,
+    } = this.context;
 
     if (id !== activeTab) {
       return null;
     }
 
     const output = this.state.summary.map((content, i) => {
-      if (typeof content === "string" && content.length === 0) {
+      if (typeof content === 'string' && content.length === 0) {
         return <OutputLine key={i}>&nbsp;</OutputLine>;
       }
       return (
         <PreOutputLine key={i}>
           {Array.isArray(content)
             ? content.map((cont, key) => (
-                <span style={{ marginRight: 5 }} key={`inner-${key}`}>
-                  {cont}
-                </span>
+              <span style={{ marginRight: 5 }} key={`inner-${key}`}>
+                {cont}
+              </span>
               ))
             : content}
         </PreOutputLine>
@@ -157,11 +159,11 @@ class Content extends Component {
       <ContainerMain
         style={{
           ...(maximise
-            ? { maxWidth: "100%", maxHeight: `calc(100% - ${toSubtract}px)` }
+            ? { maxWidth: '100%', maxHeight: `calc(100% - ${toSubtract}px)` }
             : {}),
           ...(this.state.canScroll
-            ? { overflowY: "auto" }
-            : { overflowY: "hidden" }),
+            ? { overflowY: 'auto' }
+            : { overflowY: 'hidden' }),
         }}
         tabIndex="0"
         onKeyUp={this.handleOuterKeypress}
@@ -184,6 +186,9 @@ class Content extends Component {
             <InputArea>
               {output}
               <Input
+                onKeyPress={() => {
+                  this.shouldScroll = true;
+                }}
                 innerRef={(elm) => {
                   this.inputWrapper = elm;
                 }}
