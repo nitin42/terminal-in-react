@@ -1,11 +1,11 @@
 {
-  "name": "@weitongxaun/terminal-in-react",
+  "name": "terminal-in-react",
   "version": "4.3.1",
   "description": "A component for making a terminal in React",
   "main": "lib/js/index.js",
   "module": "src/index.js",
-  "repository": "https://www.github.com/weitongxuan/terminal-in-react",
-  "author": "weitongxuan",
+  "repository": "https://www.github.com/nitin42/terminal-in-react",
+  "author": "Nitin Tulswani",
   "license": "MIT",
   "dependencies": {
     "lodash.camelcase": "^4.3.0",
@@ -63,8 +63,8 @@
     "test": "./node_modules/.bin/jest",
     "test:watch": "./node_modules/.bin/jest --watch",
     "build": "npm run build:lib && npm run build:bundle",
-    "build:bundle": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.config.js",
-    "build:lib": "cross-env NODE_ENV=production babel src/js --out-dir lib/js --source-maps"
+    "build:bundle": "NODE_ENV=production webpack --config ./webpack/webpack.config.js",
+    "build:lib": "NODE_ENV=production babel src/js --out-dir lib/js --source-maps"
   },
   "jest": {
     "testEnvironment": "node",
@@ -81,8 +81,5 @@
     "terminal",
     "simple",
     "display"
-  ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  }
+  ]
 }

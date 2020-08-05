@@ -4,6 +4,7 @@ export const Container = styled.div`
  display: block;
  margin: 0 auto;
 `;
+
 export const ContainerMain = Container.extend`
   max-width: 600px;
   transition: all 0.4s ease-out;
