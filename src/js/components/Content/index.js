@@ -44,6 +44,9 @@ class Content extends Component {
     controller: null,
   };
 
+  // eslint-disable-next-line react/sort-comp
+  shouldScroll = true;
+
   componentWillMount = () => {
     const data = this.context.instances.find(i => i.index === this.props.id);
     let state = { prompt: this.props.prompt };
@@ -64,8 +67,8 @@ class Content extends Component {
 
   // Adjust scrolling
   componentDidUpdate = () => {
-    if (this.inputWrapper !== null) {
-      this.inputWrapper.scrollIntoView(false);
+    if (this.inputWrapper !== null && !!this.shouldScroll) {
+      this.inputWrapper.scrollIntoView(true);
     }
   };
 
@@ -156,13 +159,28 @@ class Content extends Component {
         tabIndex="0"
         onKeyUp={this.handleOuterKeypress}
         innerRef={(ctw) => { this.contentWrapper = ctw; }}
+        onScroll={(e) => {
+          if (
+            e.target.scrollTop ===
+            e.target.scrollHeight - e.target.clientHeight
+          ) {
+            this.shouldScroll = true;
+          } else {
+            this.shouldScroll = false;
+          }
+        }}
       >
         <Holder>
           <ContainerContent>
             <InputArea>
               {output}
               <Input
-                innerRef={(elm) => { this.inputWrapper = elm; }}
+                onKeyPress={() => {
+                  this.shouldScroll = true;
+                }}
+                innerRef={(elm) => {
+                  this.inputWrapper = elm;
+                }}
               >
                 <Prompt>
                   {this.state.promptPrefix + this.state.prompt}
