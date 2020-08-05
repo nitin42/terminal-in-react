@@ -175,7 +175,7 @@ class Terminal extends Component {
 
   // Tab creation
   createTab = (force = false) => {
-    const { allowTabs, promptSymbol } = this.props;
+    const { allowTabs, promptSymbol, rowStyle } = this.props;
     if (force || allowTabs) {
       const { tabs } = this.state;
       const id = uuidv4();
@@ -188,6 +188,7 @@ class Terminal extends Component {
           handleChange={this.handleChange}
           handlerKeyPress={this.handlerKeyPress}
           register={(...args) => this.registerInstance(id, ...args)}
+          rowStyle={rowStyle}
         />
       ));
 

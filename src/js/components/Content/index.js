@@ -17,6 +17,7 @@ class Content extends Component {
     register: PropTypes.func,
     handleChange: PropTypes.func,
     handlerKeyPress: PropTypes.func.isRequired,
+    rowStyle: PropTypes.object, // eslint-disable-line
   };
 
   static defaultProps = {
@@ -112,7 +113,7 @@ class Content extends Component {
   }
 
   render() {
-    const { id } = this.props;
+    const { id, rowStyle } = this.props;
     const {
       maximise, activeTab, barShowing, tabsShowing,
     } = this.context;
@@ -126,7 +127,7 @@ class Content extends Component {
         return <OutputLine key={i}>&nbsp;</OutputLine>;
       }
       return (
-        <PreOutputLine key={i}>
+        <PreOutputLine key={i} style={rowStyle}>
           {
             Array.isArray(content) ?
             content.map((cont, key) => (
