@@ -175,7 +175,8 @@ export default {
 
   generateDetails(kind) {
     // Get all properties of kind from global scope
-    const items = typeof kind === 'string' ? [...this.details[kind]] : [...kind];
+    const prop = typeof kind === 'string' ? [...this.details[kind]] : [...kind];    
+    const items = JSON.parse(JSON.stringify(prop));
     const parts = [];
     const isCmd = kind === 'commands';
 

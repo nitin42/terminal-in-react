@@ -1,4 +1,8 @@
 export default function (name, description, defaultValue, init) {
+  // prevent adding twice
+  if (this.details.options.find(flagName => flagName.name == name)) {
+    return this;
+  }
   let usage = [];
 
   const assignShort = (n, options, short) => {
@@ -27,6 +31,7 @@ export default function (name, description, defaultValue, init) {
   }
 
   const optionDetails = {
+    name,
     defaultValue,
     usage,
     description,
