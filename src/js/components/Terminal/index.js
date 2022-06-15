@@ -75,7 +75,7 @@ class Terminal extends Component {
 
     this.pluginData = {};
 
-    this.defaultCommands = {
+    this.defaultCommands = props.disableBuiltin ? {} : {
       // eslint-disable-line react/sort-comp
       show: this.showMsg,
       clear: {
@@ -101,7 +101,7 @@ class Terminal extends Component {
       },
     };
 
-    this.defaultDesciptions = {
+    this.defaultDesciptions = props.disableBuiltin ? {} : {
       show: (props.msg && props.msg.length > 0) ? 'show the msg' : false,
       clear: 'clear the screen',
       help: 'list all the commands',

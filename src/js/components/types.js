@@ -54,6 +54,7 @@ export const TerminalPropTypes = {
   }),
   afterChange: PropTypes.func,
   commandWasRun: PropTypes.func,
+  disableBuiltin: PropTypes.bool,
 };
 
 export const TerminalContextTypes = {
@@ -95,4 +96,5 @@ export const TerminalDefaultProps = {
   promptSymbol: '>',
   plugins: [],
   shortcuts: {},
+  disableBuiltin: false,
 };
