@@ -389,6 +389,8 @@ class Terminal extends Component {
     pluginMap(this.props.plugins, (PluginClass, config) => {
       try {
         const api = {
+          updateLine: this.updateLine.bind(this, instance),
+          getLines: this.getLines.bind(this, instance),
           printLine: this.printLine.bind(this, instance),
           removeLine: this.removeLine.bind(this, instance),
           runCommand: this.runCommand.bind(this, instance),
@@ -756,6 +758,17 @@ class Terminal extends Component {
     if (typeof pos === 'number') {
       instance.focusInput();
     }
+  }
+
+  getLines = (instance) => {
+    const { summary } = instance.state;
+    return summary;
+  }
+
+  updateLine = (instance, lineNumber, value) => {
+    const { summary } = instance.state;
+    summary[lineNumber] = value;
+    instance.setState({ summary });
   }
 
   // Print the summary (input -> output)
