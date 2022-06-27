@@ -25,5 +25,6 @@ declare module 'terminal-in-react' {
             handleMaximise?: (toggleMaximise: () => void) => void;
             handleMinimise?: (toggleMinimise: () => void) => void;
         };
+        disableBuiltin?: boolean;
     }> {}
 }
