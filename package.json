@@ -15,7 +15,7 @@
     "prop-types": "^15.5.10",
     "react": "16.2.0",
     "react-dom": "16.2.0",
-    "react-object-inspector": "^0.2.1",
+    "react-inspector": "2.3.1",
     "string-similarity": "^1.2.0",
     "styled-components": "3.1.6",
     "whatkey": "^2.0.1"
@@ -48,6 +48,7 @@
     "jest": "22.2.2",
     "jsdom": "^11.1.0",
     "react-test-renderer": "16.2.0",
+    "terminal-in-react-node-eval-plugin": "2.0.0",
     "terminal-in-react-pseudo-file-system-plugin": "3.0.0",
     "webpack": "^3.1.0",
     "webpack-bundle-analyzer": "^2.8.2",

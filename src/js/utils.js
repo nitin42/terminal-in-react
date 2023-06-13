@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react'; // eslint-disable-line
-import ObjectInspector from 'react-object-inspector';
+import { ObjectInspector } from 'react-inspector';
 import platform from 'platform';
 
 // Capture the console.log calls (hijacking)
