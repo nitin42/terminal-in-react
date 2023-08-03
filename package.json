@@ -7,6 +7,10 @@
   "repository": "https://www.github.com/nitin42/terminal-in-react",
   "author": "Nitin Tulswani",
   "license": "MIT",
+  "files": [
+    "lib",
+    "src"
+  ],
   "dependencies": {
     "lodash.camelcase": "^4.3.0",
     "lodash.isequal": "^4.5.0",
